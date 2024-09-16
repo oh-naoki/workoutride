@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         home: const Scaffold(
+          backgroundColor: Colors.black,
           body: SafeArea(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),

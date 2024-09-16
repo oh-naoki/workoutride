@@ -183,7 +183,7 @@ class _MeterPainter extends CustomPainter {
     const TextSpan topTextSpan = TextSpan(
       text: '300w',
       style: TextStyle(
-        color: Colors.black87,
+        color: Colors.white,
         fontSize: 60,
         fontWeight: FontWeight.bold,
       ),
@@ -193,7 +193,7 @@ class _MeterPainter extends CustomPainter {
     const TextSpan bottomTextSpan = TextSpan(
       text: '90rpm',
       style: TextStyle(
-        color: Colors.black87,
+        color: Colors.white,
         fontSize: 32,
         fontWeight: FontWeight.bold,
       ),
