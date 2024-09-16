@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class Meter extends StatelessWidget {
-  const Meter({Key? key}) : super(key: key);
+  const Meter({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +45,8 @@ class _MeterPainter extends CustomPainter {
 
     // 線を描画
     _drawIndicatorLine(canvas, center, innerRadius, outerRadius, position);
+
+    _drawCenteredText(canvas, center);
   }
 
   Path _createDonutPath(Offset center, double outerRadius, double innerRadius) {
@@ -174,6 +176,63 @@ class _MeterPainter extends CustomPainter {
       false,
       arcPaint,
     );
+  }
+
+  void _drawCenteredText(Canvas canvas, Offset center) {
+    // 上のテキスト
+    const TextSpan topTextSpan = TextSpan(
+      text: '300w',
+      style: TextStyle(
+        color: Colors.black87,
+        fontSize: 60,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+
+    // 下のテキスト
+    const TextSpan bottomTextSpan = TextSpan(
+      text: '90rpm',
+      style: TextStyle(
+        color: Colors.black87,
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+
+    // 上のテキストを描画
+    final TextPainter topTextPainter = TextPainter(
+      text: topTextSpan,
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    );
+    topTextPainter.layout();
+
+    // 下のテキストを描画
+    final TextPainter bottomTextPainter = TextPainter(
+      text: bottomTextSpan,
+      textAlign: TextAlign.right,
+      textDirection: TextDirection.ltr,
+    );
+    bottomTextPainter.layout();
+
+    // テキストの合計高さを計算
+    final double totalTextHeight = topTextPainter.height + bottomTextPainter.height;
+
+    // 上のテキストの位置を計算
+    final Offset topTextOffset = Offset(
+      center.dx - topTextPainter.width / 2,
+      center.dy - totalTextHeight / 2,
+    );
+
+    // 下のテキストの位置を計算
+    final Offset bottomTextOffset = Offset(
+      center.dx - bottomTextPainter.width / 4,
+      topTextOffset.dy + topTextPainter.height,
+    );
+
+    // テキストをキャンバスに描画
+    topTextPainter.paint(canvas, topTextOffset);
+    bottomTextPainter.paint(canvas, bottomTextOffset);
   }
 
   @override
