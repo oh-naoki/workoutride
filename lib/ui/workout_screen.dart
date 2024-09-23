@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
-class WorkoutScreen extends StatelessWidget {
-  const WorkoutScreen({super.key});
+class PowerMeter extends StatelessWidget {
+  const PowerMeter({super.key});
 
   @override
   Widget build(BuildContext context) {

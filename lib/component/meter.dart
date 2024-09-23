@@ -38,7 +38,7 @@ class _MeterPainter extends CustomPainter {
     canvas.drawPath(finalPath, donutPaint);
 
     // 角度の計算と線の描画
-    final double position = 0.6; // 0から1の間の値
+    const double position = 0.6; // 0から1の間の値
 
     // 弧を描画
     _drawArcAtPosition(canvas, center, innerRadius, outerRadius, position);
@@ -123,7 +123,7 @@ class _MeterPainter extends CustomPainter {
 
   void _drawArcAtPosition(Canvas canvas, Offset center, double innerRadius, double outerRadius, double position) {
     // 角度幅（±0.05）を設定
-    final double angleWidthFraction = 0.05;
+    const double angleWidthFraction = 0.05;
 
     // 左下と右下の座標
     final double leftX = center.dx - outerRadius;
