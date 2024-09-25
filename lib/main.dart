@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:workoutride/component/meter.dart';
+import 'package:workoutride/ui/home/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,19 +19,7 @@ class MyApp extends StatelessWidget {
         home: const Scaffold(
           backgroundColor: Colors.black,
           body: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                children: [
-                  Text("Power Meter"),
-                  SizedBox(
-                    height: 400,
-                    width: double.infinity,
-                    child: Meter(),
-                  ),
-                ],
-              ),
-            ),
+            child: HomeScreen(),
           ),
         ));
   }
