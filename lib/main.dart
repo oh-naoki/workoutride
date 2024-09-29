@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:workoutride/ui/home/home_screen.dart';
+import 'package:workoutride/ui/workout_detail/workout_detail_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         home: const Scaffold(
           backgroundColor: Colors.black,
           body: SafeArea(
-            child: HomeScreen(),
+            child: WorkoutDetailScreen(),
           ),
         ));
   }
