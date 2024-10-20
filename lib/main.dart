@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:workoutride/ui/ble_setting/scan_screen.dart';
 import 'package:workoutride/ui/workout_detail/workout_detail_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
         home: const Scaffold(
           backgroundColor: Colors.black,
           body: SafeArea(
-            child: WorkoutDetailScreen(),
+            child: ScanScreen(),
           ),
         ));
   }
