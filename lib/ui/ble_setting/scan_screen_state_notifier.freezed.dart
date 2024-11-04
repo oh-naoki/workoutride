@@ -16,7 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ScanScreenUiState {
-  List<ScanResult> get scanResults => throw _privateConstructorUsedError;
+  List<DeviceScanResult> get scanResults => throw _privateConstructorUsedError;
 
   /// Create a copy of ScanScreenUiState
   /// with the given fields replaced by the non-null parameter values.
@@ -31,7 +31,7 @@ abstract class $ScanScreenUiStateCopyWith<$Res> {
           ScanScreenUiState value, $Res Function(ScanScreenUiState) then) =
       _$ScanScreenUiStateCopyWithImpl<$Res, ScanScreenUiState>;
   @useResult
-  $Res call({List<ScanResult> scanResults});
+  $Res call({List<DeviceScanResult> scanResults});
 }
 
 /// @nodoc
@@ -55,7 +55,7 @@ class _$ScanScreenUiStateCopyWithImpl<$Res, $Val extends ScanScreenUiState>
       scanResults: null == scanResults
           ? _value.scanResults
           : scanResults // ignore: cast_nullable_to_non_nullable
-              as List<ScanResult>,
+              as List<DeviceScanResult>,
     ) as $Val);
   }
 }
@@ -68,7 +68,7 @@ abstract class _$$ScanScreenUiStateImplCopyWith<$Res>
       __$$ScanScreenUiStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<ScanResult> scanResults});
+  $Res call({List<DeviceScanResult> scanResults});
 }
 
 /// @nodoc
@@ -90,7 +90,7 @@ class __$$ScanScreenUiStateImplCopyWithImpl<$Res>
       scanResults: null == scanResults
           ? _value._scanResults
           : scanResults // ignore: cast_nullable_to_non_nullable
-              as List<ScanResult>,
+              as List<DeviceScanResult>,
     ));
   }
 }
@@ -100,13 +100,14 @@ class __$$ScanScreenUiStateImplCopyWithImpl<$Res>
 class _$ScanScreenUiStateImpl
     with DiagnosticableTreeMixin
     implements _ScanScreenUiState {
-  const _$ScanScreenUiStateImpl({final List<ScanResult> scanResults = const []})
+  const _$ScanScreenUiStateImpl(
+      {final List<DeviceScanResult> scanResults = const []})
       : _scanResults = scanResults;
 
-  final List<ScanResult> _scanResults;
+  final List<DeviceScanResult> _scanResults;
   @override
   @JsonKey()
-  List<ScanResult> get scanResults {
+  List<DeviceScanResult> get scanResults {
     if (_scanResults is EqualUnmodifiableListView) return _scanResults;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_scanResults);
@@ -149,11 +150,11 @@ class _$ScanScreenUiStateImpl
 }
 
 abstract class _ScanScreenUiState implements ScanScreenUiState {
-  const factory _ScanScreenUiState({final List<ScanResult> scanResults}) =
+  const factory _ScanScreenUiState({final List<DeviceScanResult> scanResults}) =
       _$ScanScreenUiStateImpl;
 
   @override
-  List<ScanResult> get scanResults;
+  List<DeviceScanResult> get scanResults;
 
   /// Create a copy of ScanScreenUiState
   /// with the given fields replaced by the non-null parameter values.

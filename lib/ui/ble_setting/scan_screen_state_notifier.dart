@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:workoutride/data/ble_connector.dart';
+import 'package:workoutride/domain/usecase/scan_ble_device_usecase.dart';
 
-import '../../domain/model/scan_result.dart';
+import '../../domain/model/device_scan_result.dart';
 
 part 'scan_screen_state_notifier.freezed.dart';
 part 'scan_screen_state_notifier.g.dart';
@@ -10,7 +12,7 @@ part 'scan_screen_state_notifier.g.dart';
 @freezed
 class ScanScreenUiState with _$ScanScreenUiState {
   const factory ScanScreenUiState({
-    @Default([]) List<ScanResult> scanResults,
+    @Default([]) List<DeviceScanResult> scanResults,
   }) = _ScanScreenUiState;
 }
 
@@ -22,25 +24,23 @@ class ScanScreenStateNotifier extends _$ScanScreenStateNotifier {
   }
 
   void scanDevice() {
-    // TODO: BLE Device Scanning
-    state = state.copyWith(
-      scanResults: [
-        ScanResult(
-          deviceName: 'Device 1',
-          deviceAddress: '00:00:00:00:00:00',
-          rssi: -50,
-        ),
-        ScanResult(
-          deviceName: 'Device 2',
-          deviceAddress: '00:00:00:00:00:01',
-          rssi: -60,
-        ),
-        ScanResult(
-          deviceName: 'Device 3',
-          deviceAddress: '00:00:00:00:00:02',
-          rssi: -70,
-        ),
-      ],
+    ref.read(scanBleDeviceUseCaseProvider)().listen(
+      (results) {
+        state = state.copyWith(
+          scanResults: results,
+        );
+      },
+      onError: (error) {
+        print('Error: $error');
+      },
+      onDone: () {
+        print('Scan completed');
+      },
+      cancelOnError: true,
     );
+  }
+
+  void onDeviceTap(DeviceScanResult result) {
+    ref.read(bleConnectorProvider).connect(result.deviceAddress);
   }
 }

@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'scan_result.dart';
+part of 'device_scan_result.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,38 +15,38 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$ScanResult {
+mixin _$DeviceScanResult {
   String get deviceName => throw _privateConstructorUsedError;
   String get deviceAddress => throw _privateConstructorUsedError;
   int get rssi => throw _privateConstructorUsedError;
 
-  /// Create a copy of ScanResult
+  /// Create a copy of DeviceScanResult
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ScanResultCopyWith<ScanResult> get copyWith =>
+  $DeviceScanResultCopyWith<DeviceScanResult> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ScanResultCopyWith<$Res> {
-  factory $ScanResultCopyWith(
-          ScanResult value, $Res Function(ScanResult) then) =
-      _$ScanResultCopyWithImpl<$Res, ScanResult>;
+abstract class $DeviceScanResultCopyWith<$Res> {
+  factory $DeviceScanResultCopyWith(
+          DeviceScanResult value, $Res Function(DeviceScanResult) then) =
+      _$DeviceScanResultCopyWithImpl<$Res, DeviceScanResult>;
   @useResult
   $Res call({String deviceName, String deviceAddress, int rssi});
 }
 
 /// @nodoc
-class _$ScanResultCopyWithImpl<$Res, $Val extends ScanResult>
-    implements $ScanResultCopyWith<$Res> {
-  _$ScanResultCopyWithImpl(this._value, this._then);
+class _$DeviceScanResultCopyWithImpl<$Res, $Val extends DeviceScanResult>
+    implements $DeviceScanResultCopyWith<$Res> {
+  _$DeviceScanResultCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of ScanResult
+  /// Create a copy of DeviceScanResult
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -73,25 +73,25 @@ class _$ScanResultCopyWithImpl<$Res, $Val extends ScanResult>
 }
 
 /// @nodoc
-abstract class _$$ScanResultImplCopyWith<$Res>
-    implements $ScanResultCopyWith<$Res> {
-  factory _$$ScanResultImplCopyWith(
-          _$ScanResultImpl value, $Res Function(_$ScanResultImpl) then) =
-      __$$ScanResultImplCopyWithImpl<$Res>;
+abstract class _$$DeviceScanResultImplCopyWith<$Res>
+    implements $DeviceScanResultCopyWith<$Res> {
+  factory _$$DeviceScanResultImplCopyWith(_$DeviceScanResultImpl value,
+          $Res Function(_$DeviceScanResultImpl) then) =
+      __$$DeviceScanResultImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String deviceName, String deviceAddress, int rssi});
 }
 
 /// @nodoc
-class __$$ScanResultImplCopyWithImpl<$Res>
-    extends _$ScanResultCopyWithImpl<$Res, _$ScanResultImpl>
-    implements _$$ScanResultImplCopyWith<$Res> {
-  __$$ScanResultImplCopyWithImpl(
-      _$ScanResultImpl _value, $Res Function(_$ScanResultImpl) _then)
+class __$$DeviceScanResultImplCopyWithImpl<$Res>
+    extends _$DeviceScanResultCopyWithImpl<$Res, _$DeviceScanResultImpl>
+    implements _$$DeviceScanResultImplCopyWith<$Res> {
+  __$$DeviceScanResultImplCopyWithImpl(_$DeviceScanResultImpl _value,
+      $Res Function(_$DeviceScanResultImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of ScanResult
+  /// Create a copy of DeviceScanResult
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -100,7 +100,7 @@ class __$$ScanResultImplCopyWithImpl<$Res>
     Object? deviceAddress = null,
     Object? rssi = null,
   }) {
-    return _then(_$ScanResultImpl(
+    return _then(_$DeviceScanResultImpl(
       deviceName: null == deviceName
           ? _value.deviceName
           : deviceName // ignore: cast_nullable_to_non_nullable
@@ -119,8 +119,8 @@ class __$$ScanResultImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ScanResultImpl implements _ScanResult {
-  const _$ScanResultImpl(
+class _$DeviceScanResultImpl implements _DeviceScanResult {
+  const _$DeviceScanResultImpl(
       {required this.deviceName,
       required this.deviceAddress,
       required this.rssi});
@@ -134,14 +134,14 @@ class _$ScanResultImpl implements _ScanResult {
 
   @override
   String toString() {
-    return 'ScanResult(deviceName: $deviceName, deviceAddress: $deviceAddress, rssi: $rssi)';
+    return 'DeviceScanResult(deviceName: $deviceName, deviceAddress: $deviceAddress, rssi: $rssi)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ScanResultImpl &&
+            other is _$DeviceScanResultImpl &&
             (identical(other.deviceName, deviceName) ||
                 other.deviceName == deviceName) &&
             (identical(other.deviceAddress, deviceAddress) ||
@@ -152,20 +152,21 @@ class _$ScanResultImpl implements _ScanResult {
   @override
   int get hashCode => Object.hash(runtimeType, deviceName, deviceAddress, rssi);
 
-  /// Create a copy of ScanResult
+  /// Create a copy of DeviceScanResult
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$ScanResultImplCopyWith<_$ScanResultImpl> get copyWith =>
-      __$$ScanResultImplCopyWithImpl<_$ScanResultImpl>(this, _$identity);
+  _$$DeviceScanResultImplCopyWith<_$DeviceScanResultImpl> get copyWith =>
+      __$$DeviceScanResultImplCopyWithImpl<_$DeviceScanResultImpl>(
+          this, _$identity);
 }
 
-abstract class _ScanResult implements ScanResult {
-  const factory _ScanResult(
+abstract class _DeviceScanResult implements DeviceScanResult {
+  const factory _DeviceScanResult(
       {required final String deviceName,
       required final String deviceAddress,
-      required final int rssi}) = _$ScanResultImpl;
+      required final int rssi}) = _$DeviceScanResultImpl;
 
   @override
   String get deviceName;
@@ -174,10 +175,10 @@ abstract class _ScanResult implements ScanResult {
   @override
   int get rssi;
 
-  /// Create a copy of ScanResult
+  /// Create a copy of DeviceScanResult
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ScanResultImplCopyWith<_$ScanResultImpl> get copyWith =>
+  _$$DeviceScanResultImplCopyWith<_$DeviceScanResultImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

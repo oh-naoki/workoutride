@@ -287,10 +287,18 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_blue_plus
-      sha256: "59fded880d769859e9e2fd6e5599555575174f642d758cc846988c86c4341131"
+      sha256: "22912f71d140ff5c15735d4b2f0425e0a5f61ce6444a29360e7fca05eeebbad7"
       url: "https://pub.dev"
     source: hosted
-    version: "1.33.0"
+    version: "1.33.5"
+  flutter_hooks:
+    dependency: "direct main"
+    description:
+      name: flutter_hooks
+      sha256: cde36b12f7188c85286fba9b38cc5a902e7279f36dd676967106c041dc9dde70
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.20.5"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -365,6 +373,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
+  hooks_riverpod:
+    dependency: "direct main"
+    description:
+      name: hooks_riverpod
+      sha256: "534ca8af331235f700f3916a74e4579cdfdd708e2fbed342fc8aa969d41a7af0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.5.4"
   hotreloader:
     dependency: transitive
     description:
