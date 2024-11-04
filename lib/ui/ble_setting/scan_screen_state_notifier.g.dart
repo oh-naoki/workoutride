@@ -7,7 +7,7 @@ part of 'scan_screen_state_notifier.dart';
 // **************************************************************************
 
 String _$scanScreenStateNotifierHash() =>
-    r'f0087a8dd96b4238cd3d39dffc70d0d195917356';
+    r'd43eff0d2817226921ffa664d14b721ca7c1bebc';
 
 /// See also [ScanScreenStateNotifier].
 @ProviderFor(ScanScreenStateNotifier)

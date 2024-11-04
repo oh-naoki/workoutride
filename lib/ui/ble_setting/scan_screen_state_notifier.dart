@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:workoutride/data/ble_connector.dart';
+import 'package:workoutride/domain/usecase/connect_ble_power_meter_use_case.dart';
 import 'package:workoutride/domain/usecase/scan_ble_device_usecase.dart';
 
 import '../../domain/model/device_scan_result.dart';
@@ -41,6 +41,6 @@ class ScanScreenStateNotifier extends _$ScanScreenStateNotifier {
   }
 
   void onDeviceTap(DeviceScanResult result) {
-    ref.read(bleConnectorProvider).connect(result.deviceAddress);
+    ref.read(connectBlePowerMeterUseCaseProvider)(result.deviceAddress);
   }
 }
