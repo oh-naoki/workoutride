@@ -12,6 +12,8 @@ BleConnector bleConnector(BleConnectorRef ref) {
 }
 
 class BleConnector {
+  late final String deviceId;
+
   Future<void> initialize() async {
     if (Platform.isAndroid) {
       await FlutterBluePlus.turnOn();
@@ -46,19 +48,20 @@ class BleConnector {
 
   Future<void> connect(String deviceId) async {
     // TODO: deviceId を永続化する
+    this.deviceId = deviceId;
     final device = BluetoothDevice.fromId(deviceId);
     await device.connect();
   }
 
   // notification の登録とデータを返したい
-  Stream<List<int>> notify(String deviceId, Guid uuid) {
+  Stream<List<int>> notify(String uuid) {
     final StreamController<List<int>> controller = StreamController<List<int>>();
     final device = BluetoothDevice.fromId(deviceId);
     device.connect();
     device.discoverServices().then((services) {
       for (var service in services) {
         for (var characteristic in service.characteristics) {
-          if (characteristic.uuid == uuid) {
+          if (characteristic.uuid == Guid(uuid)) {
             characteristic.setNotifyValue(true);
             characteristic.onValueReceived.listen((value) {
               controller.add(value);
