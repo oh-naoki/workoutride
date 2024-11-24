@@ -61,6 +61,8 @@ dev_dependencies:
   freezed: ^2.5.7
   json_serializable: ^6.8.0
 
+  mockito: ^5.0.17
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -109,7 +111,7 @@ flutter_native_splash:
   color: "#FFFFFF"
   image: assets/images/ic_splash.png
   background_image: assets/images/ic_splash.png
-  fullscreen: true 
+  fullscreen: true
   android: true
   ios: true
   android_12:
