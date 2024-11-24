@@ -19,10 +19,10 @@ void main() {
     final usecase = GetCalculatedPowerMeterDataUseCase(mock);
     // モックのストリームデータを用意
     final inputStream = Stream.fromIterable([
-      PowerMeterData(power: 100, cadence: 80), // 1秒目
-      PowerMeterData(power: 200, cadence: 90), // 2秒目
-      PowerMeterData(power: 300, cadence: 100), // 3秒目
-      PowerMeterData(power: 400, cadence: 110), // 4秒目
+      const PowerMeterData(power: 100, cadence: 80), // 1秒目
+      const PowerMeterData(power: 200, cadence: 90), // 2秒目
+      const PowerMeterData(power: 300, cadence: 100), // 3秒目
+      const PowerMeterData(power: 400, cadence: 110), // 4秒目
     ]);
     // モックの振る舞いを定義
     when(mock()).thenAnswer((_) => inputStream);
@@ -35,12 +35,21 @@ void main() {
     expect(results.length, 4); // 入力データ数と一致する
 
     // 期待される3秒平均値
-    expect(results[0], PowerMeterData(power: 100, cadence: 80)); // 1秒目 (1データだけ)
     expect(
-        results[1], PowerMeterData(power: 150, cadence: 85)); // 2秒目 (2データの平均)
+      results[0],
+      const PowerMeterData(power: 100, cadence: 80),
+    ); // 1秒目 (1データだけ)
     expect(
-        results[2], PowerMeterData(power: 200, cadence: 90)); // 3秒目 (3データの平均)
-    expect(results[3],
-        PowerMeterData(power: 300, cadence: 100)); // 4秒目 (最新3データの平均)
+      results[1],
+      const PowerMeterData(power: 150, cadence: 85),
+    ); // 2秒目 (2データの平均)
+    expect(
+      results[2],
+      const PowerMeterData(power: 200, cadence: 90),
+    ); // 3秒目 (3データの平均)
+    expect(
+      results[3],
+      const PowerMeterData(power: 300, cadence: 100),
+    ); // 4秒目 (最新3データの平均)
   });
 }
