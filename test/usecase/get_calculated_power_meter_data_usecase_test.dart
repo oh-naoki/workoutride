@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -7,49 +9,91 @@ import 'package:workoutride/domain/usecase/get_power_meter_data_use_case.dart';
 
 import 'get_calculated_power_meter_data_usecase_test.mocks.dart';
 
-// モックを生成
 @GenerateMocks([GetPowerMeterDataUseCase])
 void main() {
+  late GetCalculatedPowerMeterDataUseCase useCase;
+  late MockGetPowerMeterDataUseCase mockGetPowerMeterDataUseCase;
+
   setUp(() {
-    reset(MockGetPowerMeterDataUseCase());
+    mockGetPowerMeterDataUseCase = MockGetPowerMeterDataUseCase();
+    useCase = GetCalculatedPowerMeterDataUseCase(mockGetPowerMeterDataUseCase);
   });
 
-  test('3秒平均が正しく計算されること', () async {
-    final mock = MockGetPowerMeterDataUseCase();
-    final usecase = GetCalculatedPowerMeterDataUseCase(mock);
-    // モックのストリームデータを用意
-    final inputStream = Stream.fromIterable([
-      const PowerMeterData(power: 100, cadence: 80), // 1秒目
-      const PowerMeterData(power: 200, cadence: 90), // 2秒目
-      const PowerMeterData(power: 300, cadence: 100), // 3秒目
-      const PowerMeterData(power: 400, cadence: 110), // 4秒目
-    ]);
-    // モックの振る舞いを定義
-    when(mock()).thenAnswer((_) => inputStream);
-
-    // 実行
-    final resultStream = usecase();
-    final results = await resultStream.toList();
-
-    // 結果を検証
-    expect(results.length, 4); // 入力データ数と一致する
-
-    // 期待される3秒平均値
-    expect(
-      results[0],
+  test('3件未満のデータの場合、平均値を正しく計算する', () async {
+    // Arrange
+    final testData = [
       const PowerMeterData(power: 100, cadence: 80),
-    ); // 1秒目 (1データだけ)
-    expect(
-      results[1],
-      const PowerMeterData(power: 150, cadence: 85),
-    ); // 2秒目 (2データの平均)
-    expect(
-      results[2],
       const PowerMeterData(power: 200, cadence: 90),
-    ); // 3秒目 (3データの平均)
-    expect(
-      results[3],
+    ];
+    when(mockGetPowerMeterDataUseCase())
+        .thenAnswer((_) => Stream.fromIterable(testData));
+
+    // Act
+    final results = await useCase().toList();
+
+    // Assert
+    expect(results.length, 2);
+    expect(results[0].power, 100);
+    expect(results[0].cadence, 80);
+    expect(results[1].power, 150);
+    expect(results[1].cadence, 85);
+  });
+
+  test('3件のデータの場合、平均値を正しく計算する', () async {
+    // Arrange
+    final testData = [
+      const PowerMeterData(power: 100, cadence: 80),
+      const PowerMeterData(power: 200, cadence: 90),
       const PowerMeterData(power: 300, cadence: 100),
-    ); // 4秒目 (最新3データの平均)
+    ];
+    when(mockGetPowerMeterDataUseCase())
+        .thenAnswer((_) => Stream.fromIterable(testData));
+
+    // Act
+    final results = await useCase().toList();
+
+    // Assert
+    expect(results.length, 3);
+    expect(results[2].power, 200);
+    expect(results[2].cadence, 90);
+  });
+
+  test('3件を超えるデータの場合、古いデータを削除して平均値を計算する', () async {
+    // Arrange
+    final testData = [
+      const PowerMeterData(power: 100, cadence: 80),
+      const PowerMeterData(power: 200, cadence: 90),
+      const PowerMeterData(power: 300, cadence: 100),
+      const PowerMeterData(power: 400, cadence: 110),
+    ];
+    when(mockGetPowerMeterDataUseCase())
+        .thenAnswer((_) => Stream.fromIterable(testData));
+
+    // Act
+    final results = await useCase().toList();
+
+    // Assert
+    expect(results.length, 4);
+    expect(results[3].power, 300);
+    expect(results[3].cadence, 100);
+  });
+
+  test('異なるパワーとケイデンス値の組み合わせを正しく処理する', () async {
+    // Arrange
+    final testData = [
+      const PowerMeterData(power: 150, cadence: 85),
+      const PowerMeterData(power: 250, cadence: 95),
+      const PowerMeterData(power: 350, cadence: 105),
+    ];
+    when(mockGetPowerMeterDataUseCase())
+        .thenAnswer((_) => Stream.fromIterable(testData));
+
+    // Act
+    final results = await useCase().toList();
+
+    // Assert
+    expect(results.length, 3);
+    expect(results[2].power, 250);
+    expect(results[2].cadence, 95);
   });
 }
