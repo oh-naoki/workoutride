@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:workoutride/ui/ble_setting/scan_screen.dart';
+import 'package:workoutride/ui/workout/workout_screen.dart';
 import 'package:workoutride/ui/workout_detail/workout_detail_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -18,11 +19,6 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const Scaffold(
-          backgroundColor: Colors.black,
-          body: SafeArea(
-            child: ScanScreen(),
-          ),
-        ));
+        home: const WorkoutScreen());
   }
 }
