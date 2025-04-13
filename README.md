@@ -1,16 +1,57 @@
-# workoutride
+# WorkoutRide
 
-A new Flutter project.
+WorkoutRideは、サイクリングワークアウトを管理・追跡するためのアプリケーションです。このリポジトリはモノレポ構造を採用しており、フロントエンド（Flutter）とバックエンド（Rails）の両方のコードを含んでいます。
 
-## Getting Started
+## プロジェクト構造
 
-This project is a starting point for a Flutter application.
+```
+workoutride/
+├── frontend/          # Flutterモバイルアプリ
+│   ├── android/       # Androidアプリケーション
+│   ├── ios/           # iOSアプリケーション
+│   ├── lib/           # Dartソースコード
+│   └── ...
+├── backend/           # Railsバックエンド（開発中）
+│   └── ...
+└── shared/            # 共有リソース
+    ├── models/        # 共通のモデル定義
+    ├── api_specs/     # API仕様
+    └── docs/          # プロジェクト全体のドキュメント
+```
 
-A few resources to get you started if this is your first Flutter project:
+## 開発環境のセットアップ
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### フロントエンド（Flutter）
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Flutterの開発環境をセットアップします（[Flutter公式ドキュメント](https://docs.flutter.dev/get-started/install)）
+2. 依存関係をインストールします：
+   ```
+   cd frontend
+   flutter pub get
+   ```
+3. アプリを実行します：
+   ```
+   flutter run
+   ```
+
+### バックエンド（Rails）
+
+バックエンドは現在開発中です。
+
+## 機能
+
+- パワーメーターデータの表示
+- ワークアウトセッションの記録
+- BLEデバイスとの接続
+
+## 貢献
+
+プロジェクトへの貢献を歓迎します。貢献する前に、以下の点を確認してください：
+
+1. コードスタイルガイドラインに従ってください
+2. 適切なテストを追加してください
+3. ドキュメントを更新してください
+
+## ライセンス
+
+このプロジェクトはMITライセンスの下で公開されています。
