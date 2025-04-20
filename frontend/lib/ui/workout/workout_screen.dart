@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workoutride/component/meter.dart';
-import 'package:workoutride/di/providers.dart';
-import 'package:workoutride/domain/model/workout/workout_summary.dart';
-import 'package:workoutride/domain/usecase/workout/get_workout_summaries_use_case.dart';
+import 'package:workoutride/ui/workout/workout_screen_state_notifier.dart';
 import 'package:workoutride/ui/workout_detail/workout_detail_screen.dart';
 
 class WorkoutScreen extends ConsumerWidget {
@@ -11,7 +9,7 @@ class WorkoutScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final workoutSummariesState = ref.watch(workoutSummariesProvider);
+    final uiState = ref.watch(workoutScreenStateNotifierProvider);
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -45,52 +43,55 @@ class WorkoutScreen extends ConsumerWidget {
               flex: 2,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: workoutSummariesState.when(
-                  data: (summaries) {
-                    if (summaries.isEmpty) {
+                child: Builder(
+                  builder: (context) {
+                    if (uiState.isLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (uiState.errorMessage != null) {
+                      return Center(
+                        child: Text(
+                          'エラーが発生しました: ${uiState.errorMessage}',
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      );
+                    } else if (uiState.workoutSummaries.isEmpty) {
                       return const Center(
                         child: Text(
                           'ワークアウトがありません',
                           style: TextStyle(color: Colors.white),
                         ),
                       );
-                    }
-                    return ListView.builder(
-                      itemCount: summaries.length,
-                      itemBuilder: (context, index) {
-                        final summary = summaries[index];
-                        return GestureDetector(
-                          onTap: () {
-                            if (summary.workouts.isNotEmpty) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => WorkoutDetailScreen(
-                                    workoutId: summary.workouts[0].id,
+                    } else {
+                      return ListView.builder(
+                        itemCount: uiState.workoutSummaries.length,
+                        itemBuilder: (context, index) {
+                          final summary = uiState.workoutSummaries[index];
+                          return GestureDetector(
+                            onTap: () {
+                              if (summary.workouts.isNotEmpty) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => WorkoutDetailScreen(
+                                      workoutId: summary.workouts[0].id,
+                                    ),
                                   ),
-                                ),
-                              );
-                            }
-                          },
-                          child: _buildWorkoutCard(
-                            name: summary.name,
-                            power: summary.totalDuration,
-                            time: _formatDuration(summary.totalDuration),
-                            isActive: index == 0,
-                          ),
-                        );
-                      },
-                    );
+                                );
+                              }
+                            },
+                            child: _buildWorkoutCard(
+                              name: summary.name,
+                              power: summary.totalDuration,
+                              time: _formatDuration(summary.totalDuration),
+                              isActive: index == 0,
+                            ),
+                          );
+                        },
+                      );
+                    }
                   },
-                  loading: () => const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                  error: (error, stackTrace) => Center(
-                    child: Text(
-                      'エラーが発生しました: $error',
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                  ),
                 ),
               ),
             ),

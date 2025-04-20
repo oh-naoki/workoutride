@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/domain/model/workout/workout_summary.dart';
+import 'package:workoutride/ui/home/home_screen_state_notifier.dart';
 import 'package:workoutride/ui/workout_detail/workout_detail_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -9,7 +9,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final workoutSummariesState = ref.watch(getWorkoutSummariesUseCaseProvider).call();
+    final uiState = ref.watch(homeScreenStateNotifierProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home", style: TextStyle(color: Colors.white)),
@@ -27,9 +27,26 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           children: [
             const SectionTitle(title: "ワークアウト一覧"),
-            workoutSummariesState.when(
-              data: (summaries) {
-                if (summaries.isEmpty) {
+            Builder(
+              builder: (context) {
+                if (uiState.isLoading) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                } else if (uiState.errorMessage != null) {
+                  return Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Text(
+                        'エラーが発生しました: ${uiState.errorMessage}',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  );
+                } else if (uiState.workoutSummaries.isEmpty) {
                   return const Center(
                     child: Padding(
                       padding: EdgeInsets.all(16.0),
@@ -39,24 +56,10 @@ class HomeScreen extends ConsumerWidget {
                       ),
                     ),
                   );
+                } else {
+                  return WorkoutList(summaries: uiState.workoutSummaries);
                 }
-                return WorkoutList(summaries: summaries);
               },
-              loading: () => const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-              error: (error, stackTrace) => Center(
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Text(
-                    'エラーが発生しました: $error',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ),
-              ),
             ),
           ],
         ),

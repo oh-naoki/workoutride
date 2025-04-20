@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
-import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart';
+import 'package:workoutride/ui/workout_detail/workout_detail_screen_state_notifier.dart';
 
 class WorkoutDetailScreen extends ConsumerWidget {
   final int workoutId;
@@ -11,7 +10,7 @@ class WorkoutDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final workoutBlocksState = ref.watch(workoutBlocksProvider(workoutId));
+    final uiState = ref.watch(workoutDetailScreenStateNotifierProvider(workoutId));
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -32,7 +31,7 @@ class WorkoutDetailScreen extends ConsumerWidget {
           child: Column(
             children: [
               const WorkoutDetailHeader(),
-              WorkoutDetailBody(workoutBlocksState: workoutBlocksState),
+              WorkoutDetailBody(uiState: uiState),
             ],
           ),
         ),
@@ -73,9 +72,9 @@ class WorkoutDetailHeader extends StatelessWidget {
 }
 
 class WorkoutDetailBody extends StatelessWidget {
-  final AsyncValue<List<WorkoutBlock>> workoutBlocksState;
+  final WorkoutDetailScreenUiState uiState;
   
-  const WorkoutDetailBody({super.key, required this.workoutBlocksState});
+  const WorkoutDetailBody({super.key, required this.uiState});
 
   @override
   Widget build(BuildContext context) {
@@ -95,9 +94,26 @@ class WorkoutDetailBody extends StatelessWidget {
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
         ),
-        workoutBlocksState.when(
-          data: (blocks) {
-            if (blocks.isEmpty) {
+        Builder(
+          builder: (context) {
+            if (uiState.isLoading) {
+              return const Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 16.0),
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            } else if (uiState.errorMessage != null) {
+              return Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 16.0),
+                  child: Text(
+                    'エラーが発生しました: ${uiState.errorMessage}',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+              );
+            } else if (uiState.workoutBlocks.isEmpty) {
               return const Center(
                 child: Padding(
                   padding: EdgeInsets.only(top: 16.0),
@@ -107,24 +123,10 @@ class WorkoutDetailBody extends StatelessWidget {
                   ),
                 ),
               );
+            } else {
+              return WorkoutMenu(blocks: uiState.workoutBlocks);
             }
-            return WorkoutMenu(blocks: blocks);
           },
-          loading: () => const Center(
-            child: Padding(
-              padding: EdgeInsets.only(top: 16.0),
-              child: CircularProgressIndicator(),
-            ),
-          ),
-          error: (error, stackTrace) => Center(
-            child: Padding(
-              padding: EdgeInsets.only(top: 16.0),
-              child: Text(
-                'エラーが発生しました: $error',
-                style: TextStyle(color: Colors.red),
-              ),
-            ),
-          ),
         ),
       ],
     );

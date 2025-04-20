@@ -1,0 +1,51 @@
+import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:workoutride/di/providers.dart';
+import 'package:workoutride/domain/model/workout/workout_summary.dart';
+import 'package:workoutride/domain/usecase/workout/get_workout_summaries_use_case.dart';
+
+part 'home_screen_state_notifier.freezed.dart';
+part 'home_screen_state_notifier.g.dart';
+
+@freezed
+class HomeScreenUiState with _$HomeScreenUiState {
+  const factory HomeScreenUiState({
+    @Default([]) List<WorkoutSummary> workoutSummaries,
+    @Default(false) bool isLoading,
+    String? errorMessage,
+  }) = _HomeScreenUiState;
+}
+
+@riverpod
+class HomeScreenStateNotifier extends _$HomeScreenStateNotifier {
+  late final GetWorkoutSummariesUseCase _getWorkoutSummariesUseCase;
+
+  @override
+  HomeScreenUiState build() {
+    state = const HomeScreenUiState(isLoading: true);
+    _getWorkoutSummariesUseCase = ref.read(getWorkoutSummariesUseCaseProvider);
+    _fetchWorkoutSummaries();
+    return state;
+  }
+
+  Future<void> _fetchWorkoutSummaries() async {
+    try {
+      state = state.copyWith(isLoading: true, errorMessage: null);
+      final summaries = await _getWorkoutSummariesUseCase.call();
+      state = state.copyWith(
+        workoutSummaries: summaries,
+        isLoading: false,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: e.toString(),
+      );
+    }
+  }
+
+  Future<void> refreshWorkoutSummaries() async {
+    await _fetchWorkoutSummaries();
+  }
+}
