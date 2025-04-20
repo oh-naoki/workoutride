@@ -3,7 +3,7 @@ module V1
     resource :workout_summaries do
       desc 'ワークアウトサマリーの一覧を取得'
       get do
-        workout_summaries = WorkoutSummary.all
+        workout_summaries = WorkoutSummary.includes(:workouts).all
         present workout_summaries, with: Entities::WorkoutSummary
       end
     end
