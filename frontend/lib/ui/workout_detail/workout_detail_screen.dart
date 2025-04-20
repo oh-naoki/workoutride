@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:workoutride/di/providers.dart';
+import 'package:workoutride/domain/model/workout/workout_block.dart';
+import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart';
 
-class WorkoutDetailScreen extends StatelessWidget {
-  const WorkoutDetailScreen({super.key});
+class WorkoutDetailScreen extends ConsumerWidget {
+  final int workoutId;
+  
+  const WorkoutDetailScreen({super.key, required this.workoutId});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final workoutBlocksState = ref.watch(workoutBlocksProvider(workoutId));
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
           icon: const Icon(
             Icons.arrow_back,
             color: Colors.white,
@@ -17,13 +26,13 @@ class WorkoutDetailScreen extends StatelessWidget {
         ),
       ),
       backgroundColor: Colors.black,
-      body: const SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             children: [
-              WorkoutDetailHeader(),
-              WorkoutDetailBody(),
+              const WorkoutDetailHeader(),
+              WorkoutDetailBody(workoutBlocksState: workoutBlocksState),
             ],
           ),
         ),
@@ -64,43 +73,82 @@ class WorkoutDetailHeader extends StatelessWidget {
 }
 
 class WorkoutDetailBody extends StatelessWidget {
-  const WorkoutDetailBody({super.key});
+  final AsyncValue<List<WorkoutBlock>> workoutBlocksState;
+  
+  const WorkoutDetailBody({super.key, required this.workoutBlocksState});
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           style: TextStyle(color: Colors.white, fontSize: 20),
           maxLines: 3,
           overflow: TextOverflow.ellipsis,
         ),
-        Padding(
+        const Padding(
           padding: EdgeInsets.symmetric(vertical: 16),
           child: Text(
             "ワークアウト内容",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
         ),
-        WorkoutMenu(),
+        workoutBlocksState.when(
+          data: (blocks) {
+            if (blocks.isEmpty) {
+              return const Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 16.0),
+                  child: Text(
+                    'ワークアウトブロックがありません',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              );
+            }
+            return WorkoutMenu(blocks: blocks);
+          },
+          loading: () => const Center(
+            child: Padding(
+              padding: EdgeInsets.only(top: 16.0),
+              child: CircularProgressIndicator(),
+            ),
+          ),
+          error: (error, stackTrace) => Center(
+            child: Padding(
+              padding: EdgeInsets.only(top: 16.0),
+              child: Text(
+                'エラーが発生しました: $error',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
 }
 
 class WorkoutMenu extends StatelessWidget {
-  const WorkoutMenu({super.key});
+  final List<WorkoutBlock> blocks;
+  
+  const WorkoutMenu({super.key, required this.blocks});
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      itemCount: 10,
+      itemCount: blocks.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        return WorkoutMenuItem();
+        final block = blocks[index];
+        return WorkoutMenuItem(
+          type: block.blockType,
+          power: block.targetPower,
+          duration: block.duration,
+        );
       },
       separatorBuilder: (context, index) {
         return const SizedBox(height: 8);
@@ -110,7 +158,22 @@ class WorkoutMenu extends StatelessWidget {
 }
 
 class WorkoutMenuItem extends StatelessWidget {
-  const WorkoutMenuItem({super.key});
+  final String type;
+  final int power;
+  final int duration;
+  
+  const WorkoutMenuItem({
+    super.key,
+    required this.type,
+    required this.power,
+    required this.duration,
+  });
+  
+  String _formatDuration(int seconds) {
+    final minutes = seconds ~/ 60;
+    final remainingSeconds = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,14 +188,14 @@ class WorkoutMenuItem extends StatelessWidget {
         color: const Color(0xFF4C4C4C),
         borderRadius: BorderRadius.circular(6),
       ),
-      child: const Padding(
+      child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("Hold", style: textStyle),
-            Text("300[W]", style: textStyle),
-            Text("00:10", style: textStyle),
+            Text(type, style: textStyle),
+            Text("$power[W]", style: textStyle),
+            Text(_formatDuration(duration), style: textStyle),
           ],
         ),
       ),

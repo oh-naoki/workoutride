@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workoutride/component/meter.dart';
+import 'package:workoutride/di/providers.dart';
+import 'package:workoutride/domain/model/workout/workout_summary.dart';
+import 'package:workoutride/domain/usecase/workout/get_workout_summaries_use_case.dart';
+import 'package:workoutride/ui/workout_detail/workout_detail_screen.dart';
 
-class WorkoutScreen extends StatelessWidget {
+class WorkoutScreen extends ConsumerWidget {
   const WorkoutScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final workoutSummariesState = ref.watch(workoutSummariesProvider);
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
@@ -38,12 +45,52 @@ class WorkoutScreen extends StatelessWidget {
               flex: 2,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: ListView(
-                  children: [
-                    _buildWorkoutCard(power: 300, time: "01:29", isActive: true),
-                    _buildWorkoutCard(power: 250, time: "05:00", isActive: false),
-                    _buildWorkoutCard(power: 250, time: "05:00", isActive: false),
-                  ],
+                child: workoutSummariesState.when(
+                  data: (summaries) {
+                    if (summaries.isEmpty) {
+                      return const Center(
+                        child: Text(
+                          'ワークアウトがありません',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      );
+                    }
+                    return ListView.builder(
+                      itemCount: summaries.length,
+                      itemBuilder: (context, index) {
+                        final summary = summaries[index];
+                        return GestureDetector(
+                          onTap: () {
+                            if (summary.workouts.isNotEmpty) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => WorkoutDetailScreen(
+                                    workoutId: summary.workouts[0].id,
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                          child: _buildWorkoutCard(
+                            name: summary.name,
+                            power: summary.totalDuration,
+                            time: _formatDuration(summary.totalDuration),
+                            isActive: index == 0,
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  error: (error, stackTrace) => Center(
+                    child: Text(
+                      'エラーが発生しました: $error',
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -65,8 +112,16 @@ class WorkoutScreen extends StatelessWidget {
     );
   }
 
+  // 秒数をMM:SS形式に変換
+  String _formatDuration(int seconds) {
+    final minutes = seconds ~/ 60;
+    final remainingSeconds = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
+  }
+
   // ワークアウトカードを作成するメソッド
   Widget _buildWorkoutCard({
+    required String name,
     required int power,
     required String time,
     required bool isActive,
@@ -85,8 +140,8 @@ class WorkoutScreen extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'ホールド',
+                Text(
+                  name,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,

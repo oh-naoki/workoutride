@@ -1,7 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:workoutride/data/ble_connector.dart';
 import 'package:workoutride/domain/model/power_meter_data.dart';
-import 'package:flutter/foundation.dart';
 
 part 'get_power_meter_data_use_case.g.dart';
 

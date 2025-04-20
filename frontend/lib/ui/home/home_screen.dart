@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:workoutride/di/providers.dart';
+import 'package:workoutride/domain/model/workout/workout_summary.dart';
+import 'package:workoutride/ui/workout_detail/workout_detail_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final workoutSummariesState = ref.watch(getWorkoutSummariesUseCaseProvider).call();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home", style: TextStyle(color: Colors.white)),
@@ -18,13 +23,41 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       backgroundColor: Colors.black,
-      body: const SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           children: [
-            SectionTitle(title: "前回のワークアウト"),
-            WorkoutList(),
-            SectionTitle(title: "ワークアウトメニュー"),
-            WorkoutList()
+            const SectionTitle(title: "ワークアウト一覧"),
+            workoutSummariesState.when(
+              data: (summaries) {
+                if (summaries.isEmpty) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Text(
+                        'ワークアウトがありません',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  );
+                }
+                return WorkoutList(summaries: summaries);
+              },
+              loading: () => const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+              error: (error, stackTrace) => Center(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text(
+                    'エラーが発生しました: $error',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -61,20 +94,22 @@ class SectionTitle extends StatelessWidget {
 }
 
 class WorkoutList extends StatelessWidget {
-  const WorkoutList({super.key});
+  final List<WorkoutSummary> summaries;
+  
+  const WorkoutList({super.key, required this.summaries});
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: 10,
+      itemCount: summaries.length,
       itemBuilder: (context, index) {
-        return const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        final summary = summaries[index];
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: WorkoutItem(
-            title: "Workout",
-            subtitle: "Subtitle",
+            summary: summary,
           ),
         );
       },
@@ -83,30 +118,62 @@ class WorkoutList extends StatelessWidget {
 }
 
 class WorkoutItem extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  const WorkoutItem({super.key, required this.title, required this.subtitle});
+  final WorkoutSummary summary;
+  
+  const WorkoutItem({super.key, required this.summary});
+  
+  String _formatDuration(int seconds) {
+    final minutes = seconds ~/ 60;
+    final remainingSeconds = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
+  }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        print("tapped");
+        if (summary.workouts.isNotEmpty) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => WorkoutDetailScreen(
+                workoutId: summary.workouts[0].id,
+              ),
+            ),
+          );
+        }
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              )),
-          Text(subtitle,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-              )),
+          Text(
+            summary.name,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              Text(
+                '合計時間: ${_formatDuration(summary.totalDuration)}',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Text(
+                'カテゴリ: ${summary.category}',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );

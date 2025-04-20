@@ -1,0 +1,286 @@
+// coverage:ignore-file
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
+
+part of 'workout_summary.dart';
+
+// **************************************************************************
+// FreezedGenerator
+// **************************************************************************
+
+T _$identity<T>(T value) => value;
+
+final _privateConstructorUsedError = UnsupportedError(
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+
+/// @nodoc
+mixin _$WorkoutSummary {
+  int get id => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+  int get totalDuration => throw _privateConstructorUsedError;
+  String get category => throw _privateConstructorUsedError;
+  DateTime get createdAt => throw _privateConstructorUsedError;
+  DateTime get updatedAt => throw _privateConstructorUsedError;
+  List<WorkoutId> get workouts => throw _privateConstructorUsedError;
+
+  /// Create a copy of WorkoutSummary
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $WorkoutSummaryCopyWith<WorkoutSummary> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $WorkoutSummaryCopyWith<$Res> {
+  factory $WorkoutSummaryCopyWith(
+          WorkoutSummary value, $Res Function(WorkoutSummary) then) =
+      _$WorkoutSummaryCopyWithImpl<$Res, WorkoutSummary>;
+  @useResult
+  $Res call(
+      {int id,
+      String name,
+      int totalDuration,
+      String category,
+      DateTime createdAt,
+      DateTime updatedAt,
+      List<WorkoutId> workouts});
+}
+
+/// @nodoc
+class _$WorkoutSummaryCopyWithImpl<$Res, $Val extends WorkoutSummary>
+    implements $WorkoutSummaryCopyWith<$Res> {
+  _$WorkoutSummaryCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of WorkoutSummary
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? name = null,
+    Object? totalDuration = null,
+    Object? category = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
+    Object? workouts = null,
+  }) {
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      totalDuration: null == totalDuration
+          ? _value.totalDuration
+          : totalDuration // ignore: cast_nullable_to_non_nullable
+              as int,
+      category: null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      updatedAt: null == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      workouts: null == workouts
+          ? _value.workouts
+          : workouts // ignore: cast_nullable_to_non_nullable
+              as List<WorkoutId>,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$WorkoutSummaryImplCopyWith<$Res>
+    implements $WorkoutSummaryCopyWith<$Res> {
+  factory _$$WorkoutSummaryImplCopyWith(_$WorkoutSummaryImpl value,
+          $Res Function(_$WorkoutSummaryImpl) then) =
+      __$$WorkoutSummaryImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {int id,
+      String name,
+      int totalDuration,
+      String category,
+      DateTime createdAt,
+      DateTime updatedAt,
+      List<WorkoutId> workouts});
+}
+
+/// @nodoc
+class __$$WorkoutSummaryImplCopyWithImpl<$Res>
+    extends _$WorkoutSummaryCopyWithImpl<$Res, _$WorkoutSummaryImpl>
+    implements _$$WorkoutSummaryImplCopyWith<$Res> {
+  __$$WorkoutSummaryImplCopyWithImpl(
+      _$WorkoutSummaryImpl _value, $Res Function(_$WorkoutSummaryImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of WorkoutSummary
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? name = null,
+    Object? totalDuration = null,
+    Object? category = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
+    Object? workouts = null,
+  }) {
+    return _then(_$WorkoutSummaryImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      totalDuration: null == totalDuration
+          ? _value.totalDuration
+          : totalDuration // ignore: cast_nullable_to_non_nullable
+              as int,
+      category: null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      updatedAt: null == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      workouts: null == workouts
+          ? _value._workouts
+          : workouts // ignore: cast_nullable_to_non_nullable
+              as List<WorkoutId>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$WorkoutSummaryImpl implements _WorkoutSummary {
+  const _$WorkoutSummaryImpl(
+      {required this.id,
+      required this.name,
+      required this.totalDuration,
+      required this.category,
+      required this.createdAt,
+      required this.updatedAt,
+      required final List<WorkoutId> workouts})
+      : _workouts = workouts;
+
+  @override
+  final int id;
+  @override
+  final String name;
+  @override
+  final int totalDuration;
+  @override
+  final String category;
+  @override
+  final DateTime createdAt;
+  @override
+  final DateTime updatedAt;
+  final List<WorkoutId> _workouts;
+  @override
+  List<WorkoutId> get workouts {
+    if (_workouts is EqualUnmodifiableListView) return _workouts;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_workouts);
+  }
+
+  @override
+  String toString() {
+    return 'WorkoutSummary(id: $id, name: $name, totalDuration: $totalDuration, category: $category, createdAt: $createdAt, updatedAt: $updatedAt, workouts: $workouts)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$WorkoutSummaryImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.totalDuration, totalDuration) ||
+                other.totalDuration == totalDuration) &&
+            (identical(other.category, category) ||
+                other.category == category) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
+            const DeepCollectionEquality().equals(other._workouts, _workouts));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      name,
+      totalDuration,
+      category,
+      createdAt,
+      updatedAt,
+      const DeepCollectionEquality().hash(_workouts));
+
+  /// Create a copy of WorkoutSummary
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$WorkoutSummaryImplCopyWith<_$WorkoutSummaryImpl> get copyWith =>
+      __$$WorkoutSummaryImplCopyWithImpl<_$WorkoutSummaryImpl>(
+          this, _$identity);
+}
+
+abstract class _WorkoutSummary implements WorkoutSummary {
+  const factory _WorkoutSummary(
+      {required final int id,
+      required final String name,
+      required final int totalDuration,
+      required final String category,
+      required final DateTime createdAt,
+      required final DateTime updatedAt,
+      required final List<WorkoutId> workouts}) = _$WorkoutSummaryImpl;
+
+  @override
+  int get id;
+  @override
+  String get name;
+  @override
+  int get totalDuration;
+  @override
+  String get category;
+  @override
+  DateTime get createdAt;
+  @override
+  DateTime get updatedAt;
+  @override
+  List<WorkoutId> get workouts;
+
+  /// Create a copy of WorkoutSummary
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$WorkoutSummaryImplCopyWith<_$WorkoutSummaryImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}

@@ -43,6 +43,8 @@ dependencies:
   json_annotation: ^4.9.0
   flutter_hooks: ^0.20.5
   hooks_riverpod: ^2.5.4
+  retrofit: ^4.4.2
+  dio: ^5.8.0+1
 
 dev_dependencies:
   flutter_test:
@@ -62,6 +64,7 @@ dev_dependencies:
   json_serializable: ^6.8.0
 
   mockito: ^5.0.17
+  retrofit_generator: ^9.1.9
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
