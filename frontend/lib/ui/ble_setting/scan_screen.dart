@@ -20,7 +20,9 @@ class ScanScreen extends HookConsumerWidget {
         title: const Text("Find Devices", style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.black,
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
           icon: const Icon(
             Icons.arrow_back,
             color: Colors.white,
