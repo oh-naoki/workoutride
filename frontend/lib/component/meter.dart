@@ -1,16 +1,28 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:workoutride/ui/workout/workout_screen_state_notifier.dart';
 
 class Meter extends StatelessWidget {
-  const Meter({super.key});
+  final int power;
+  final int cadence;
+
+  const Meter({
+    super.key,
+    required this.power,
+    required this.cadence,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: SizedBox.expand(
         child: CustomPaint(
-          painter: _MeterPainter(),
+          painter: _MeterPainter(
+            power: power,
+            cadence: cadence,
+          ),
         ),
       ),
     );
@@ -18,6 +30,14 @@ class Meter extends StatelessWidget {
 }
 
 class _MeterPainter extends CustomPainter {
+  final int power;
+  final int cadence;
+
+  _MeterPainter({
+    required this.power,
+    required this.cadence,
+  });
+
   @override
   void paint(Canvas canvas, Size size) {
     // ドーナツの中心点と半径を計算
@@ -180,9 +200,9 @@ class _MeterPainter extends CustomPainter {
 
   void _drawCenteredText(Canvas canvas, Offset center) {
     // 上のテキスト
-    const TextSpan topTextSpan = TextSpan(
-      text: '300w',
-      style: TextStyle(
+    final TextSpan topTextSpan = TextSpan(
+      text: '${power}w',
+      style: const TextStyle(
         color: Colors.white,
         fontSize: 60,
         fontWeight: FontWeight.bold,
@@ -190,9 +210,9 @@ class _MeterPainter extends CustomPainter {
     );
 
     // 下のテキスト
-    const TextSpan bottomTextSpan = TextSpan(
-      text: '90rpm',
-      style: TextStyle(
+    final TextSpan bottomTextSpan = TextSpan(
+      text: '${cadence}rpm',
+      style: const TextStyle(
         color: Colors.white,
         fontSize: 32,
         fontWeight: FontWeight.bold,
@@ -236,5 +256,6 @@ class _MeterPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _MeterPainter oldDelegate) => 
+    oldDelegate.power != power || oldDelegate.cadence != cadence;
 }

@@ -18,11 +18,14 @@ class WorkoutScreen extends ConsumerWidget {
         child: Column(
           children: [
             // メーターを表示するエリア
-            const Expanded(
+            Expanded(
               flex: 2,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
-                child: Meter(),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Meter(
+                  power: uiState.power,
+                  cadence: uiState.cadence,
+                ),
               ),
             ),
             

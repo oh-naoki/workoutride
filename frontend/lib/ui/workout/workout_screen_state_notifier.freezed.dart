@@ -18,6 +18,8 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$WorkoutScreenUiState {
   List<WorkoutBlock> get workoutBlocks => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
+  int get power => throw _privateConstructorUsedError;
+  int get cadence => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
 
   /// Create a copy of WorkoutScreenUiState
@@ -34,7 +36,11 @@ abstract class $WorkoutScreenUiStateCopyWith<$Res> {
       _$WorkoutScreenUiStateCopyWithImpl<$Res, WorkoutScreenUiState>;
   @useResult
   $Res call(
-      {List<WorkoutBlock> workoutBlocks, bool isLoading, String? errorMessage});
+      {List<WorkoutBlock> workoutBlocks,
+      bool isLoading,
+      int power,
+      int cadence,
+      String? errorMessage});
 }
 
 /// @nodoc
@@ -55,6 +61,8 @@ class _$WorkoutScreenUiStateCopyWithImpl<$Res,
   $Res call({
     Object? workoutBlocks = null,
     Object? isLoading = null,
+    Object? power = null,
+    Object? cadence = null,
     Object? errorMessage = freezed,
   }) {
     return _then(_value.copyWith(
@@ -66,6 +74,14 @@ class _$WorkoutScreenUiStateCopyWithImpl<$Res,
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
+      power: null == power
+          ? _value.power
+          : power // ignore: cast_nullable_to_non_nullable
+              as int,
+      cadence: null == cadence
+          ? _value.cadence
+          : cadence // ignore: cast_nullable_to_non_nullable
+              as int,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -83,7 +99,11 @@ abstract class _$$WorkoutScreenUiStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {List<WorkoutBlock> workoutBlocks, bool isLoading, String? errorMessage});
+      {List<WorkoutBlock> workoutBlocks,
+      bool isLoading,
+      int power,
+      int cadence,
+      String? errorMessage});
 }
 
 /// @nodoc
@@ -101,6 +121,8 @@ class __$$WorkoutScreenUiStateImplCopyWithImpl<$Res>
   $Res call({
     Object? workoutBlocks = null,
     Object? isLoading = null,
+    Object? power = null,
+    Object? cadence = null,
     Object? errorMessage = freezed,
   }) {
     return _then(_$WorkoutScreenUiStateImpl(
@@ -112,6 +134,14 @@ class __$$WorkoutScreenUiStateImplCopyWithImpl<$Res>
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
+      power: null == power
+          ? _value.power
+          : power // ignore: cast_nullable_to_non_nullable
+              as int,
+      cadence: null == cadence
+          ? _value.cadence
+          : cadence // ignore: cast_nullable_to_non_nullable
+              as int,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -128,6 +158,8 @@ class _$WorkoutScreenUiStateImpl
   const _$WorkoutScreenUiStateImpl(
       {final List<WorkoutBlock> workoutBlocks = const [],
       this.isLoading = false,
+      this.power = 0,
+      this.cadence = 0,
       this.errorMessage})
       : _workoutBlocks = workoutBlocks;
 
@@ -144,11 +176,17 @@ class _$WorkoutScreenUiStateImpl
   @JsonKey()
   final bool isLoading;
   @override
+  @JsonKey()
+  final int power;
+  @override
+  @JsonKey()
+  final int cadence;
+  @override
   final String? errorMessage;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'WorkoutScreenUiState(workoutBlocks: $workoutBlocks, isLoading: $isLoading, errorMessage: $errorMessage)';
+    return 'WorkoutScreenUiState(workoutBlocks: $workoutBlocks, isLoading: $isLoading, power: $power, cadence: $cadence, errorMessage: $errorMessage)';
   }
 
   @override
@@ -158,6 +196,8 @@ class _$WorkoutScreenUiStateImpl
       ..add(DiagnosticsProperty('type', 'WorkoutScreenUiState'))
       ..add(DiagnosticsProperty('workoutBlocks', workoutBlocks))
       ..add(DiagnosticsProperty('isLoading', isLoading))
+      ..add(DiagnosticsProperty('power', power))
+      ..add(DiagnosticsProperty('cadence', cadence))
       ..add(DiagnosticsProperty('errorMessage', errorMessage));
   }
 
@@ -170,6 +210,8 @@ class _$WorkoutScreenUiStateImpl
                 .equals(other._workoutBlocks, _workoutBlocks) &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
+            (identical(other.power, power) || other.power == power) &&
+            (identical(other.cadence, cadence) || other.cadence == cadence) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage));
   }
@@ -179,6 +221,8 @@ class _$WorkoutScreenUiStateImpl
       runtimeType,
       const DeepCollectionEquality().hash(_workoutBlocks),
       isLoading,
+      power,
+      cadence,
       errorMessage);
 
   /// Create a copy of WorkoutScreenUiState
@@ -196,12 +240,18 @@ abstract class _WorkoutScreenUiState implements WorkoutScreenUiState {
   const factory _WorkoutScreenUiState(
       {final List<WorkoutBlock> workoutBlocks,
       final bool isLoading,
+      final int power,
+      final int cadence,
       final String? errorMessage}) = _$WorkoutScreenUiStateImpl;
 
   @override
   List<WorkoutBlock> get workoutBlocks;
   @override
   bool get isLoading;
+  @override
+  int get power;
+  @override
+  int get cadence;
   @override
   String? get errorMessage;
 
