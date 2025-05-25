@@ -7,7 +7,7 @@ part of 'get_power_meter_data_use_case.dart';
 // **************************************************************************
 
 String _$getPowerMeterDataUseCaseHash() =>
-    r'16adc4bdbae082ecab776e8623c2b663f617a694';
+    r'cc3ee392b016efd0654040602b831910b7676f3b';
 
 /// See also [getPowerMeterDataUseCase].
 @ProviderFor(getPowerMeterDataUseCase)

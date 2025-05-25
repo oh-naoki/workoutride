@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workoutride/component/meter.dart';
+import 'package:workoutride/ui/workout/developer_menu.dart';
 import 'package:workoutride/ui/workout/workout_screen_state_notifier.dart';
 
 class WorkoutScreen extends ConsumerWidget {
@@ -8,12 +9,29 @@ class WorkoutScreen extends ConsumerWidget {
   
   const WorkoutScreen({super.key, required this.workoutId});
 
+  void _showDeveloperMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const DeveloperMenu(),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final uiState = ref.watch(workoutScreenStateNotifierProvider(workoutId));
 
     return Scaffold(
       backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.bug_report, color: Colors.white),
+            onPressed: () => _showDeveloperMenu(context),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Column(
           children: [

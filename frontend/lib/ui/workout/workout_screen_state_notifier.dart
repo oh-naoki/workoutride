@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -33,19 +34,33 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
     _workoutId = workoutId;
     state = const WorkoutScreenUiState(isLoading: true);
     _getWorkoutBlocksUseCase = ref.read(getWorkoutBlocksUseCaseProvider);
-    _getPowerMeterDataUseCase = ref.read(getCalculatedPowerMeterDataUseCaseProvider);
+    _getPowerMeterDataUseCase = ref.watch(getCalculatedPowerMeterDataUseCaseProvider);
     _fetchWorkoutBlocks();
     _startListeningToPowerMeterData();
+
+    ref.onDispose(() {
+      _cancelCurrentListener();
+    });
+
     return const WorkoutScreenUiState(isLoading: true);
   }
 
   void _startListeningToPowerMeterData() {
-    _getPowerMeterDataUseCase().listen((powerMeterData) {
+    _cancelCurrentListener();
+    
+    _currentListener = _getPowerMeterDataUseCase().listen((powerMeterData) {
       state = state.copyWith(
         power: powerMeterData.power,
         cadence: powerMeterData.cadence,
       );
     });
+  }
+
+  StreamSubscription? _currentListener;
+
+  void _cancelCurrentListener() {
+    _currentListener?.cancel();
+    _currentListener = null;
   }
 
   Future<void> _fetchWorkoutBlocks() async {

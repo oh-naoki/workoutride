@@ -3,13 +3,12 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i5;
+import 'dart:async' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:workoutride/data/ble_connector.dart' as _i2;
-import 'package:workoutride/domain/model/power_meter_data.dart' as _i3;
+import 'package:workoutride/domain/model/power_meter_data.dart' as _i2;
 import 'package:workoutride/domain/usecase/get_power_meter_data_use_case.dart'
-    as _i4;
+    as _i3;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -25,19 +24,9 @@ import 'package:workoutride/domain/usecase/get_power_meter_data_use_case.dart'
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeBleConnector_0 extends _i1.SmartFake implements _i2.BleConnector {
-  _FakeBleConnector_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakePowerMeterData_1 extends _i1.SmartFake
-    implements _i3.PowerMeterData {
-  _FakePowerMeterData_1(
+class _FakePowerMeterData_0 extends _i1.SmartFake
+    implements _i2.PowerMeterData {
+  _FakePowerMeterData_0(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -50,19 +39,10 @@ class _FakePowerMeterData_1 extends _i1.SmartFake
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockGetPowerMeterDataUseCase extends _i1.Mock
-    implements _i4.GetPowerMeterDataUseCase {
+    implements _i3.GetPowerMeterDataUseCase {
   MockGetPowerMeterDataUseCase() {
     _i1.throwOnMissingStub(this);
   }
-
-  @override
-  _i2.BleConnector get bleConnector => (super.noSuchMethod(
-        Invocation.getter(#bleConnector),
-        returnValue: _FakeBleConnector_0(
-          this,
-          Invocation.getter(#bleConnector),
-        ),
-      ) as _i2.BleConnector);
 
   @override
   int get lastCrankRevolutions => (super.noSuchMethod(
@@ -95,26 +75,26 @@ class MockGetPowerMeterDataUseCase extends _i1.Mock
       );
 
   @override
-  _i5.Stream<_i3.PowerMeterData> call() => (super.noSuchMethod(
+  _i4.Stream<_i2.PowerMeterData> call() => (super.noSuchMethod(
         Invocation.method(
           #call,
           [],
         ),
-        returnValue: _i5.Stream<_i3.PowerMeterData>.empty(),
-      ) as _i5.Stream<_i3.PowerMeterData>);
+        returnValue: _i4.Stream<_i2.PowerMeterData>.empty(),
+      ) as _i4.Stream<_i2.PowerMeterData>);
 
   @override
-  _i3.PowerMeterData processData(List<int>? value) => (super.noSuchMethod(
+  _i2.PowerMeterData processData(List<int>? value) => (super.noSuchMethod(
         Invocation.method(
           #processData,
           [value],
         ),
-        returnValue: _FakePowerMeterData_1(
+        returnValue: _FakePowerMeterData_0(
           this,
           Invocation.method(
             #processData,
             [value],
           ),
         ),
-      ) as _i3.PowerMeterData);
+      ) as _i2.PowerMeterData);
 }

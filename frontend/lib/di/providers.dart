@@ -1,13 +1,57 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workoutride/data/remote/api/workout_api_client.dart';
 import 'package:workoutride/data/remote/workout_remote_data_source.dart';
 import 'package:workoutride/data/repository/workout_repository_impl.dart';
 import 'package:workoutride/domain/repository/workout_repository.dart';
 import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart';
 import 'package:workoutride/domain/usecase/workout/get_workout_summaries_use_case.dart';
+import 'package:workoutride/data/ble_connector.dart';
+import 'package:workoutride/data/power_meter_data_source.dart';
 
 part 'providers.g.dart';
+
+const _mockModeKey = 'mock_mode';
+const _mockPatternKey = 'mock_pattern';
+
+@Riverpod(keepAlive: true)
+SharedPreferences sharedPreferences(SharedPreferencesRef ref) {
+  throw UnimplementedError();
+}
+
+@Riverpod(keepAlive: true)
+class MockModeState extends _$MockModeState {
+  @override
+  bool build() {
+    // SharedPreferencesから初期値を読み込む
+    return ref.read(sharedPreferencesProvider).getBool(_mockModeKey) ?? false;
+  }
+
+  void toggle() {
+    state = !state;
+    // 状態を永続化
+    ref.read(sharedPreferencesProvider).setBool(_mockModeKey, state);
+  }
+}
+
+@Riverpod(keepAlive: true)
+class MockPatternState extends _$MockPatternState {
+  @override
+  MockPattern build() {
+    // SharedPreferencesから初期値を読み込む
+    final savedPattern = ref.read(sharedPreferencesProvider).getString(_mockPatternKey);
+    return savedPattern != null 
+      ? MockPattern.values.firstWhere((p) => p.name == savedPattern)
+      : MockPattern.warmup;
+  }
+
+  void setPattern(MockPattern pattern) {
+    state = pattern;
+    // 状態を永続化
+    ref.read(sharedPreferencesProvider).setString(_mockPatternKey, pattern.name);
+  }
+}
 
 // UseCaseプロバイダー
 @riverpod
@@ -44,4 +88,15 @@ WorkoutRemoteDataSource workoutRemoteDataSource(WorkoutRemoteDataSourceRef ref) 
 @riverpod
 WorkoutRepository workoutRepository(WorkoutRepositoryRef ref) {
   return WorkoutRepositoryImpl(ref.read(workoutRemoteDataSourceProvider));
+}
+
+@riverpod
+PowerMeterDataSource powerMeterDataSource(PowerMeterDataSourceRef ref) {
+  final isMock = ref.watch(mockModeStateProvider);
+  if (isMock) {
+    final pattern = ref.watch(mockPatternStateProvider);
+    return MockPowerMeterDataSource(pattern);
+  } else {
+    return BlePowerMeterDataSource(ref.read(bleConnectorProvider));
+  }
 }
