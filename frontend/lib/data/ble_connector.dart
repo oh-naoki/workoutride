@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'ble_connector.g.dart';
 
@@ -12,11 +13,18 @@ BleConnector bleConnector(BleConnectorRef ref) {
 }
 
 class BleConnector {
-  late final String deviceId;
+  static const String _deviceIdKey = 'last_connected_device_id';
+  late String deviceId;
 
   Future<void> initialize() async {
     if (Platform.isAndroid) {
       await FlutterBluePlus.turnOn();
+    }
+    // 保存されているdeviceIdがあれば読み込む
+    final prefs = await SharedPreferences.getInstance();
+    final savedDeviceId = prefs.getString(_deviceIdKey);
+    if (savedDeviceId != null) {
+      deviceId = savedDeviceId;
     }
   }
 
@@ -47,7 +55,10 @@ class BleConnector {
   }
 
   Future<void> connect(String deviceId) async {
-    // TODO: deviceId を永続化する
+    // deviceIdを永続化
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_deviceIdKey, deviceId);
+    
     this.deviceId = deviceId;
     final device = BluetoothDevice.fromId(deviceId);
     await device.connect();
