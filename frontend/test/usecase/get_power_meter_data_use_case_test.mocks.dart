@@ -3,11 +3,10 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
+import 'dart:async' as _i3;
 
-import 'package:flutter_blue_plus/flutter_blue_plus.dart' as _i5;
+import 'package:flutter_blue_plus/flutter_blue_plus.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i3;
 import 'package:workoutride/data/ble_connector.dart' as _i2;
 
 // ignore_for_file: type=lint
@@ -33,15 +32,6 @@ class MockBleConnector extends _i1.Mock implements _i2.BleConnector {
   }
 
   @override
-  String get deviceId => (super.noSuchMethod(
-        Invocation.getter(#deviceId),
-        returnValue: _i3.dummyValue<String>(
-          this,
-          Invocation.getter(#deviceId),
-        ),
-      ) as String);
-
-  @override
   set deviceId(String? _deviceId) => super.noSuchMethod(
         Invocation.setter(
           #deviceId,
@@ -51,40 +41,40 @@ class MockBleConnector extends _i1.Mock implements _i2.BleConnector {
       );
 
   @override
-  _i4.Future<void> initialize() => (super.noSuchMethod(
+  _i3.Future<void> initialize() => (super.noSuchMethod(
         Invocation.method(
           #initialize,
           [],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i4.Stream<List<_i5.ScanResult>> scan() => (super.noSuchMethod(
+  _i3.Stream<List<_i4.ScanResult>> scan() => (super.noSuchMethod(
         Invocation.method(
           #scan,
           [],
         ),
-        returnValue: _i4.Stream<List<_i5.ScanResult>>.empty(),
-      ) as _i4.Stream<List<_i5.ScanResult>>);
+        returnValue: _i3.Stream<List<_i4.ScanResult>>.empty(),
+      ) as _i3.Stream<List<_i4.ScanResult>>);
 
   @override
-  _i4.Future<void> connect(String? deviceId) => (super.noSuchMethod(
+  _i3.Future<void> connect(String? deviceId) => (super.noSuchMethod(
         Invocation.method(
           #connect,
           [deviceId],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i4.Stream<List<int>> notify(String? uuid) => (super.noSuchMethod(
+  _i3.Stream<List<int>> notify(String? uuid) => (super.noSuchMethod(
         Invocation.method(
           #notify,
           [uuid],
         ),
-        returnValue: _i4.Stream<List<int>>.empty(),
-      ) as _i4.Stream<List<int>>);
+        returnValue: _i3.Stream<List<int>>.empty(),
+      ) as _i3.Stream<List<int>>);
 }

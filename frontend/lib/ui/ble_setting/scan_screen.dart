@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:workoutride/data/ble_connector.dart';
 import 'package:workoutride/ui/ble_setting/scan_screen_state_notifier.dart';
 
 class ScanScreen extends HookConsumerWidget {
@@ -9,11 +10,20 @@ class ScanScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     useEffect(() {
-      ref.read(scanScreenStateNotifierProvider.notifier).scanDevice();
+      ref.read(bleConnectorProvider).initialize().then((_) {
+        ref.read(scanScreenStateNotifierProvider.notifier).scanDevice();
+      });
       return null;
     }, []);
 
-    final scanResults = ref.watch(scanScreenStateNotifierProvider).scanResults;
+    final uiState = ref.watch(scanScreenStateNotifierProvider);
+
+    useEffect(() {
+      if (uiState.isConnected) {
+        Navigator.of(context).pop();
+      }
+      return null;
+    }, [uiState.isConnected]);
 
     return Scaffold(
       appBar: AppBar(
@@ -30,19 +40,38 @@ class ScanScreen extends HookConsumerWidget {
         ),
       ),
       backgroundColor: Colors.black,
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            for (final result in scanResults)
-              ListTile(
-                title: result.deviceName,
-                onTap: () {
-                  ref.read(scanScreenStateNotifierProvider.notifier).onDeviceTap(result);
-                },
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                if (uiState.errorMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      uiState.errorMessage!,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  ),
+                for (final result in uiState.scanResults)
+                  ListTile(
+                    title: result.deviceName,
+                    onTap: () {
+                      ref.read(scanScreenStateNotifierProvider.notifier).onDeviceTap(result);
+                    },
+                  ),
+                const Padding(padding: EdgeInsets.symmetric(vertical: 16)),
+              ],
+            ),
+          ),
+          if (uiState.isConnecting)
+            Container(
+              color: Colors.black.withOpacity(0.5),
+              child: const Center(
+                child: CircularProgressIndicator(),
               ),
-            const Padding(padding: EdgeInsets.symmetric(vertical: 16)),
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }

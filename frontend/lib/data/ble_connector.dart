@@ -14,17 +14,10 @@ BleConnector bleConnector(BleConnectorRef ref) {
 
 class BleConnector {
   static const String _deviceIdKey = 'last_connected_device_id';
-  late String deviceId;
 
   Future<void> initialize() async {
     if (Platform.isAndroid) {
       await FlutterBluePlus.turnOn();
-    }
-    // 保存されているdeviceIdがあれば読み込む
-    final prefs = await SharedPreferences.getInstance();
-    final savedDeviceId = prefs.getString(_deviceIdKey);
-    if (savedDeviceId != null) {
-      deviceId = savedDeviceId;
     }
   }
 
@@ -59,28 +52,47 @@ class BleConnector {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_deviceIdKey, deviceId);
     
-    this.deviceId = deviceId;
     final device = BluetoothDevice.fromId(deviceId);
     await device.connect();
   }
 
   // notification の登録とデータを返したい
-  Stream<List<int>> notify(String uuid) {
-    final StreamController<List<int>> controller = StreamController<List<int>>();
-    final device = BluetoothDevice.fromId(deviceId);
-    device.connect();
-    device.discoverServices().then((services) {
+  Stream<List<int>> notify(String uuid) async* {
+    try {
+      // SharedPreferencesからdeviceIdを取得
+      final prefs = await SharedPreferences.getInstance();
+      final savedDeviceId = prefs.getString(_deviceIdKey);
+      
+      if (savedDeviceId == null) {
+        throw Exception('デバイスが接続されていません');
+      }
+
+      final device = BluetoothDevice.fromId(savedDeviceId);
+      
+      // 接続を待機
+      await device.connect();
+      
+      // サービスディスカバリーを待機
+      final services = await device.discoverServices();
+      
+      bool characteristicFound = false;
       for (var service in services) {
         for (var characteristic in service.characteristics) {
           if (characteristic.uuid == Guid(uuid)) {
-            characteristic.setNotifyValue(true);
-            characteristic.onValueReceived.listen((value) {
-              controller.add(value);
-            });
+            characteristicFound = true;
+            await characteristic.setNotifyValue(true);
+            await for (final value in characteristic.onValueReceived) {
+              yield value;
+            }
           }
         }
       }
-    });
-    return controller.stream;
+      
+      if (!characteristicFound) {
+        throw Exception('指定されたUUIDのキャラクタリスティックが見つかりませんでした');
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 }
