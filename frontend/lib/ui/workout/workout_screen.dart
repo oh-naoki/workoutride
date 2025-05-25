@@ -135,7 +135,7 @@ class WorkoutScreen extends ConsumerWidget {
               children: [
                 Text(
                   name,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                   ),

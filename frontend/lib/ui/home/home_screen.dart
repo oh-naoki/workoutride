@@ -47,10 +47,10 @@ class HomeScreen extends ConsumerWidget {
                 } else if (uiState.errorMessage != null) {
                   return Center(
                     child: Padding(
-                      padding: EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(16.0),
                       child: Text(
                         'エラーが発生しました: ${uiState.errorMessage}',
-                        style: TextStyle(color: Colors.red),
+                        style: const TextStyle(color: Colors.red),
                       ),
                     ),
                   );

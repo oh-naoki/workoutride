@@ -28,7 +28,7 @@ class WorkoutDetailScreen extends ConsumerWidget {
       backgroundColor: Colors.black,
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             children: [
               WorkoutDetailHeader(workoutId: workoutId),
@@ -116,10 +116,10 @@ class WorkoutDetailBody extends StatelessWidget {
             } else if (uiState.errorMessage != null) {
               return Center(
                 child: Padding(
-                  padding: EdgeInsets.only(top: 16.0),
+                  padding: const EdgeInsets.only(top: 16.0),
                   child: Text(
                     'エラーが発生しました: ${uiState.errorMessage}',
-                    style: TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.red),
                   ),
                 ),
               );
@@ -201,7 +201,7 @@ class WorkoutMenuItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(6),
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
