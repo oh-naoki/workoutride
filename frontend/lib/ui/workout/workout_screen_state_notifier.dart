@@ -16,6 +16,8 @@ class WorkoutScreenUiState with _$WorkoutScreenUiState {
     @Default(false) bool isLoading,
     @Default(0) int power,
     @Default(0) int cadence,
+    @Default(0) int maxPower,
+    @Default(0) int targetPower,
     String? errorMessage,
   }) = _WorkoutScreenUiState;
 }
@@ -50,9 +52,15 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
     try {
       state = state.copyWith(isLoading: true, errorMessage: null);
       final blocks = await _getWorkoutBlocksUseCase.call(_workoutId);
+      
+      // 最大パワー値を計算（全ブロックの中で最大のtargetPowerを取得）
+      final maxTargetPower = blocks.fold(0, (max, block) => block.targetPower > max ? block.targetPower : max);
+      
       state = state.copyWith(
         workoutBlocks: blocks,
         isLoading: false,
+        maxPower: (maxTargetPower * 1.5).toInt(), // 最大値の1.5倍を設定
+        targetPower: blocks.isNotEmpty ? blocks.first.targetPower : 0, // 現在のブロックのターゲットパワー
       );
     } catch (e) {
       state = state.copyWith(

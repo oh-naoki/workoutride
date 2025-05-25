@@ -25,6 +25,8 @@ class WorkoutScreen extends ConsumerWidget {
                 child: Meter(
                   power: uiState.power,
                   cadence: uiState.cadence,
+                  maxPower: uiState.maxPower,
+                  targetPower: uiState.targetPower,
                 ),
               ),
             ),

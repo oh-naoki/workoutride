@@ -7,11 +7,15 @@ import 'package:workoutride/ui/workout/workout_screen_state_notifier.dart';
 class Meter extends StatelessWidget {
   final int power;
   final int cadence;
+  final int maxPower;
+  final int targetPower;
 
   const Meter({
     super.key,
     required this.power,
     required this.cadence,
+    required this.maxPower,
+    required this.targetPower,
   });
 
   @override
@@ -22,6 +26,8 @@ class Meter extends StatelessWidget {
           painter: _MeterPainter(
             power: power,
             cadence: cadence,
+            maxPower: maxPower,
+            targetPower: targetPower,
           ),
         ),
       ),
@@ -32,10 +38,14 @@ class Meter extends StatelessWidget {
 class _MeterPainter extends CustomPainter {
   final int power;
   final int cadence;
+  final int maxPower;
+  final int targetPower;
 
   _MeterPainter({
     required this.power,
     required this.cadence,
+    required this.maxPower,
+    required this.targetPower,
   });
 
   @override
@@ -58,13 +68,14 @@ class _MeterPainter extends CustomPainter {
     canvas.drawPath(finalPath, donutPaint);
 
     // 角度の計算と線の描画
-    const double position = 0.6; // 0から1の間の値
+    final double powerPosition = maxPower > 0 ? power / maxPower : 0; // 現在のパワー位置
+    final double targetPosition = maxPower > 0 ? targetPower / maxPower : 0; // ターゲットパワー位置
 
-    // 弧を描画
-    _drawArcAtPosition(canvas, center, innerRadius, outerRadius, position);
+    // 弧を描画（ターゲットパワーの位置に）
+    _drawArcAtPosition(canvas, center, innerRadius, outerRadius, targetPosition);
 
-    // 線を描画
-    _drawIndicatorLine(canvas, center, innerRadius, outerRadius, position);
+    // 線を描画（現在のパワーの位置に）
+    _drawIndicatorLine(canvas, center, innerRadius, outerRadius, powerPosition);
 
     _drawCenteredText(canvas, center);
   }
@@ -257,5 +268,8 @@ class _MeterPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _MeterPainter oldDelegate) => 
-    oldDelegate.power != power || oldDelegate.cadence != cadence;
+    oldDelegate.power != power || 
+    oldDelegate.cadence != cadence ||
+    oldDelegate.maxPower != maxPower ||
+    oldDelegate.targetPower != targetPower;
 }

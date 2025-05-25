@@ -32,15 +32,6 @@ class MockBleConnector extends _i1.Mock implements _i2.BleConnector {
   }
 
   @override
-  set deviceId(String? _deviceId) => super.noSuchMethod(
-        Invocation.setter(
-          #deviceId,
-          _deviceId,
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
   _i3.Future<void> initialize() => (super.noSuchMethod(
         Invocation.method(
           #initialize,
