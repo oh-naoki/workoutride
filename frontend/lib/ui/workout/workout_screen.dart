@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workoutride/component/meter.dart';
 import 'package:workoutride/ui/workout/workout_screen_state_notifier.dart';
-import 'package:workoutride/ui/workout_detail/workout_detail_screen.dart';
 
 class WorkoutScreen extends ConsumerWidget {
-  const WorkoutScreen({super.key});
+  final int workoutId;
+  
+  const WorkoutScreen({super.key, required this.workoutId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final uiState = ref.watch(workoutScreenStateNotifierProvider);
+    final uiState = ref.watch(workoutScreenStateNotifierProvider(workoutId));
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -56,35 +57,26 @@ class WorkoutScreen extends ConsumerWidget {
                           style: const TextStyle(color: Colors.red),
                         ),
                       );
-                    } else if (uiState.workoutSummaries.isEmpty) {
+                    } else if (uiState.workoutBlocks.isEmpty) {
                       return const Center(
                         child: Text(
-                          'ワークアウトがありません',
+                          'ワークアウトブロックがありません',
                           style: TextStyle(color: Colors.white),
                         ),
                       );
                     } else {
                       return ListView.builder(
-                        itemCount: uiState.workoutSummaries.length,
+                        itemCount: uiState.workoutBlocks.length,
                         itemBuilder: (context, index) {
-                          final summary = uiState.workoutSummaries[index];
+                          final block = uiState.workoutBlocks[index];
                           return GestureDetector(
                             onTap: () {
-                              if (summary.workouts.isNotEmpty) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => WorkoutDetailScreen(
-                                      workoutId: summary.workouts[0].id,
-                                    ),
-                                  ),
-                                );
-                              }
+                              // ブロックをタップした時の処理
                             },
                             child: _buildWorkoutCard(
-                              name: summary.name,
-                              power: summary.totalDuration,
-                              time: _formatDuration(summary.totalDuration),
+                              name: block.blockType,
+                              power: block.targetPower,
+                              time: _formatDuration(block.duration),
                               isActive: index == 0,
                             ),
                           );

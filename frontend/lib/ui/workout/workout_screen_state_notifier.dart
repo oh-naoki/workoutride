@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:workoutride/di/providers.dart';
-import 'package:workoutride/domain/model/workout/workout_summary.dart';
-import 'package:workoutride/domain/usecase/workout/get_workout_summaries_use_case.dart';
+import 'package:workoutride/domain/model/workout/workout_block.dart';
+import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart';
 
 part 'workout_screen_state_notifier.freezed.dart';
 part 'workout_screen_state_notifier.g.dart';
@@ -11,30 +11,32 @@ part 'workout_screen_state_notifier.g.dart';
 @freezed
 class WorkoutScreenUiState with _$WorkoutScreenUiState {
   const factory WorkoutScreenUiState({
-    @Default([]) List<WorkoutSummary> workoutSummaries,
+    @Default([]) List<WorkoutBlock> workoutBlocks,
     @Default(false) bool isLoading,
     String? errorMessage,
   }) = _WorkoutScreenUiState;
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
-  late final GetWorkoutSummariesUseCase _getWorkoutSummariesUseCase;
+  late final GetWorkoutBlocksUseCase _getWorkoutBlocksUseCase;
+  late int _workoutId;
 
   @override
-  WorkoutScreenUiState build() {
+  WorkoutScreenUiState build(int workoutId) {
+    _workoutId = workoutId;
     state = const WorkoutScreenUiState(isLoading: true);
-    _getWorkoutSummariesUseCase = ref.read(getWorkoutSummariesUseCaseProvider);
-    _fetchWorkoutSummaries();
-    return state;
+    _getWorkoutBlocksUseCase = ref.read(getWorkoutBlocksUseCaseProvider);
+    _fetchWorkoutBlocks();
+    return const WorkoutScreenUiState(isLoading: true);
   }
 
-  Future<void> _fetchWorkoutSummaries() async {
+  Future<void> _fetchWorkoutBlocks() async {
     try {
       state = state.copyWith(isLoading: true, errorMessage: null);
-      final summaries = await _getWorkoutSummariesUseCase.call();
+      final blocks = await _getWorkoutBlocksUseCase.call(_workoutId);
       state = state.copyWith(
-        workoutSummaries: summaries,
+        workoutBlocks: blocks,
         isLoading: false,
       );
     } catch (e) {
@@ -45,7 +47,7 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
     }
   }
 
-  Future<void> refreshWorkoutSummaries() async {
-    await _fetchWorkoutSummaries();
+  Future<void> refreshWorkoutBlocks() async {
+    await _fetchWorkoutBlocks();
   }
 }

@@ -16,8 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$WorkoutScreenUiState {
-  List<WorkoutSummary> get workoutSummaries =>
-      throw _privateConstructorUsedError;
+  List<WorkoutBlock> get workoutBlocks => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
 
@@ -35,9 +34,7 @@ abstract class $WorkoutScreenUiStateCopyWith<$Res> {
       _$WorkoutScreenUiStateCopyWithImpl<$Res, WorkoutScreenUiState>;
   @useResult
   $Res call(
-      {List<WorkoutSummary> workoutSummaries,
-      bool isLoading,
-      String? errorMessage});
+      {List<WorkoutBlock> workoutBlocks, bool isLoading, String? errorMessage});
 }
 
 /// @nodoc
@@ -56,15 +53,15 @@ class _$WorkoutScreenUiStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? workoutSummaries = null,
+    Object? workoutBlocks = null,
     Object? isLoading = null,
     Object? errorMessage = freezed,
   }) {
     return _then(_value.copyWith(
-      workoutSummaries: null == workoutSummaries
-          ? _value.workoutSummaries
-          : workoutSummaries // ignore: cast_nullable_to_non_nullable
-              as List<WorkoutSummary>,
+      workoutBlocks: null == workoutBlocks
+          ? _value.workoutBlocks
+          : workoutBlocks // ignore: cast_nullable_to_non_nullable
+              as List<WorkoutBlock>,
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
@@ -86,9 +83,7 @@ abstract class _$$WorkoutScreenUiStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {List<WorkoutSummary> workoutSummaries,
-      bool isLoading,
-      String? errorMessage});
+      {List<WorkoutBlock> workoutBlocks, bool isLoading, String? errorMessage});
 }
 
 /// @nodoc
@@ -104,15 +99,15 @@ class __$$WorkoutScreenUiStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? workoutSummaries = null,
+    Object? workoutBlocks = null,
     Object? isLoading = null,
     Object? errorMessage = freezed,
   }) {
     return _then(_$WorkoutScreenUiStateImpl(
-      workoutSummaries: null == workoutSummaries
-          ? _value._workoutSummaries
-          : workoutSummaries // ignore: cast_nullable_to_non_nullable
-              as List<WorkoutSummary>,
+      workoutBlocks: null == workoutBlocks
+          ? _value._workoutBlocks
+          : workoutBlocks // ignore: cast_nullable_to_non_nullable
+              as List<WorkoutBlock>,
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
@@ -131,19 +126,18 @@ class _$WorkoutScreenUiStateImpl
     with DiagnosticableTreeMixin
     implements _WorkoutScreenUiState {
   const _$WorkoutScreenUiStateImpl(
-      {final List<WorkoutSummary> workoutSummaries = const [],
+      {final List<WorkoutBlock> workoutBlocks = const [],
       this.isLoading = false,
       this.errorMessage})
-      : _workoutSummaries = workoutSummaries;
+      : _workoutBlocks = workoutBlocks;
 
-  final List<WorkoutSummary> _workoutSummaries;
+  final List<WorkoutBlock> _workoutBlocks;
   @override
   @JsonKey()
-  List<WorkoutSummary> get workoutSummaries {
-    if (_workoutSummaries is EqualUnmodifiableListView)
-      return _workoutSummaries;
+  List<WorkoutBlock> get workoutBlocks {
+    if (_workoutBlocks is EqualUnmodifiableListView) return _workoutBlocks;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_workoutSummaries);
+    return EqualUnmodifiableListView(_workoutBlocks);
   }
 
   @override
@@ -154,7 +148,7 @@ class _$WorkoutScreenUiStateImpl
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'WorkoutScreenUiState(workoutSummaries: $workoutSummaries, isLoading: $isLoading, errorMessage: $errorMessage)';
+    return 'WorkoutScreenUiState(workoutBlocks: $workoutBlocks, isLoading: $isLoading, errorMessage: $errorMessage)';
   }
 
   @override
@@ -162,7 +156,7 @@ class _$WorkoutScreenUiStateImpl
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'WorkoutScreenUiState'))
-      ..add(DiagnosticsProperty('workoutSummaries', workoutSummaries))
+      ..add(DiagnosticsProperty('workoutBlocks', workoutBlocks))
       ..add(DiagnosticsProperty('isLoading', isLoading))
       ..add(DiagnosticsProperty('errorMessage', errorMessage));
   }
@@ -173,7 +167,7 @@ class _$WorkoutScreenUiStateImpl
         (other.runtimeType == runtimeType &&
             other is _$WorkoutScreenUiStateImpl &&
             const DeepCollectionEquality()
-                .equals(other._workoutSummaries, _workoutSummaries) &&
+                .equals(other._workoutBlocks, _workoutBlocks) &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
             (identical(other.errorMessage, errorMessage) ||
@@ -183,7 +177,7 @@ class _$WorkoutScreenUiStateImpl
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(_workoutSummaries),
+      const DeepCollectionEquality().hash(_workoutBlocks),
       isLoading,
       errorMessage);
 
@@ -200,12 +194,12 @@ class _$WorkoutScreenUiStateImpl
 
 abstract class _WorkoutScreenUiState implements WorkoutScreenUiState {
   const factory _WorkoutScreenUiState(
-      {final List<WorkoutSummary> workoutSummaries,
+      {final List<WorkoutBlock> workoutBlocks,
       final bool isLoading,
       final String? errorMessage}) = _$WorkoutScreenUiStateImpl;
 
   @override
-  List<WorkoutSummary> get workoutSummaries;
+  List<WorkoutBlock> get workoutBlocks;
   @override
   bool get isLoading;
   @override

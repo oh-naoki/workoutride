@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
+import 'package:workoutride/ui/workout/workout_screen.dart';
 import 'package:workoutride/ui/workout_detail/workout_detail_screen_state_notifier.dart';
 
 class WorkoutDetailScreen extends ConsumerWidget {
@@ -30,7 +31,7 @@ class WorkoutDetailScreen extends ConsumerWidget {
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             children: [
-              const WorkoutDetailHeader(),
+              WorkoutDetailHeader(workoutId: workoutId),
               WorkoutDetailBody(uiState: uiState),
             ],
           ),
@@ -40,11 +41,13 @@ class WorkoutDetailScreen extends ConsumerWidget {
   }
 }
 
-class WorkoutDetailHeader extends StatelessWidget {
-  const WorkoutDetailHeader({super.key});
+class WorkoutDetailHeader extends ConsumerWidget {
+  final int workoutId;
+  
+  const WorkoutDetailHeader({super.key, required this.workoutId});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16),
       child: Row(
@@ -59,7 +62,14 @@ class WorkoutDetailHeader extends StatelessWidget {
           ),
           const Spacer(),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => WorkoutScreen(workoutId: workoutId),
+                ),
+              );
+            },
             icon: const Icon(
               Icons.play_arrow,
               color: Colors.white,
