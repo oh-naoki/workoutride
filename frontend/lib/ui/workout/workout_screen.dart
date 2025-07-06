@@ -93,7 +93,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                   children: [
                     _buildControlButton(),
                     _buildPauseResumeButton(uiState.isPaused),
-                    _buildControlButton(),
+                    _buildStopButton(),
                   ],
                 ),
               ),
@@ -203,6 +203,72 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
           size: 30,
         ),
       ),
+    );
+  }
+
+  // ワークアウト終了ボタンを作成するメソッド
+  Widget _buildStopButton() {
+    return GestureDetector(
+      onTap: () {
+        _showStopWorkoutDialog();
+      },
+      child: Container(
+        width: 60,
+        height: 60,
+        decoration: BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Icon(
+          Icons.stop,
+          color: Colors.white,
+          size: 30,
+        ),
+      ),
+    );
+  }
+
+  // ワークアウト終了確認ダイアログを表示するメソッド
+  void _showStopWorkoutDialog() {
+    // まず一時停止する
+    final notifier = ref.read(workoutScreenStateNotifierProvider(widget.workoutId).notifier);
+    final uiState = ref.read(workoutScreenStateNotifierProvider(widget.workoutId));
+    final wasPaused = uiState.isPaused;
+    
+    if (!wasPaused) {
+      notifier.togglePauseResume();
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('ワークアウト終了'),
+          content: const Text('ワークアウトを終了しますか？'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                // キャンセル時は再開する（元々一時停止していなかった場合のみ）
+                if (!wasPaused) {
+                  notifier.togglePauseResume();
+                }
+              },
+              child: const Text('キャンセル'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                // ワークアウト終了して前画面に戻る
+                notifier.stopWorkout();
+                Navigator.of(context).pop();
+              },
+              child: const Text('終了'),
+            ),
+          ],
+        );
+      },
     );
   }
 

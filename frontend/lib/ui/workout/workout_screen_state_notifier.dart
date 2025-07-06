@@ -108,6 +108,12 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
     }
   }
 
+  void stopWorkout() {
+    _workoutSubscription?.cancel();
+    _powerSubscription?.cancel();
+    _manageWorkoutUseCase.dispose();
+  }
+
   Future<void> refreshWorkoutBlocks() async {
     state = state.copyWith(isLoading: true);
     await _initializeWorkout(state.workoutBlocks.first.workoutId);
