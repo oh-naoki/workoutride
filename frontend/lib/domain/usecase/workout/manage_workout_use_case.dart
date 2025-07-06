@@ -21,6 +21,8 @@ class ManageWorkoutUseCase {
   final GetCalculatedPowerMeterDataUseCase _getPowerMeterDataUseCase;
   final PowerZoneAnalyzer _powerZoneAnalyzer;
   Timer? _timer;
+  bool _isPaused = false;
+  StreamController<(WorkoutTimerState, WorkoutProgressState)>? _controller;
 
   ManageWorkoutUseCase(
     this._getPowerMeterDataUseCase,
@@ -38,6 +40,7 @@ class ManageWorkoutUseCase {
     var currentTimerState = const WorkoutTimerState();
 
     final controller = StreamController<(WorkoutTimerState, WorkoutProgressState)>();
+    _controller = controller;
     
     // パワーメーターのデータストリームを購読
     final powerSubscription = _getPowerMeterDataUseCase().listen((powerData) {
@@ -60,12 +63,17 @@ class ManageWorkoutUseCase {
         return;
       }
 
+      // 一時停止中の場合は時間を進めない
+      if (_isPaused) {
+        return;
+      }
+
       final newElapsedSeconds = currentTimerState.elapsedSeconds + 1;
       
       // タイマー状態を更新
       currentTimerState = currentTimerState.copyWith(
         elapsedSeconds: newElapsedSeconds,
-        isRunning: true,
+        isRunning: !_isPaused,
       );
 
       // 現在のブロックの終了時間を計算
@@ -108,7 +116,22 @@ class ManageWorkoutUseCase {
     return controller.stream;
   }
 
+  void pauseWorkout() {
+    _isPaused = true;
+    // 現在の状態を一時停止状態で更新
+    if (_controller != null && !_controller!.isClosed) {
+      // 現在の状態を取得して一時停止状態に更新する必要がある場合はここで実装
+    }
+  }
+
+  void resumeWorkout() {
+    _isPaused = false;
+  }
+
+  bool get isPaused => _isPaused;
+
   void dispose() {
     _timer?.cancel();
+    _controller?.close();
   }
 } 

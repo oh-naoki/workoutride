@@ -90,7 +90,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _buildControlButton(),
-                  _buildControlButton(),
+                  _buildPauseResumeButton(uiState.isPaused),
                   _buildControlButton(),
                 ],
               ),
@@ -177,6 +177,28 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
       decoration: BoxDecoration(
         color: Colors.grey[400],
         borderRadius: BorderRadius.circular(12),
+      ),
+    );
+  }
+
+  // 一時停止・再開ボタンを作成するメソッド
+  Widget _buildPauseResumeButton(bool isPaused) {
+    return GestureDetector(
+      onTap: () {
+        ref.read(workoutScreenStateNotifierProvider(widget.workoutId).notifier).togglePauseResume();
+      },
+      child: Container(
+        width: 60,
+        height: 60,
+        decoration: BoxDecoration(
+          color: isPaused ? Colors.green : Colors.orange,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Icon(
+          isPaused ? Icons.play_arrow : Icons.pause,
+          color: Colors.white,
+          size: 30,
+        ),
       ),
     );
   }

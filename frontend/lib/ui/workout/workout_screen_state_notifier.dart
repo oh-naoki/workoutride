@@ -22,6 +22,7 @@ class WorkoutScreenUiState with _$WorkoutScreenUiState {
     @Default(0) int targetPower,
     @Default(0) int currentBlockIndex,
     @Default(0) int elapsedSeconds,
+    @Default(false) bool isPaused,
     String? errorMessage,
   }) = _WorkoutScreenUiState;
 }
@@ -95,6 +96,16 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
         cadence: powerMeterData.cadence,
       );
     });
+  }
+
+  void togglePauseResume() {
+    if (state.isPaused) {
+      _manageWorkoutUseCase.resumeWorkout();
+      state = state.copyWith(isPaused: false);
+    } else {
+      _manageWorkoutUseCase.pauseWorkout();
+      state = state.copyWith(isPaused: true);
+    }
   }
 
   Future<void> refreshWorkoutBlocks() async {
