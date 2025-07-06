@@ -22,6 +22,8 @@ mixin _$WorkoutScreenUiState {
   int get cadence => throw _privateConstructorUsedError;
   int get maxPower => throw _privateConstructorUsedError;
   int get targetPower => throw _privateConstructorUsedError;
+  int get currentBlockIndex => throw _privateConstructorUsedError;
+  int get elapsedSeconds => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
 
   /// Create a copy of WorkoutScreenUiState
@@ -44,6 +46,8 @@ abstract class $WorkoutScreenUiStateCopyWith<$Res> {
       int cadence,
       int maxPower,
       int targetPower,
+      int currentBlockIndex,
+      int elapsedSeconds,
       String? errorMessage});
 }
 
@@ -69,6 +73,8 @@ class _$WorkoutScreenUiStateCopyWithImpl<$Res,
     Object? cadence = null,
     Object? maxPower = null,
     Object? targetPower = null,
+    Object? currentBlockIndex = null,
+    Object? elapsedSeconds = null,
     Object? errorMessage = freezed,
   }) {
     return _then(_value.copyWith(
@@ -96,6 +102,14 @@ class _$WorkoutScreenUiStateCopyWithImpl<$Res,
           ? _value.targetPower
           : targetPower // ignore: cast_nullable_to_non_nullable
               as int,
+      currentBlockIndex: null == currentBlockIndex
+          ? _value.currentBlockIndex
+          : currentBlockIndex // ignore: cast_nullable_to_non_nullable
+              as int,
+      elapsedSeconds: null == elapsedSeconds
+          ? _value.elapsedSeconds
+          : elapsedSeconds // ignore: cast_nullable_to_non_nullable
+              as int,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -119,6 +133,8 @@ abstract class _$$WorkoutScreenUiStateImplCopyWith<$Res>
       int cadence,
       int maxPower,
       int targetPower,
+      int currentBlockIndex,
+      int elapsedSeconds,
       String? errorMessage});
 }
 
@@ -141,6 +157,8 @@ class __$$WorkoutScreenUiStateImplCopyWithImpl<$Res>
     Object? cadence = null,
     Object? maxPower = null,
     Object? targetPower = null,
+    Object? currentBlockIndex = null,
+    Object? elapsedSeconds = null,
     Object? errorMessage = freezed,
   }) {
     return _then(_$WorkoutScreenUiStateImpl(
@@ -168,6 +186,14 @@ class __$$WorkoutScreenUiStateImplCopyWithImpl<$Res>
           ? _value.targetPower
           : targetPower // ignore: cast_nullable_to_non_nullable
               as int,
+      currentBlockIndex: null == currentBlockIndex
+          ? _value.currentBlockIndex
+          : currentBlockIndex // ignore: cast_nullable_to_non_nullable
+              as int,
+      elapsedSeconds: null == elapsedSeconds
+          ? _value.elapsedSeconds
+          : elapsedSeconds // ignore: cast_nullable_to_non_nullable
+              as int,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -188,6 +214,8 @@ class _$WorkoutScreenUiStateImpl
       this.cadence = 0,
       this.maxPower = 0,
       this.targetPower = 0,
+      this.currentBlockIndex = 0,
+      this.elapsedSeconds = 0,
       this.errorMessage})
       : _workoutBlocks = workoutBlocks;
 
@@ -216,11 +244,17 @@ class _$WorkoutScreenUiStateImpl
   @JsonKey()
   final int targetPower;
   @override
+  @JsonKey()
+  final int currentBlockIndex;
+  @override
+  @JsonKey()
+  final int elapsedSeconds;
+  @override
   final String? errorMessage;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'WorkoutScreenUiState(workoutBlocks: $workoutBlocks, isLoading: $isLoading, power: $power, cadence: $cadence, maxPower: $maxPower, targetPower: $targetPower, errorMessage: $errorMessage)';
+    return 'WorkoutScreenUiState(workoutBlocks: $workoutBlocks, isLoading: $isLoading, power: $power, cadence: $cadence, maxPower: $maxPower, targetPower: $targetPower, currentBlockIndex: $currentBlockIndex, elapsedSeconds: $elapsedSeconds, errorMessage: $errorMessage)';
   }
 
   @override
@@ -234,6 +268,8 @@ class _$WorkoutScreenUiStateImpl
       ..add(DiagnosticsProperty('cadence', cadence))
       ..add(DiagnosticsProperty('maxPower', maxPower))
       ..add(DiagnosticsProperty('targetPower', targetPower))
+      ..add(DiagnosticsProperty('currentBlockIndex', currentBlockIndex))
+      ..add(DiagnosticsProperty('elapsedSeconds', elapsedSeconds))
       ..add(DiagnosticsProperty('errorMessage', errorMessage));
   }
 
@@ -252,6 +288,10 @@ class _$WorkoutScreenUiStateImpl
                 other.maxPower == maxPower) &&
             (identical(other.targetPower, targetPower) ||
                 other.targetPower == targetPower) &&
+            (identical(other.currentBlockIndex, currentBlockIndex) ||
+                other.currentBlockIndex == currentBlockIndex) &&
+            (identical(other.elapsedSeconds, elapsedSeconds) ||
+                other.elapsedSeconds == elapsedSeconds) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage));
   }
@@ -265,6 +305,8 @@ class _$WorkoutScreenUiStateImpl
       cadence,
       maxPower,
       targetPower,
+      currentBlockIndex,
+      elapsedSeconds,
       errorMessage);
 
   /// Create a copy of WorkoutScreenUiState
@@ -286,6 +328,8 @@ abstract class _WorkoutScreenUiState implements WorkoutScreenUiState {
       final int cadence,
       final int maxPower,
       final int targetPower,
+      final int currentBlockIndex,
+      final int elapsedSeconds,
       final String? errorMessage}) = _$WorkoutScreenUiStateImpl;
 
   @override
@@ -300,6 +344,10 @@ abstract class _WorkoutScreenUiState implements WorkoutScreenUiState {
   int get maxPower;
   @override
   int get targetPower;
+  @override
+  int get currentBlockIndex;
+  @override
+  int get elapsedSeconds;
   @override
   String? get errorMessage;
 

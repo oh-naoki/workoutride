@@ -20,7 +20,7 @@ extension WorkoutBlockDtoExtension on WorkoutBlockDto {
       workoutId: workout_id,
       orderIndex: order_index,
       targetPower: target_power,
-      duration: duration,
+      durationSeconds: duration,
       blockType: block_type,
       createdAt: DateTime.parse(created_at),
       updatedAt: DateTime.parse(updated_at),

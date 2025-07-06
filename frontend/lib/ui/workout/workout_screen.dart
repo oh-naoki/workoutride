@@ -4,10 +4,23 @@ import 'package:workoutride/component/meter.dart';
 import 'package:workoutride/ui/workout/developer_menu.dart';
 import 'package:workoutride/ui/workout/workout_screen_state_notifier.dart';
 
-class WorkoutScreen extends ConsumerWidget {
+class WorkoutScreen extends ConsumerStatefulWidget {
   final int workoutId;
   
   const WorkoutScreen({super.key, required this.workoutId});
+
+  @override
+  ConsumerState<WorkoutScreen> createState() => _WorkoutScreenState();
+}
+
+class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   void _showDeveloperMenu(BuildContext context) {
     showModalBottomSheet(
@@ -17,9 +30,30 @@ class WorkoutScreen extends ConsumerWidget {
     );
   }
 
+  // 現在のブロックまでスクロール
+  void _scrollToCurrentBlock(int currentBlockIndex) {
+    if (!_scrollController.hasClients) return;
+
+    final itemHeight = 140.0; // カードの高さ + マージン
+    final targetOffset = currentBlockIndex * itemHeight;
+
+    _scrollController.animateTo(
+      targetOffset,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final uiState = ref.watch(workoutScreenStateNotifierProvider(workoutId));
+  Widget build(BuildContext context) {
+    final uiState = ref.watch(workoutScreenStateNotifierProvider(widget.workoutId));
+
+    // 現在のブロックが変更されたら自動スクロール
+    ref.listen(workoutScreenStateNotifierProvider(widget.workoutId), (previous, next) {
+      if (previous?.currentBlockIndex != next.currentBlockIndex) {
+        _scrollToCurrentBlock(next.currentBlockIndex);
+      }
+    });
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -89,9 +123,22 @@ class WorkoutScreen extends ConsumerWidget {
                       );
                     } else {
                       return ListView.builder(
+                        controller: _scrollController,
                         itemCount: uiState.workoutBlocks.length,
                         itemBuilder: (context, index) {
                           final block = uiState.workoutBlocks[index];
+                          final isCurrentBlock = index == uiState.currentBlockIndex;
+                          
+                          // 現在のブロックの経過時間を計算
+                          int blockElapsedSeconds = 0;
+                          if (isCurrentBlock) {
+                            int previousBlocksTime = 0;
+                            for (var i = 0; i < index; i++) {
+                              previousBlocksTime += uiState.workoutBlocks[i].durationSeconds;
+                            }
+                            blockElapsedSeconds = uiState.elapsedSeconds - previousBlocksTime;
+                          }
+
                           return GestureDetector(
                             onTap: () {
                               // ブロックをタップした時の処理
@@ -99,8 +146,14 @@ class WorkoutScreen extends ConsumerWidget {
                             child: _buildWorkoutCard(
                               name: block.blockType,
                               power: block.targetPower,
-                              time: _formatDuration(block.duration),
-                              isActive: index == 0,
+                              time: _formatDuration(block.durationSeconds),
+                              isActive: isCurrentBlock,
+                              progress: isCurrentBlock 
+                                ? blockElapsedSeconds / block.durationSeconds
+                                : index < uiState.currentBlockIndex ? 1.0 : 0.0,
+                              elapsedTime: isCurrentBlock 
+                                ? _formatDuration(blockElapsedSeconds)
+                                : null,
                             ),
                           );
                         },
@@ -141,6 +194,8 @@ class WorkoutScreen extends ConsumerWidget {
     required int power,
     required String time,
     required bool isActive,
+    required double progress,
+    String? elapsedTime,
   }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -191,9 +246,9 @@ class WorkoutScreen extends ConsumerWidget {
               child: Stack(
                 children: [
                   LinearProgressIndicator(
-                    value: 0.5, // 進捗率（0.0 ~ 1.0）
+                    value: progress,
                     minHeight: 40,
-                    backgroundColor: Colors.grey[800], // 未進捗部分の色
+                    backgroundColor: Colors.grey[800],
                     valueColor: AlwaysStoppedAnimation<Color>(
                       isActive ? const Color(0xFF51DB40) : const Color(0xFF333333),
                     ),
@@ -202,7 +257,7 @@ class WorkoutScreen extends ConsumerWidget {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Center(
                       child: Text(
-                        time,
+                        elapsedTime != null ? '$elapsedTime / $time' : time,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 20,

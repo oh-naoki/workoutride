@@ -159,7 +159,7 @@ class WorkoutMenu extends StatelessWidget {
         return WorkoutMenuItem(
           type: block.blockType,
           power: block.targetPower,
-          duration: block.duration,
+          duration: block.durationSeconds,
         );
       },
       separatorBuilder: (context, index) {

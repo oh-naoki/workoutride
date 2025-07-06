@@ -20,7 +20,7 @@ mixin _$WorkoutBlock {
   int get workoutId => throw _privateConstructorUsedError;
   int get orderIndex => throw _privateConstructorUsedError;
   int get targetPower => throw _privateConstructorUsedError;
-  int get duration => throw _privateConstructorUsedError;
+  int get durationSeconds => throw _privateConstructorUsedError;
   String get blockType => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
@@ -43,7 +43,7 @@ abstract class $WorkoutBlockCopyWith<$Res> {
       int workoutId,
       int orderIndex,
       int targetPower,
-      int duration,
+      int durationSeconds,
       String blockType,
       DateTime createdAt,
       DateTime updatedAt});
@@ -68,7 +68,7 @@ class _$WorkoutBlockCopyWithImpl<$Res, $Val extends WorkoutBlock>
     Object? workoutId = null,
     Object? orderIndex = null,
     Object? targetPower = null,
-    Object? duration = null,
+    Object? durationSeconds = null,
     Object? blockType = null,
     Object? createdAt = null,
     Object? updatedAt = null,
@@ -90,9 +90,9 @@ class _$WorkoutBlockCopyWithImpl<$Res, $Val extends WorkoutBlock>
           ? _value.targetPower
           : targetPower // ignore: cast_nullable_to_non_nullable
               as int,
-      duration: null == duration
-          ? _value.duration
-          : duration // ignore: cast_nullable_to_non_nullable
+      durationSeconds: null == durationSeconds
+          ? _value.durationSeconds
+          : durationSeconds // ignore: cast_nullable_to_non_nullable
               as int,
       blockType: null == blockType
           ? _value.blockType
@@ -123,7 +123,7 @@ abstract class _$$WorkoutBlockImplCopyWith<$Res>
       int workoutId,
       int orderIndex,
       int targetPower,
-      int duration,
+      int durationSeconds,
       String blockType,
       DateTime createdAt,
       DateTime updatedAt});
@@ -146,7 +146,7 @@ class __$$WorkoutBlockImplCopyWithImpl<$Res>
     Object? workoutId = null,
     Object? orderIndex = null,
     Object? targetPower = null,
-    Object? duration = null,
+    Object? durationSeconds = null,
     Object? blockType = null,
     Object? createdAt = null,
     Object? updatedAt = null,
@@ -168,9 +168,9 @@ class __$$WorkoutBlockImplCopyWithImpl<$Res>
           ? _value.targetPower
           : targetPower // ignore: cast_nullable_to_non_nullable
               as int,
-      duration: null == duration
-          ? _value.duration
-          : duration // ignore: cast_nullable_to_non_nullable
+      durationSeconds: null == durationSeconds
+          ? _value.durationSeconds
+          : durationSeconds // ignore: cast_nullable_to_non_nullable
               as int,
       blockType: null == blockType
           ? _value.blockType
@@ -196,7 +196,7 @@ class _$WorkoutBlockImpl implements _WorkoutBlock {
       required this.workoutId,
       required this.orderIndex,
       required this.targetPower,
-      required this.duration,
+      required this.durationSeconds,
       required this.blockType,
       required this.createdAt,
       required this.updatedAt});
@@ -210,7 +210,7 @@ class _$WorkoutBlockImpl implements _WorkoutBlock {
   @override
   final int targetPower;
   @override
-  final int duration;
+  final int durationSeconds;
   @override
   final String blockType;
   @override
@@ -220,7 +220,7 @@ class _$WorkoutBlockImpl implements _WorkoutBlock {
 
   @override
   String toString() {
-    return 'WorkoutBlock(id: $id, workoutId: $workoutId, orderIndex: $orderIndex, targetPower: $targetPower, duration: $duration, blockType: $blockType, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'WorkoutBlock(id: $id, workoutId: $workoutId, orderIndex: $orderIndex, targetPower: $targetPower, durationSeconds: $durationSeconds, blockType: $blockType, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -235,8 +235,8 @@ class _$WorkoutBlockImpl implements _WorkoutBlock {
                 other.orderIndex == orderIndex) &&
             (identical(other.targetPower, targetPower) ||
                 other.targetPower == targetPower) &&
-            (identical(other.duration, duration) ||
-                other.duration == duration) &&
+            (identical(other.durationSeconds, durationSeconds) ||
+                other.durationSeconds == durationSeconds) &&
             (identical(other.blockType, blockType) ||
                 other.blockType == blockType) &&
             (identical(other.createdAt, createdAt) ||
@@ -247,7 +247,7 @@ class _$WorkoutBlockImpl implements _WorkoutBlock {
 
   @override
   int get hashCode => Object.hash(runtimeType, id, workoutId, orderIndex,
-      targetPower, duration, blockType, createdAt, updatedAt);
+      targetPower, durationSeconds, blockType, createdAt, updatedAt);
 
   /// Create a copy of WorkoutBlock
   /// with the given fields replaced by the non-null parameter values.
@@ -264,7 +264,7 @@ abstract class _WorkoutBlock implements WorkoutBlock {
       required final int workoutId,
       required final int orderIndex,
       required final int targetPower,
-      required final int duration,
+      required final int durationSeconds,
       required final String blockType,
       required final DateTime createdAt,
       required final DateTime updatedAt}) = _$WorkoutBlockImpl;
@@ -278,7 +278,7 @@ abstract class _WorkoutBlock implements WorkoutBlock {
   @override
   int get targetPower;
   @override
-  int get duration;
+  int get durationSeconds;
   @override
   String get blockType;
   @override

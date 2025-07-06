@@ -9,6 +9,9 @@ import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.d
 import 'package:workoutride/domain/usecase/workout/get_workout_summaries_use_case.dart';
 import 'package:workoutride/data/ble_connector.dart';
 import 'package:workoutride/data/power_meter_data_source.dart';
+import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart';
+import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart';
+import 'package:workoutride/domain/service/power_zone_analyzer.dart';
 
 part 'providers.g.dart';
 
@@ -62,6 +65,14 @@ GetWorkoutSummariesUseCase getWorkoutSummariesUseCase(GetWorkoutSummariesUseCase
 @riverpod
 GetWorkoutBlocksUseCase getWorkoutBlocksUseCase(GetWorkoutBlocksUseCaseRef ref) {
   return GetWorkoutBlocksUseCase(ref.read(workoutRepositoryProvider));
+}
+
+@riverpod
+ManageWorkoutUseCase manageWorkoutUseCase(ManageWorkoutUseCaseRef ref) {
+  return ManageWorkoutUseCase(
+    ref.watch(getCalculatedPowerMeterDataUseCaseProvider),
+    ref.watch(powerZoneAnalyzerProvider),
+  );
 }
 
 // DIプロバイダー
