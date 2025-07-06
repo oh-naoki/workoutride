@@ -55,115 +55,118 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
       }
     });
 
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.bug_report, color: Colors.white),
-            onPressed: () => _showDeveloperMenu(context),
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // メーターを表示するエリア
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Meter(
-                  power: uiState.power,
-                  cadence: uiState.cadence,
-                  maxPower: uiState.maxPower,
-                  targetPower: uiState.targetPower,
-                ),
-              ),
-            ),
-            
-            // 3つのボタンを表示するエリア
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildControlButton(),
-                  _buildPauseResumeButton(uiState.isPaused),
-                  _buildControlButton(),
-                ],
-              ),
-            ),
-            
-            // スクロール可能なカードリストを表示するエリア
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Builder(
-                  builder: (context) {
-                    if (uiState.isLoading) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else if (uiState.errorMessage != null) {
-                      return Center(
-                        child: Text(
-                          'エラーが発生しました: ${uiState.errorMessage}',
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                      );
-                    } else if (uiState.workoutBlocks.isEmpty) {
-                      return const Center(
-                        child: Text(
-                          'ワークアウトブロックがありません',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      );
-                    } else {
-                      return ListView.builder(
-                        controller: _scrollController,
-                        itemCount: uiState.workoutBlocks.length,
-                        itemBuilder: (context, index) {
-                          final block = uiState.workoutBlocks[index];
-                          final isCurrentBlock = index == uiState.currentBlockIndex;
-                          
-                          // 現在のブロックの経過時間を計算
-                          int blockElapsedSeconds = 0;
-                          if (isCurrentBlock) {
-                            int previousBlocksTime = 0;
-                            for (var i = 0; i < index; i++) {
-                              previousBlocksTime += uiState.workoutBlocks[i].durationSeconds;
-                            }
-                            blockElapsedSeconds = uiState.elapsedSeconds - previousBlocksTime;
-                          }
-
-                          return GestureDetector(
-                            onTap: () {
-                              // ブロックをタップした時の処理
-                            },
-                            child: _buildWorkoutCard(
-                              name: block.blockType,
-                              power: block.targetPower,
-                              time: _formatDuration(block.durationSeconds),
-                              isActive: isCurrentBlock,
-                              progress: isCurrentBlock 
-                                ? blockElapsedSeconds / block.durationSeconds
-                                : index < uiState.currentBlockIndex ? 1.0 : 0.0,
-                              elapsedTime: isCurrentBlock 
-                                ? _formatDuration(blockElapsedSeconds)
-                                : null,
-                            ),
-                          );
-                        },
-                      );
-                    }
-                  },
-                ),
-              ),
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.bug_report, color: Colors.white),
+              onPressed: () => _showDeveloperMenu(context),
             ),
           ],
+        ),
+        body: SafeArea(
+          child: Column(
+            children: [
+              // メーターを表示するエリア
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Meter(
+                    power: uiState.power,
+                    cadence: uiState.cadence,
+                    maxPower: uiState.maxPower,
+                    targetPower: uiState.targetPower,
+                  ),
+                ),
+              ),
+              
+              // 3つのボタンを表示するエリア
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildControlButton(),
+                    _buildPauseResumeButton(uiState.isPaused),
+                    _buildControlButton(),
+                  ],
+                ),
+              ),
+              
+              // スクロール可能なカードリストを表示するエリア
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Builder(
+                    builder: (context) {
+                      if (uiState.isLoading) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (uiState.errorMessage != null) {
+                        return Center(
+                          child: Text(
+                            'エラーが発生しました: ${uiState.errorMessage}',
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        );
+                      } else if (uiState.workoutBlocks.isEmpty) {
+                        return const Center(
+                          child: Text(
+                            'ワークアウトブロックがありません',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        );
+                      } else {
+                        return ListView.builder(
+                          controller: _scrollController,
+                          itemCount: uiState.workoutBlocks.length,
+                          itemBuilder: (context, index) {
+                            final block = uiState.workoutBlocks[index];
+                            final isCurrentBlock = index == uiState.currentBlockIndex;
+                            
+                            // 現在のブロックの経過時間を計算
+                            int blockElapsedSeconds = 0;
+                            if (isCurrentBlock) {
+                              int previousBlocksTime = 0;
+                              for (var i = 0; i < index; i++) {
+                                previousBlocksTime += uiState.workoutBlocks[i].durationSeconds;
+                              }
+                              blockElapsedSeconds = uiState.elapsedSeconds - previousBlocksTime;
+                            }
+      
+                            return GestureDetector(
+                              onTap: () {
+                                // ブロックをタップした時の処理
+                              },
+                              child: _buildWorkoutCard(
+                                name: block.blockType,
+                                power: block.targetPower,
+                                time: _formatDuration(block.durationSeconds),
+                                isActive: isCurrentBlock,
+                                progress: isCurrentBlock 
+                                  ? blockElapsedSeconds / block.durationSeconds
+                                  : index < uiState.currentBlockIndex ? 1.0 : 0.0,
+                                elapsedTime: isCurrentBlock 
+                                  ? _formatDuration(blockElapsedSeconds)
+                                  : null,
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
