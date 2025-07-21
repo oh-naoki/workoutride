@@ -27,7 +27,7 @@ class WorkoutScreenUiState with _$WorkoutScreenUiState {
   }) = _WorkoutScreenUiState;
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
   late final GetWorkoutBlocksUseCase _getWorkoutBlocksUseCase;
   late final GetCalculatedPowerMeterDataUseCase _getPowerMeterDataUseCase;
@@ -37,6 +37,10 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
 
   @override
   WorkoutScreenUiState build(int workoutId) {
+    // 既存のサブスクリプションをキャンセル
+    _powerSubscription?.cancel();
+    _workoutSubscription?.cancel();
+
     _getWorkoutBlocksUseCase = ref.read(getWorkoutBlocksUseCaseProvider);
     _getPowerMeterDataUseCase = ref.read(getCalculatedPowerMeterDataUseCaseProvider);
     _manageWorkoutUseCase = ref.read(manageWorkoutUseCaseProvider);
@@ -77,6 +81,9 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
 
   void _startWorkout(List<WorkoutBlock> blocks) {
     _workoutSubscription?.cancel();
+    // ManageWorkoutUseCaseの前回の状態をクリア
+    _manageWorkoutUseCase.dispose();
+    
     _workoutSubscription = _manageWorkoutUseCase(blocks).listen((workoutState) {
       final (timerState, progressState) = workoutState;
       state = state.copyWith(

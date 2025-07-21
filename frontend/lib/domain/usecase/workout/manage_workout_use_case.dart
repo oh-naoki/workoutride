@@ -30,6 +30,11 @@ class ManageWorkoutUseCase {
   );
 
   Stream<(WorkoutTimerState, WorkoutProgressState)> call(List<WorkoutBlock> blocks) {
+    // 前回の状態をリセット
+    _timer?.cancel();
+    _controller?.close();
+    _isPaused = false;
+    
     final totalSeconds = blocks.fold(0, (sum, block) => sum + block.durationSeconds);
     
     var currentProgressState = WorkoutProgressState(

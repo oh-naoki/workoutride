@@ -7,7 +7,7 @@ part of 'workout_screen_state_notifier.dart';
 // **************************************************************************
 
 String _$workoutScreenStateNotifierHash() =>
-    r'4534db7ac9700caca58018b865b7b916bc77bff8';
+    r'1b23d332a98be0b00f89140f9c450fe845e5ded0';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -31,7 +31,7 @@ class _SystemHash {
 }
 
 abstract class _$WorkoutScreenStateNotifier
-    extends BuildlessNotifier<WorkoutScreenUiState> {
+    extends BuildlessAutoDisposeNotifier<WorkoutScreenUiState> {
   late final int workoutId;
 
   WorkoutScreenUiState build(
@@ -82,8 +82,9 @@ class WorkoutScreenStateNotifierFamily extends Family<WorkoutScreenUiState> {
 }
 
 /// See also [WorkoutScreenStateNotifier].
-class WorkoutScreenStateNotifierProvider extends NotifierProviderImpl<
-    WorkoutScreenStateNotifier, WorkoutScreenUiState> {
+class WorkoutScreenStateNotifierProvider
+    extends AutoDisposeNotifierProviderImpl<WorkoutScreenStateNotifier,
+        WorkoutScreenUiState> {
   /// See also [WorkoutScreenStateNotifier].
   WorkoutScreenStateNotifierProvider(
     int workoutId,
@@ -139,8 +140,8 @@ class WorkoutScreenStateNotifierProvider extends NotifierProviderImpl<
   }
 
   @override
-  NotifierProviderElement<WorkoutScreenStateNotifier, WorkoutScreenUiState>
-      createElement() {
+  AutoDisposeNotifierProviderElement<WorkoutScreenStateNotifier,
+      WorkoutScreenUiState> createElement() {
     return _WorkoutScreenStateNotifierProviderElement(this);
   }
 
@@ -162,13 +163,13 @@ class WorkoutScreenStateNotifierProvider extends NotifierProviderImpl<
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 mixin WorkoutScreenStateNotifierRef
-    on NotifierProviderRef<WorkoutScreenUiState> {
+    on AutoDisposeNotifierProviderRef<WorkoutScreenUiState> {
   /// The parameter `workoutId` of this provider.
   int get workoutId;
 }
 
 class _WorkoutScreenStateNotifierProviderElement
-    extends NotifierProviderElement<WorkoutScreenStateNotifier,
+    extends AutoDisposeNotifierProviderElement<WorkoutScreenStateNotifier,
         WorkoutScreenUiState> with WorkoutScreenStateNotifierRef {
   _WorkoutScreenStateNotifierProviderElement(super.provider);
 
