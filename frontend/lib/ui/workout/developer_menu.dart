@@ -8,8 +8,10 @@ class DeveloperMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isMock = ref.watch(mockModeStateProvider);
-    final currentPattern = ref.watch(mockPatternStateProvider);
+    final mockModeNotifier = ref.watch(mockModeStateNotifierProvider);
+    final mockPatternNotifier = ref.watch(mockPatternStateNotifierProvider);
+    final isMock = mockModeNotifier.state;
+    final currentPattern = mockPatternNotifier.state;
 
     return Container(
       color: Colors.black,
@@ -36,7 +38,7 @@ class DeveloperMenu extends ConsumerWidget {
                   style: TextStyle(color: Colors.white),
                 ),
                 value: isMock,
-                onChanged: (_) => ref.read(mockModeStateProvider.notifier).toggle(),
+                onChanged: (_) => ref.read(mockModeStateNotifierProvider).toggle(),
               ),
               // パターン選択（モックモード時のみ表示）
               if (isMock) ...[
@@ -63,7 +65,7 @@ class DeveloperMenu extends ConsumerWidget {
                   }).toList(),
                   onChanged: (pattern) {
                     if (pattern != null) {
-                      ref.read(mockPatternStateProvider.notifier).setPattern(pattern);
+                      ref.read(mockPatternStateNotifierProvider).setPattern(pattern);
                     }
                   },
                 ),

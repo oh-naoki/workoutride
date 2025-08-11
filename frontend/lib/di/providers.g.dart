@@ -23,6 +23,46 @@ final sharedPreferencesProvider = Provider<SharedPreferences>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SharedPreferencesRef = ProviderRef<SharedPreferences>;
+String _$mockModeStateNotifierHash() =>
+    r'd657e9d1103e5b2d70d12df39b39a3d3cdb5ed61';
+
+/// See also [mockModeStateNotifier].
+@ProviderFor(mockModeStateNotifier)
+final mockModeStateNotifierProvider =
+    AutoDisposeProvider<MockModeStateNotifier>.internal(
+  mockModeStateNotifier,
+  name: r'mockModeStateNotifierProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$mockModeStateNotifierHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef MockModeStateNotifierRef
+    = AutoDisposeProviderRef<MockModeStateNotifier>;
+String _$mockPatternStateNotifierHash() =>
+    r'9ac1c54ff7ec8155272b35007d920ee9ec734f7c';
+
+/// See also [mockPatternStateNotifier].
+@ProviderFor(mockPatternStateNotifier)
+final mockPatternStateNotifierProvider =
+    AutoDisposeProvider<MockPatternStateNotifier>.internal(
+  mockPatternStateNotifier,
+  name: r'mockPatternStateNotifierProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$mockPatternStateNotifierHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef MockPatternStateNotifierRef
+    = AutoDisposeProviderRef<MockPatternStateNotifier>;
 String _$getWorkoutSummariesUseCaseHash() =>
     r'3a69bc2b489f4f08cb0e2d4573c41f39a45ffda5';
 
@@ -154,7 +194,7 @@ final workoutRepositoryProvider =
 // ignore: unused_element
 typedef WorkoutRepositoryRef = AutoDisposeProviderRef<WorkoutRepository>;
 String _$powerMeterDataSourceHash() =>
-    r'd92160dd33f7e42a0a12d8f913ffa05e4b7aba0a';
+    r'efd24f9c54d522c8a99b83b22d00cd78e44b7b43';
 
 /// See also [powerMeterDataSource].
 @ProviderFor(powerMeterDataSource)
@@ -252,36 +292,5 @@ final autoConnectBlePowerMeterUseCaseProvider =
 // ignore: unused_element
 typedef AutoConnectBlePowerMeterUseCaseRef
     = AutoDisposeProviderRef<AutoConnectBlePowerMeterUseCase>;
-String _$mockModeStateHash() => r'310596d04cea66eb1dbc5e238a51543d1c559221';
-
-/// See also [MockModeState].
-@ProviderFor(MockModeState)
-final mockModeStateProvider = NotifierProvider<MockModeState, bool>.internal(
-  MockModeState.new,
-  name: r'mockModeStateProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$mockModeStateHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$MockModeState = Notifier<bool>;
-String _$mockPatternStateHash() => r'b24bacec25a7f9b7cade3eef9b691fcb114ee1eb';
-
-/// See also [MockPatternState].
-@ProviderFor(MockPatternState)
-final mockPatternStateProvider =
-    NotifierProvider<MockPatternState, MockPattern>.internal(
-  MockPatternState.new,
-  name: r'mockPatternStateProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$mockPatternStateHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$MockPatternState = Notifier<MockPattern>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

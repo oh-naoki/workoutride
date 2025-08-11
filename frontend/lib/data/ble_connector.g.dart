@@ -6,7 +6,7 @@ part of 'ble_connector.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$bleConnectorHash() => r'db0c9cbd5295731bc955058c33865c26e2085046';
+String _$bleConnectorHash() => r'fe15f7ae82ca4d4fe2b20b83ce8e1afa8cb0a89d';
 
 /// See also [bleConnector].
 @ProviderFor(bleConnector)

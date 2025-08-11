@@ -4,16 +4,20 @@ import 'dart:io';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workoutride/di/providers.dart';
 
 part 'ble_connector.g.dart';
 
 @riverpod
 BleConnector bleConnector(BleConnectorRef ref) {
-  return BleConnector();
+  return BleConnector(ref.read(sharedPreferencesProvider));
 }
 
 class BleConnector {
   static const String _deviceIdKey = 'last_connected_device_id';
+  final SharedPreferences _sharedPreferences;
+
+  BleConnector(this._sharedPreferences);
 
   Future<void> initialize() async {
     if (Platform.isAndroid) {
@@ -21,10 +25,43 @@ class BleConnector {
     }
   }
 
+  Stream<List<ScanResult>> scan() {
+    final StreamController<List<ScanResult>> controller = StreamController<List<ScanResult>>();
+    final Set<String> seenDevices = {}; // デバイスのIDを保持するSet
+    final List<ScanResult> scanResults = []; // スキャン結果を保持するList
+
+    FlutterBluePlus.onScanResults.listen((results) {
+      for (var result in results) {
+        final String deviceId = result.device.remoteId.toString();
+        // 既に見つかったデバイスかどうかを確認
+        if (!seenDevices.contains(deviceId)) {
+          seenDevices.add(deviceId); // 新しいデバイスを記録
+          scanResults.add(result); // スキャン結果をListに追加
+          controller.add(List.unmodifiable(scanResults)); // StreamにListのスナップショットを追加
+        }
+      }
+    }, onError: (e) {
+      controller.addError(e); // エラーが発生した場合、Streamにエラーを追加
+    });
+
+    // システムデバイスを取得してスキャンを開始します。
+    FlutterBluePlus.systemDevices([Guid("180f")]);
+    FlutterBluePlus.startScan(timeout: const Duration(seconds: 300));
+
+    return controller.stream;
+  }
+
+  Future<void> connect(String deviceId) async {
+    // deviceIdを永続化
+    await _sharedPreferences.setString(_deviceIdKey, deviceId);
+    
+    final device = BluetoothDevice.fromId(deviceId);
+    await device.connect();
+  }
+
   /// 保存されたデバイスIDを取得
   Future<String?> getSavedDeviceId() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_deviceIdKey);
+    return _sharedPreferences.getString(_deviceIdKey);
   }
 
   /// 保存されたデバイスに自動接続を試行
@@ -58,8 +95,7 @@ class BleConnector {
 
   /// 保存されたデバイスIDを削除
   Future<void> _clearSavedDeviceId() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_deviceIdKey);
+    await _sharedPreferences.remove(_deviceIdKey);
   }
 
   /// デバイスの切断
@@ -75,47 +111,11 @@ class BleConnector {
     }
   }
 
-  Stream<List<ScanResult>> scan() {
-    final StreamController<List<ScanResult>> controller = StreamController<List<ScanResult>>();
-    final Set<String> seenDevices = {}; // デバイスのIDを保持するSet
-    final List<ScanResult> scanResults = []; // スキャン結果を保持するList
-
-    FlutterBluePlus.onScanResults.listen((results) {
-      for (var result in results) {
-        final String deviceId = result.device.remoteId.toString();
-        // 既に見つかったデバイスかどうかを確認
-        if (!seenDevices.contains(deviceId)) {
-          seenDevices.add(deviceId); // 新しいデバイスを記録
-          scanResults.add(result); // スキャン結果をListに追加
-          controller.add(List.unmodifiable(scanResults)); // StreamにListのスナップショットを追加
-        }
-      }
-    }, onError: (e) {
-      controller.addError(e); // エラーが発生した場合、Streamにエラーを追加
-    });
-
-    // システムデバイスを取得してスキャンを開始します。
-    FlutterBluePlus.systemDevices([Guid("180f")]);
-    FlutterBluePlus.startScan(timeout: const Duration(seconds: 300));
-
-    return controller.stream;
-  }
-
-  Future<void> connect(String deviceId) async {
-    // deviceIdを永続化
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_deviceIdKey, deviceId);
-    
-    final device = BluetoothDevice.fromId(deviceId);
-    await device.connect();
-  }
-
   // notification の登録とデータを返したい
   Stream<List<int>> notify(String uuid) async* {
     try {
       // SharedPreferencesからdeviceIdを取得
-      final prefs = await SharedPreferences.getInstance();
-      final savedDeviceId = prefs.getString(_deviceIdKey);
+      final savedDeviceId = _sharedPreferences.getString(_deviceIdKey);
       
       if (savedDeviceId == null) {
         throw Exception('デバイスが接続されていません');

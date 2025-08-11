@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workoutride/data/remote/api/workout_api_client.dart';
@@ -28,27 +29,26 @@ SharedPreferences sharedPreferences(SharedPreferencesRef ref) {
   throw UnimplementedError();
 }
 
-@Riverpod(keepAlive: true)
-class MockModeState extends _$MockModeState {
-  @override
-  bool build() {
-    // SharedPreferencesから初期値を読み込む
-    return ref.read(sharedPreferencesProvider).getBool(_mockModeKey) ?? false;
-  }
+class MockModeStateNotifier extends StateNotifier<bool> {
+  final SharedPreferences _sharedPreferences;
+  
+  MockModeStateNotifier(this._sharedPreferences) 
+    : super(_sharedPreferences.getBool(_mockModeKey) ?? false);
 
   void toggle() {
     state = !state;
-    // 状態を永続化
-    ref.read(sharedPreferencesProvider).setBool(_mockModeKey, state);
+    _sharedPreferences.setBool(_mockModeKey, state);
   }
 }
 
-@Riverpod(keepAlive: true)
-class MockPatternState extends _$MockPatternState {
-  @override
-  MockPattern build() {
-    // SharedPreferencesから初期値を読み込む
-    final savedPattern = ref.read(sharedPreferencesProvider).getString(_mockPatternKey);
+class MockPatternStateNotifier extends StateNotifier<MockPattern> {
+  final SharedPreferences _sharedPreferences;
+  
+  MockPatternStateNotifier(this._sharedPreferences) 
+    : super(_getInitialPattern(_sharedPreferences));
+
+  static MockPattern _getInitialPattern(SharedPreferences prefs) {
+    final savedPattern = prefs.getString(_mockPatternKey);
     return savedPattern != null 
       ? MockPattern.values.firstWhere((p) => p.name == savedPattern)
       : MockPattern.warmup;
@@ -56,9 +56,18 @@ class MockPatternState extends _$MockPatternState {
 
   void setPattern(MockPattern pattern) {
     state = pattern;
-    // 状態を永続化
-    ref.read(sharedPreferencesProvider).setString(_mockPatternKey, pattern.name);
+    _sharedPreferences.setString(_mockPatternKey, pattern.name);
   }
+}
+
+@riverpod
+MockModeStateNotifier mockModeStateNotifier(MockModeStateNotifierRef ref) {
+  return MockModeStateNotifier(ref.read(sharedPreferencesProvider));
+}
+
+@riverpod
+MockPatternStateNotifier mockPatternStateNotifier(MockPatternStateNotifierRef ref) {
+  return MockPatternStateNotifier(ref.read(sharedPreferencesProvider));
 }
 
 // UseCaseプロバイダー
@@ -109,10 +118,11 @@ WorkoutRepository workoutRepository(WorkoutRepositoryRef ref) {
 
 @riverpod
 PowerMeterDataSource powerMeterDataSource(PowerMeterDataSourceRef ref) {
-  final isMock = ref.watch(mockModeStateProvider);
-  if (isMock) {
-    final pattern = ref.watch(mockPatternStateProvider);
-    return MockPowerMeterDataSource(pattern);
+  final mockModeNotifier = ref.watch(mockModeStateNotifierProvider);
+  final mockPatternNotifier = ref.watch(mockPatternStateNotifierProvider);
+  
+  if (mockModeNotifier.state) {
+    return MockPowerMeterDataSource(mockPatternNotifier.state);
   } else {
     return BlePowerMeterDataSource(ref.read(bleConnectorProvider));
   }
@@ -140,3 +150,5 @@ SaveUserWeightUseCase saveUserWeightUseCase(SaveUserWeightUseCaseRef ref) {
 AutoConnectBlePowerMeterUseCase autoConnectBlePowerMeterUseCase(AutoConnectBlePowerMeterUseCaseRef ref) {
   return AutoConnectBlePowerMeterUseCase(ref.read(bleConnectorProvider));
 }
+
+
