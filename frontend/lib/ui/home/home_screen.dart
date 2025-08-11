@@ -34,6 +34,8 @@ class HomeScreen extends ConsumerWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // BLE接続状態表示
+            BleConnectionStatus(uiState: uiState),
             const SectionTitle(title: "ワークアウト一覧"),
             Builder(
               builder: (context) {
@@ -60,7 +62,7 @@ class HomeScreen extends ConsumerWidget {
                       padding: EdgeInsets.all(16.0),
                       child: Text(
                         'ワークアウトがありません',
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white),
                       ),
                     ),
                   );
@@ -185,6 +187,89 @@ class WorkoutItem extends StatelessWidget {
               ),
             ],
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class BleConnectionStatus extends ConsumerWidget {
+  final HomeScreenUiState uiState;
+  
+  const BleConnectionStatus({super.key, required this.uiState});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container(
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF2C2C2C),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: uiState.isBleConnected ? Colors.green : Colors.orange,
+          width: 1,
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            uiState.isConnectingBle 
+              ? Icons.bluetooth_searching
+              : uiState.isBleConnected 
+                ? Icons.bluetooth_connected 
+                : Icons.bluetooth_disabled,
+            color: uiState.isConnectingBle 
+              ? Colors.blue
+              : uiState.isBleConnected 
+                ? Colors.green 
+                : Colors.orange,
+            size: 20,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  uiState.isConnectingBle 
+                    ? 'パワーメーターに接続中...'
+                    : uiState.isBleConnected 
+                      ? 'パワーメーターに接続済み'
+                      : 'パワーメーターが未接続',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                if (uiState.bleErrorMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      uiState.bleErrorMessage!,
+                      style: const TextStyle(
+                        color: Colors.red,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          if (!uiState.isBleConnected && !uiState.isConnectingBle)
+            TextButton(
+              onPressed: () {
+                ref.read(homeScreenStateNotifierProvider.notifier).retryBleConnection();
+              },
+              child: const Text(
+                '再接続',
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 12,
+                ),
+              ),
+            ),
         ],
       ),
     );

@@ -16,6 +16,7 @@ import 'package:workoutride/domain/repository/user_profile_repository.dart';
 import 'package:workoutride/data/repository/user_profile_repository_impl.dart';
 import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart';
 import 'package:workoutride/domain/usecase/user_profile/save_user_weight_use_case.dart';
+import 'package:workoutride/domain/usecase/auto_connect_ble_power_meter_use_case.dart';
 
 part 'providers.g.dart';
 
@@ -133,4 +134,9 @@ GetUserProfileUseCase getUserProfileUseCase(GetUserProfileUseCaseRef ref) {
 @riverpod
 SaveUserWeightUseCase saveUserWeightUseCase(SaveUserWeightUseCaseRef ref) {
   return SaveUserWeightUseCase(repository: ref.read(userProfileRepositoryProvider));
+}
+
+@riverpod
+AutoConnectBlePowerMeterUseCase autoConnectBlePowerMeterUseCase(AutoConnectBlePowerMeterUseCaseRef ref) {
+  return AutoConnectBlePowerMeterUseCase(ref.read(bleConnectorProvider));
 }

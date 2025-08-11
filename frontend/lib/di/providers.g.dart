@@ -232,6 +232,26 @@ final saveUserWeightUseCaseProvider =
 // ignore: unused_element
 typedef SaveUserWeightUseCaseRef
     = AutoDisposeProviderRef<SaveUserWeightUseCase>;
+String _$autoConnectBlePowerMeterUseCaseHash() =>
+    r'd7590bdc84d6346f9f041765d2bd662f87d5cfc6';
+
+/// See also [autoConnectBlePowerMeterUseCase].
+@ProviderFor(autoConnectBlePowerMeterUseCase)
+final autoConnectBlePowerMeterUseCaseProvider =
+    AutoDisposeProvider<AutoConnectBlePowerMeterUseCase>.internal(
+  autoConnectBlePowerMeterUseCase,
+  name: r'autoConnectBlePowerMeterUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$autoConnectBlePowerMeterUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef AutoConnectBlePowerMeterUseCaseRef
+    = AutoDisposeProviderRef<AutoConnectBlePowerMeterUseCase>;
 String _$mockModeStateHash() => r'310596d04cea66eb1dbc5e238a51543d1c559221';
 
 /// See also [MockModeState].

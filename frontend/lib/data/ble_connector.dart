@@ -21,6 +21,60 @@ class BleConnector {
     }
   }
 
+  /// 保存されたデバイスIDを取得
+  Future<String?> getSavedDeviceId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_deviceIdKey);
+  }
+
+  /// 保存されたデバイスに自動接続を試行
+  Future<bool> autoConnect() async {
+    try {
+      final savedDeviceId = await getSavedDeviceId();
+      if (savedDeviceId == null) {
+        return false; // 保存されたデバイスIDがない
+      }
+
+      final device = BluetoothDevice.fromId(savedDeviceId);
+      
+      // 接続を試行
+      await device.connect(timeout: const Duration(seconds: 10));
+      
+      // 接続状態を確認
+      final isConnected = device.isConnected;
+      if (!isConnected) {
+        // 接続に失敗した場合、保存されたデバイスIDを削除
+        await _clearSavedDeviceId();
+        return false;
+      }
+      
+      return true;
+    } catch (e) {
+      // 接続エラーの場合、保存されたデバイスIDを削除
+      await _clearSavedDeviceId();
+      return false;
+    }
+  }
+
+  /// 保存されたデバイスIDを削除
+  Future<void> _clearSavedDeviceId() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_deviceIdKey);
+  }
+
+  /// デバイスの切断
+  Future<void> disconnect() async {
+    try {
+      final savedDeviceId = await getSavedDeviceId();
+      if (savedDeviceId != null) {
+        final device = BluetoothDevice.fromId(savedDeviceId);
+        await device.disconnect();
+      }
+    } catch (e) {
+      // 切断エラーは無視
+    }
+  }
+
   Stream<List<ScanResult>> scan() {
     final StreamController<List<ScanResult>> controller = StreamController<List<ScanResult>>();
     final Set<String> seenDevices = {}; // デバイスのIDを保持するSet
