@@ -4,6 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:workoutride/di/providers.dart' hide manageWorkoutUseCaseProvider;
 import 'package:workoutride/domain/model/workout/workout_block.dart';
+import 'package:workoutride/domain/model/power_alert_message.dart';
 import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart';
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart';
 import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart';
@@ -24,6 +25,7 @@ class WorkoutScreenUiState with _$WorkoutScreenUiState {
     @Default(0) int elapsedSeconds,
     @Default(false) bool isPaused,
     String? errorMessage,
+    PowerAlertMessage? powerAlertMessage,
   }) = _WorkoutScreenUiState;
 }
 
@@ -85,11 +87,12 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
     _manageWorkoutUseCase.dispose();
     
     _workoutSubscription = _manageWorkoutUseCase(blocks).listen((workoutState) {
-      final (timerState, progressState) = workoutState;
+      final (timerState, progressState, powerAlertMessage) = workoutState;
       state = state.copyWith(
         elapsedSeconds: timerState.elapsedSeconds,
         currentBlockIndex: progressState.currentBlockIndex,
         targetPower: progressState.currentBlock?.targetPower ?? 0,
+        powerAlertMessage: powerAlertMessage,
       );
     });
   }

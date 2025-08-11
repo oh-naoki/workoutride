@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/domain/model/workout/workout_progress_state.dart';
 import 'package:workoutride/domain/model/workout/workout_timer_state.dart';
+import 'package:workoutride/domain/model/power_alert_message.dart';
 import 'package:workoutride/domain/service/power_zone_analyzer.dart';
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart';
 
@@ -22,14 +23,14 @@ class ManageWorkoutUseCase {
   final PowerZoneAnalyzer _powerZoneAnalyzer;
   Timer? _timer;
   bool _isPaused = false;
-  StreamController<(WorkoutTimerState, WorkoutProgressState)>? _controller;
+  StreamController<(WorkoutTimerState, WorkoutProgressState, PowerAlertMessage?)>? _controller;
 
   ManageWorkoutUseCase(
     this._getPowerMeterDataUseCase,
     this._powerZoneAnalyzer,
   );
 
-  Stream<(WorkoutTimerState, WorkoutProgressState)> call(List<WorkoutBlock> blocks) {
+  Stream<(WorkoutTimerState, WorkoutProgressState, PowerAlertMessage?)> call(List<WorkoutBlock> blocks) {
     // 前回の状態をリセット
     _timer?.cancel();
     _controller?.close();
@@ -43,8 +44,9 @@ class ManageWorkoutUseCase {
     );
 
     var currentTimerState = const WorkoutTimerState();
+    var currentPowerAlertMessage = null;
 
-    final controller = StreamController<(WorkoutTimerState, WorkoutProgressState)>();
+    final controller = StreamController<(WorkoutTimerState, WorkoutProgressState, PowerAlertMessage?)>();
     _controller = controller;
     
     // パワーメーターのデータストリームを購読
@@ -52,11 +54,16 @@ class ManageWorkoutUseCase {
       if (!controller.isClosed) {
         final currentBlock = currentProgressState.currentBlock;
         if (currentBlock != null) {
-          final isInZone = _powerZoneAnalyzer.isInTargetZone(
-            powerData.power,
-            currentBlock.targetPower,
-          );
-          // ここでパワーゾーンの判定に基づいて何かアクションを起こすことができます
+          PowerAlertMessage? alertMessage;
+          
+          if (_powerZoneAnalyzer.isBelowTargetZone(powerData.power, currentBlock.targetPower)) {
+            alertMessage = PowerAlertMessage.powerTooLow;
+          } else if (_powerZoneAnalyzer.isAboveTargetZone(powerData.power, currentBlock.targetPower)) {
+            alertMessage = PowerAlertMessage.powerTooHigh;
+          }
+          
+          currentPowerAlertMessage = alertMessage;
+          controller.add((currentTimerState, currentProgressState, currentPowerAlertMessage));
         }
       }
     });
@@ -110,7 +117,7 @@ class ManageWorkoutUseCase {
         );
       }
 
-      controller.add((currentTimerState, currentProgressState));
+      controller.add((currentTimerState, currentProgressState, currentPowerAlertMessage));
     });
 
     controller.onCancel = () {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workoutride/component/meter.dart';
+import 'package:workoutride/domain/model/power_alert_message.dart';
 import 'package:workoutride/ui/workout/developer_menu.dart';
 import 'package:workoutride/ui/workout/workout_screen_state_notifier.dart';
 
@@ -76,11 +77,36 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                 flex: 2,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Meter(
-                    power: uiState.power,
-                    cadence: uiState.cadence,
-                    maxPower: uiState.maxPower,
-                    targetPower: uiState.targetPower,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Meter(
+                          power: uiState.power,
+                          cadence: uiState.cadence,
+                          maxPower: uiState.maxPower,
+                          targetPower: uiState.targetPower,
+                        ),
+                      ),
+                      // パワーアラートメッセージ表示エリア
+                      if (uiState.powerAlertMessage != null)
+                        Container(
+                          margin: const EdgeInsets.only(top: 8.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                          decoration: BoxDecoration(
+                            color: uiState.powerAlertMessage!.color.withValues(alpha: 0.8),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Text(
+                            uiState.powerAlertMessage!.message,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ),

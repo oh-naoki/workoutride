@@ -6,6 +6,7 @@
 import 'dart:async' as _i3;
 
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:workoutride/domain/model/power_alert_message.dart' as _i10;
 import 'package:workoutride/domain/model/power_meter_data.dart' as _i6;
 import 'package:workoutride/domain/model/workout/workout_block.dart' as _i4;
 import 'package:workoutride/domain/model/workout/workout_progress_state.dart'
@@ -89,16 +90,25 @@ class MockManageWorkoutUseCase extends _i1.Mock
       ) as bool);
 
   @override
-  _i3.Stream<(_i8.WorkoutTimerState, _i9.WorkoutProgressState)> call(
-          List<_i4.WorkoutBlock>? blocks) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #call,
-          [blocks],
-        ),
-        returnValue: _i3
-            .Stream<(_i8.WorkoutTimerState, _i9.WorkoutProgressState)>.empty(),
-      ) as _i3.Stream<(_i8.WorkoutTimerState, _i9.WorkoutProgressState)>);
+  _i3.Stream<
+          (_i8.WorkoutTimerState, _i9.WorkoutProgressState, _i10.PowerAlertMessage?)>
+      call(List<_i4.WorkoutBlock>? blocks) => (super.noSuchMethod(
+            Invocation.method(
+              #call,
+              [blocks],
+            ),
+            returnValue: _i3.Stream<
+                (
+                  _i8.WorkoutTimerState,
+                  _i9.WorkoutProgressState,
+                  _i10.PowerAlertMessage?
+                )>.empty(),
+          ) as _i3.Stream<
+              (
+                _i8.WorkoutTimerState,
+                _i9.WorkoutProgressState,
+                _i10.PowerAlertMessage?
+              )>);
 
   @override
   void pauseWorkout() => super.noSuchMethod(
