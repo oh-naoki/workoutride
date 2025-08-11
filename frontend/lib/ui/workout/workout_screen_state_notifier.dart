@@ -25,6 +25,7 @@ class WorkoutScreenUiState with _$WorkoutScreenUiState {
     @Default(0) int currentBlockIndex,
     @Default(0) int elapsedSeconds,
     @Default(false) bool isPaused,
+    @Default(60.0) double userWeight,
     String? errorMessage,
     PowerAlertMessage? powerAlertMessage,
   }) = _WorkoutScreenUiState;
@@ -77,6 +78,7 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
         isLoading: false,
         maxPower: (maxTargetWatts * 1.5).toInt(), // 最大値の1.5倍を設定
         targetPower: blocks.isNotEmpty ? (blocks.first.targetPwr * _userWeight!).toInt() : 0,
+        userWeight: _userWeight!,
       );
 
       // ワークアウトを開始
@@ -86,6 +88,7 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
       state = WorkoutScreenUiState(
         isLoading: false,
         errorMessage: e.toString(),
+        userWeight: _userWeight ?? 60.0,
       );
     }
   }

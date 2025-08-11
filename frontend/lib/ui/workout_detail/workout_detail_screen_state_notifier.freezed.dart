@@ -19,6 +19,7 @@ mixin _$WorkoutDetailScreenUiState {
   List<WorkoutBlock> get workoutBlocks => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
+  double? get userWeight => throw _privateConstructorUsedError;
 
   /// Create a copy of WorkoutDetailScreenUiState
   /// with the given fields replaced by the non-null parameter values.
@@ -35,7 +36,10 @@ abstract class $WorkoutDetailScreenUiStateCopyWith<$Res> {
           WorkoutDetailScreenUiState>;
   @useResult
   $Res call(
-      {List<WorkoutBlock> workoutBlocks, bool isLoading, String? errorMessage});
+      {List<WorkoutBlock> workoutBlocks,
+      bool isLoading,
+      String? errorMessage,
+      double? userWeight});
 }
 
 /// @nodoc
@@ -57,6 +61,7 @@ class _$WorkoutDetailScreenUiStateCopyWithImpl<$Res,
     Object? workoutBlocks = null,
     Object? isLoading = null,
     Object? errorMessage = freezed,
+    Object? userWeight = freezed,
   }) {
     return _then(_value.copyWith(
       workoutBlocks: null == workoutBlocks
@@ -71,6 +76,10 @@ class _$WorkoutDetailScreenUiStateCopyWithImpl<$Res,
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
               as String?,
+      userWeight: freezed == userWeight
+          ? _value.userWeight
+          : userWeight // ignore: cast_nullable_to_non_nullable
+              as double?,
     ) as $Val);
   }
 }
@@ -85,7 +94,10 @@ abstract class _$$WorkoutDetailScreenUiStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {List<WorkoutBlock> workoutBlocks, bool isLoading, String? errorMessage});
+      {List<WorkoutBlock> workoutBlocks,
+      bool isLoading,
+      String? errorMessage,
+      double? userWeight});
 }
 
 /// @nodoc
@@ -106,6 +118,7 @@ class __$$WorkoutDetailScreenUiStateImplCopyWithImpl<$Res>
     Object? workoutBlocks = null,
     Object? isLoading = null,
     Object? errorMessage = freezed,
+    Object? userWeight = freezed,
   }) {
     return _then(_$WorkoutDetailScreenUiStateImpl(
       workoutBlocks: null == workoutBlocks
@@ -120,6 +133,10 @@ class __$$WorkoutDetailScreenUiStateImplCopyWithImpl<$Res>
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
               as String?,
+      userWeight: freezed == userWeight
+          ? _value.userWeight
+          : userWeight // ignore: cast_nullable_to_non_nullable
+              as double?,
     ));
   }
 }
@@ -132,7 +149,8 @@ class _$WorkoutDetailScreenUiStateImpl
   const _$WorkoutDetailScreenUiStateImpl(
       {final List<WorkoutBlock> workoutBlocks = const [],
       this.isLoading = false,
-      this.errorMessage})
+      this.errorMessage = null,
+      this.userWeight = null})
       : _workoutBlocks = workoutBlocks;
 
   final List<WorkoutBlock> _workoutBlocks;
@@ -148,11 +166,15 @@ class _$WorkoutDetailScreenUiStateImpl
   @JsonKey()
   final bool isLoading;
   @override
+  @JsonKey()
   final String? errorMessage;
+  @override
+  @JsonKey()
+  final double? userWeight;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'WorkoutDetailScreenUiState(workoutBlocks: $workoutBlocks, isLoading: $isLoading, errorMessage: $errorMessage)';
+    return 'WorkoutDetailScreenUiState(workoutBlocks: $workoutBlocks, isLoading: $isLoading, errorMessage: $errorMessage, userWeight: $userWeight)';
   }
 
   @override
@@ -162,7 +184,8 @@ class _$WorkoutDetailScreenUiStateImpl
       ..add(DiagnosticsProperty('type', 'WorkoutDetailScreenUiState'))
       ..add(DiagnosticsProperty('workoutBlocks', workoutBlocks))
       ..add(DiagnosticsProperty('isLoading', isLoading))
-      ..add(DiagnosticsProperty('errorMessage', errorMessage));
+      ..add(DiagnosticsProperty('errorMessage', errorMessage))
+      ..add(DiagnosticsProperty('userWeight', userWeight));
   }
 
   @override
@@ -175,7 +198,9 @@ class _$WorkoutDetailScreenUiStateImpl
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
             (identical(other.errorMessage, errorMessage) ||
-                other.errorMessage == errorMessage));
+                other.errorMessage == errorMessage) &&
+            (identical(other.userWeight, userWeight) ||
+                other.userWeight == userWeight));
   }
 
   @override
@@ -183,7 +208,8 @@ class _$WorkoutDetailScreenUiStateImpl
       runtimeType,
       const DeepCollectionEquality().hash(_workoutBlocks),
       isLoading,
-      errorMessage);
+      errorMessage,
+      userWeight);
 
   /// Create a copy of WorkoutDetailScreenUiState
   /// with the given fields replaced by the non-null parameter values.
@@ -200,7 +226,8 @@ abstract class _WorkoutDetailScreenUiState
   const factory _WorkoutDetailScreenUiState(
       {final List<WorkoutBlock> workoutBlocks,
       final bool isLoading,
-      final String? errorMessage}) = _$WorkoutDetailScreenUiStateImpl;
+      final String? errorMessage,
+      final double? userWeight}) = _$WorkoutDetailScreenUiStateImpl;
 
   @override
   List<WorkoutBlock> get workoutBlocks;
@@ -208,6 +235,8 @@ abstract class _WorkoutDetailScreenUiState
   bool get isLoading;
   @override
   String? get errorMessage;
+  @override
+  double? get userWeight;
 
   /// Create a copy of WorkoutDetailScreenUiState
   /// with the given fields replaced by the non-null parameter values.

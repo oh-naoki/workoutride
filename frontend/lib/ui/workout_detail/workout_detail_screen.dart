@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/ui/workout/workout_screen.dart';
 import 'package:workoutride/ui/workout_detail/workout_detail_screen_state_notifier.dart';
-import 'package:workoutride/di/providers.dart';
 
 class WorkoutDetailScreen extends ConsumerWidget {
   final int workoutId;
@@ -33,7 +32,7 @@ class WorkoutDetailScreen extends ConsumerWidget {
           child: Column(
             children: [
               WorkoutDetailHeader(workoutId: workoutId),
-              WorkoutDetailBody(uiState: uiState),
+              WorkoutDetailBody(uiState: uiState, workoutId: workoutId),
             ],
           ),
         ),
@@ -84,8 +83,9 @@ class WorkoutDetailHeader extends ConsumerWidget {
 
 class WorkoutDetailBody extends StatelessWidget {
   final WorkoutDetailScreenUiState uiState;
+  final int workoutId;
   
-  const WorkoutDetailBody({super.key, required this.uiState});
+  const WorkoutDetailBody({super.key, required this.uiState, required this.workoutId});
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +135,7 @@ class WorkoutDetailBody extends StatelessWidget {
                 ),
               );
             } else {
-              return WorkoutMenu(blocks: uiState.workoutBlocks);
+              return WorkoutMenu(blocks: uiState.workoutBlocks, workoutId: workoutId);
             }
           },
         ),
@@ -144,57 +144,25 @@ class WorkoutDetailBody extends StatelessWidget {
   }
 }
 
-class WorkoutMenu extends ConsumerStatefulWidget {
+class WorkoutMenu extends ConsumerWidget {
   final List<WorkoutBlock> blocks;
+  final int workoutId;
   
-  const WorkoutMenu({super.key, required this.blocks});
-  
-  @override
-  ConsumerState<WorkoutMenu> createState() => _WorkoutMenuState();
-}
-
-class _WorkoutMenuState extends ConsumerState<WorkoutMenu> {
-  double? _userWeight;
-  
-  @override
-  void initState() {
-    super.initState();
-    _loadUserWeight();
-  }
-  
-  Future<void> _loadUserWeight() async {
-    try {
-      final useCase = ref.read(getUserProfileUseCaseProvider);
-      final profile = await useCase();
-      if (mounted) {
-        setState(() {
-          _userWeight = profile?.weight ?? 60.0;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _userWeight = 60.0;
-        });
-      }
-    }
-  }
+  const WorkoutMenu({super.key, required this.blocks, required this.workoutId});
 
   @override
-  Widget build(BuildContext context) {
-    if (_userWeight == null) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
+  Widget build(BuildContext context, WidgetRef ref) {
+    final uiState = ref.watch(workoutDetailScreenStateNotifierProvider(workoutId));
+    
+    final userWeight = uiState.userWeight ?? 60.0;
     
     return ListView.separated(
-      itemCount: widget.blocks.length,
+      itemCount: blocks.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        final block = widget.blocks[index];
-        final targetWatts = (block.targetPwr * _userWeight!).toInt();
+        final block = blocks[index];
+        final targetWatts = (block.targetPwr * userWeight).toInt();
         return WorkoutMenuItem(
           type: block.blockType,
           power: targetWatts,

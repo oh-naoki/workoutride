@@ -1,53 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/ui/ble_setting/scan_screen.dart';
 import 'package:workoutride/ui/settings/weight_registration_dialog.dart';
+import 'package:workoutride/ui/settings/settings_screen_state_notifier.dart';
 
-class SettingsScreen extends ConsumerStatefulWidget {
+class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
-  @override
-  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
-}
-
-class _SettingsScreenState extends ConsumerState<SettingsScreen> {
-  double? _currentWeight;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadCurrentWeight();
-  }
-
-  Future<void> _loadCurrentWeight() async {
-    try {
-      final useCase = ref.read(getUserProfileUseCaseProvider);
-      final profile = await useCase();
-      if (mounted) {
-        setState(() {
-          _currentWeight = profile?.weight;
-        });
-      }
-    } catch (e) {
-      // エラーハンドリング（ログなど）
-    }
-  }
-
-  Future<void> _showWeightRegistrationDialog() async {
+  Future<void> _showWeightRegistrationDialog(BuildContext context, WidgetRef ref, double? currentWeight) async {
     final result = await showDialog<double>(
       context: context,
       builder: (context) => WeightRegistrationDialog(
-        currentWeight: _currentWeight,
+        currentWeight: currentWeight,
       ),
     );
 
     if (result != null) {
-      setState(() {
-        _currentWeight = result;
-      });
+      await ref.read(settingsScreenStateNotifierProvider.notifier).updateWeight(result);
       
-      if (mounted) {
+      if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('体重を${result.toStringAsFixed(1)}kgに設定しました'),
@@ -58,7 +29,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
   }
 
-  void _navigateToBleSetting() {
+  void _navigateToBleSetting(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const ScanScreen()),
@@ -66,7 +37,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final uiState = ref.watch(settingsScreenStateNotifierProvider);
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text("設定", style: TextStyle(color: Colors.white)),
@@ -75,28 +48,63 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       backgroundColor: Colors.black,
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          _buildSectionTitle('ユーザー設定'),
-          _buildSettingTile(
-            title: '体重設定',
-            subtitle: _currentWeight != null 
-                ? '現在の体重: ${_currentWeight!.toStringAsFixed(1)}kg'
-                : '体重が設定されていません',
-            icon: Icons.person,
-            onTap: _showWeightRegistrationDialog,
-          ),
-          const SizedBox(height: 32),
-          _buildSectionTitle('デバイス設定'),
-          _buildSettingTile(
-            title: 'Bluetooth設定',
-            subtitle: 'パワーメーターの接続設定',
-            icon: Icons.bluetooth,
-            onTap: _navigateToBleSetting,
-          ),
-        ],
-      ),
+      body: uiState.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                if (uiState.errorMessage != null)
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.red.withOpacity(0.1),
+                      border: Border.all(color: Colors.red),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.error, color: Colors.red),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            uiState.errorMessage!,
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => ref.read(settingsScreenStateNotifierProvider.notifier).clearError(),
+                          icon: const Icon(Icons.close, color: Colors.red),
+                        ),
+                      ],
+                    ),
+                  ),
+                Expanded(
+                  child: ListView(
+                    padding: const EdgeInsets.all(16),
+                    children: [
+                      _buildSectionTitle('ユーザー設定'),
+                      _buildSettingTile(
+                        title: '体重設定',
+                        subtitle: uiState.currentWeight != null 
+                            ? '現在の体重: ${uiState.currentWeight!.toStringAsFixed(1)}kg'
+                            : '体重が設定されていません',
+                        icon: Icons.person,
+                        onTap: () => _showWeightRegistrationDialog(context, ref, uiState.currentWeight),
+                      ),
+                      const SizedBox(height: 32),
+                      _buildSectionTitle('デバイス設定'),
+                      _buildSettingTile(
+                        title: 'Bluetooth設定',
+                        subtitle: 'パワーメーターの接続設定',
+                        icon: Icons.bluetooth,
+                        onTap: () => _navigateToBleSetting(context),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
     );
   }
 

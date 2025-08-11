@@ -4,7 +4,6 @@ import 'package:workoutride/component/meter.dart';
 import 'package:workoutride/domain/model/power_alert_message.dart';
 import 'package:workoutride/ui/workout/developer_menu.dart';
 import 'package:workoutride/ui/workout/workout_screen_state_notifier.dart';
-import 'package:workoutride/di/providers.dart';
 
 class WorkoutScreen extends ConsumerStatefulWidget {
   final int workoutId;
@@ -17,31 +16,6 @@ class WorkoutScreen extends ConsumerStatefulWidget {
 
 class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
   final ScrollController _scrollController = ScrollController();
-  double? _userWeight;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadUserWeight();
-  }
-  
-  Future<void> _loadUserWeight() async {
-    try {
-      final useCase = ref.read(getUserProfileUseCaseProvider);
-      final profile = await useCase();
-      if (mounted) {
-        setState(() {
-          _userWeight = profile?.weight ?? 60.0;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _userWeight = 60.0;
-        });
-      }
-    }
-  }
 
   @override
   void dispose() {
@@ -199,7 +173,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                               },
                               child: _buildWorkoutCard(
                                 name: block.blockType,
-                                power: _userWeight != null ? (block.targetPwr * _userWeight!).toInt() : 0,
+                                power: (block.targetPwr * uiState.userWeight).toInt(),
                                 time: _formatDuration(block.durationSeconds),
                                 isActive: isCurrentBlock,
                                 progress: isCurrentBlock 

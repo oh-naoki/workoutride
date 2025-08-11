@@ -13,7 +13,8 @@ class WorkoutDetailScreenUiState with _$WorkoutDetailScreenUiState {
   const factory WorkoutDetailScreenUiState({
     @Default([]) List<WorkoutBlock> workoutBlocks,
     @Default(false) bool isLoading,
-    String? errorMessage,
+    @Default(null) String? errorMessage,
+    @Default(null) double? userWeight,
   }) = _WorkoutDetailScreenUiState;
 }
 
@@ -26,6 +27,7 @@ class WorkoutDetailScreenStateNotifier extends _$WorkoutDetailScreenStateNotifie
     state = const WorkoutDetailScreenUiState(isLoading: true);
     _getWorkoutBlocksUseCase = ref.read(getWorkoutBlocksUseCaseProvider);
     _fetchWorkoutBlocks(workoutId);
+    _loadUserWeight();
     return state;
   }
 
@@ -45,7 +47,26 @@ class WorkoutDetailScreenStateNotifier extends _$WorkoutDetailScreenStateNotifie
     }
   }
 
+  Future<void> _loadUserWeight() async {
+    try {
+      final useCase = ref.read(getUserProfileUseCaseProvider);
+      final profile = await useCase();
+      
+      state = state.copyWith(
+        userWeight: profile?.weight ?? 60.0,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        userWeight: 60.0,
+      );
+    }
+  }
+
   Future<void> refreshWorkoutBlocks(int workoutId) async {
     await _fetchWorkoutBlocks(workoutId);
+  }
+
+  void reloadUserWeight() {
+    _loadUserWeight();
   }
 }
