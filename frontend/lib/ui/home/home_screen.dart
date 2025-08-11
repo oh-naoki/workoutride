@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workoutride/domain/model/workout/workout_summary.dart';
-import 'package:workoutride/ui/ble_setting/scan_screen.dart';
+import 'package:workoutride/ui/settings/settings_screen.dart';
 import 'package:workoutride/ui/home/home_screen_state_notifier.dart';
 import 'package:workoutride/ui/workout_detail/workout_detail_screen.dart';
 
@@ -22,7 +22,7 @@ class HomeScreen extends ConsumerWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const ScanScreen(),
+                  builder: (context) => const SettingsScreen(),
                 ),
               );
             },

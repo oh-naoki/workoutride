@@ -7,7 +7,7 @@ part of 'manage_workout_use_case.dart';
 // **************************************************************************
 
 String _$manageWorkoutUseCaseHash() =>
-    r'54c631171e91d635af05cada1c5d5145e02d8bef';
+    r'232087f6c92272bc35330389ec633ca14f52f1c5';
 
 /// See also [manageWorkoutUseCase].
 @ProviderFor(manageWorkoutUseCase)

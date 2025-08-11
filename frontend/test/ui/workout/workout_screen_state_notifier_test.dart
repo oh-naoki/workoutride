@@ -14,6 +14,7 @@ import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_useca
 import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart' as workout_usecase;
 import 'package:workoutride/ui/workout/workout_screen_state_notifier.dart';
 import 'package:workoutride/di/providers.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'workout_screen_state_notifier_test.mocks.dart';
 
@@ -35,7 +36,7 @@ void main() {
       id: 1,
       workoutId: testWorkoutId,
       blockType: 'ウォームアップ',
-      targetPower: 100,
+      targetPwr: 1.6,
       durationSeconds: 300,
       orderIndex: 1,
       createdAt: DateTime(2023, 1, 1),
@@ -45,7 +46,7 @@ void main() {
       id: 2,
       workoutId: testWorkoutId,
       blockType: 'メイン',
-      targetPower: 200,
+      targetPwr: 3.3,
       durationSeconds: 600,
       orderIndex: 2,
       createdAt: DateTime(2023, 1, 1),
@@ -58,16 +59,21 @@ void main() {
     cadence: 80,
   );
 
-  setUp(() {
+  setUp(() async {
     mockGetWorkoutBlocksUseCase = MockGetWorkoutBlocksUseCase();
     mockGetCalculatedPowerMeterDataUseCase = MockGetCalculatedPowerMeterDataUseCase();
     mockManageWorkoutUseCase = MockManageWorkoutUseCase();
+    
+    // SharedPreferencesのモックを作成
+    SharedPreferences.setMockInitialValues({});
+    final sharedPreferences = await SharedPreferences.getInstance();
 
     container = ProviderContainer(
       overrides: [
         getWorkoutBlocksUseCaseProvider.overrideWithValue(mockGetWorkoutBlocksUseCase),
         getCalculatedPowerMeterDataUseCaseProvider.overrideWithValue(mockGetCalculatedPowerMeterDataUseCase),
         manageWorkoutUseCaseProvider.overrideWithValue(mockManageWorkoutUseCase),
+        sharedPreferencesProvider.overrideWithValue(sharedPreferences),
       ],
     );
   });

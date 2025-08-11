@@ -3,7 +3,7 @@ module Entities
     expose :id
     expose :workout_id
     expose :order_index
-    expose :target_power
+    expose :target_pwr
     expose :duration
     expose :block_type
     expose :created_at

@@ -12,6 +12,10 @@ import 'package:workoutride/data/power_meter_data_source.dart';
 import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart';
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart';
 import 'package:workoutride/domain/service/power_zone_analyzer.dart';
+import 'package:workoutride/domain/repository/user_profile_repository.dart';
+import 'package:workoutride/data/repository/user_profile_repository_impl.dart';
+import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart';
+import 'package:workoutride/domain/usecase/user_profile/save_user_weight_use_case.dart';
 
 part 'providers.g.dart';
 
@@ -72,6 +76,7 @@ ManageWorkoutUseCase manageWorkoutUseCase(ManageWorkoutUseCaseRef ref) {
   return ManageWorkoutUseCase(
     ref.watch(getCalculatedPowerMeterDataUseCaseProvider),
     ref.watch(powerZoneAnalyzerProvider),
+    ref.watch(getUserProfileUseCaseProvider),
   );
 }
 
@@ -110,4 +115,22 @@ PowerMeterDataSource powerMeterDataSource(PowerMeterDataSourceRef ref) {
   } else {
     return BlePowerMeterDataSource(ref.read(bleConnectorProvider));
   }
+}
+
+// User Profile providers
+@riverpod
+UserProfileRepository userProfileRepository(UserProfileRepositoryRef ref) {
+  return UserProfileRepositoryImpl(
+    sharedPreferences: ref.read(sharedPreferencesProvider),
+  );
+}
+
+@riverpod
+GetUserProfileUseCase getUserProfileUseCase(GetUserProfileUseCaseRef ref) {
+  return GetUserProfileUseCase(repository: ref.read(userProfileRepositoryProvider));
+}
+
+@riverpod
+SaveUserWeightUseCase saveUserWeightUseCase(SaveUserWeightUseCaseRef ref) {
+  return SaveUserWeightUseCase(repository: ref.read(userProfileRepositoryProvider));
 }

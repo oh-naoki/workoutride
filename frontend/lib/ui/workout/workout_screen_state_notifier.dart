@@ -8,6 +8,7 @@ import 'package:workoutride/domain/model/power_alert_message.dart';
 import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart';
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart';
 import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart';
+import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart';
 
 part 'workout_screen_state_notifier.freezed.dart';
 part 'workout_screen_state_notifier.g.dart';
@@ -34,6 +35,8 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
   late final GetWorkoutBlocksUseCase _getWorkoutBlocksUseCase;
   late final GetCalculatedPowerMeterDataUseCase _getPowerMeterDataUseCase;
   late final ManageWorkoutUseCase _manageWorkoutUseCase;
+  late final GetUserProfileUseCase _getUserProfileUseCase;
+  double? _userWeight;
   StreamSubscription? _workoutSubscription;
   StreamSubscription? _powerSubscription;
 
@@ -46,6 +49,7 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
     _getWorkoutBlocksUseCase = ref.read(getWorkoutBlocksUseCaseProvider);
     _getPowerMeterDataUseCase = ref.read(getCalculatedPowerMeterDataUseCaseProvider);
     _manageWorkoutUseCase = ref.read(manageWorkoutUseCaseProvider);
+    _getUserProfileUseCase = ref.read(getUserProfileUseCaseProvider);
 
     ref.onDispose(() {
       _powerSubscription?.cancel();
@@ -58,16 +62,21 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
 
   Future<void> _initializeWorkout(int workoutId) async {
     try {
+      // ユーザー体重を取得
+      final userProfile = await _getUserProfileUseCase();
+      _userWeight = userProfile?.weight ?? 60.0; // デフォルト60kg
+      
       final blocks = await _getWorkoutBlocksUseCase.call(workoutId);
       
-      // 最大パワー値を計算（全ブロックの中で最大のtargetPowerを取得）
-      final maxTargetPower = blocks.fold(0, (max, block) => block.targetPower > max ? block.targetPower : max);
+      // 最大パワー値を計算（全ブロックの中で最大のtargetPwr * 体重を取得）
+      final maxTargetPwr = blocks.fold(0.0, (max, block) => block.targetPwr > max ? block.targetPwr : max);
+      final maxTargetWatts = (maxTargetPwr * _userWeight!).toInt();
       
       state = WorkoutScreenUiState(
         workoutBlocks: blocks,
         isLoading: false,
-        maxPower: (maxTargetPower * 1.5).toInt(), // 最大値の1.5倍を設定
-        targetPower: blocks.isNotEmpty ? blocks.first.targetPower : 0, // 現在のブロックのターゲットパワー
+        maxPower: (maxTargetWatts * 1.5).toInt(), // 最大値の1.5倍を設定
+        targetPower: blocks.isNotEmpty ? (blocks.first.targetPwr * _userWeight!).toInt() : 0,
       );
 
       // ワークアウトを開始
@@ -91,7 +100,9 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
       state = state.copyWith(
         elapsedSeconds: timerState.elapsedSeconds,
         currentBlockIndex: progressState.currentBlockIndex,
-        targetPower: progressState.currentBlock?.targetPower ?? 0,
+        targetPower: progressState.currentBlock != null && _userWeight != null
+            ? (progressState.currentBlock!.targetPwr * _userWeight!).toInt()
+            : 0,
         powerAlertMessage: powerAlertMessage,
       );
     });

@@ -8,7 +8,7 @@ class WorkoutBlock with _$WorkoutBlock {
     required int id,
     required int workoutId,
     required int orderIndex,
-    required int targetPower,
+    required double targetPwr,
     required int durationSeconds,
     required String blockType,
     required DateTime createdAt,

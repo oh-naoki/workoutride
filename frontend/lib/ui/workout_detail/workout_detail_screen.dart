@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/ui/workout/workout_screen.dart';
 import 'package:workoutride/ui/workout_detail/workout_detail_screen_state_notifier.dart';
+import 'package:workoutride/di/providers.dart';
 
 class WorkoutDetailScreen extends ConsumerWidget {
   final int workoutId;
@@ -143,22 +144,60 @@ class WorkoutDetailBody extends StatelessWidget {
   }
 }
 
-class WorkoutMenu extends StatelessWidget {
+class WorkoutMenu extends ConsumerStatefulWidget {
   final List<WorkoutBlock> blocks;
   
   const WorkoutMenu({super.key, required this.blocks});
+  
+  @override
+  ConsumerState<WorkoutMenu> createState() => _WorkoutMenuState();
+}
+
+class _WorkoutMenuState extends ConsumerState<WorkoutMenu> {
+  double? _userWeight;
+  
+  @override
+  void initState() {
+    super.initState();
+    _loadUserWeight();
+  }
+  
+  Future<void> _loadUserWeight() async {
+    try {
+      final useCase = ref.read(getUserProfileUseCaseProvider);
+      final profile = await useCase();
+      if (mounted) {
+        setState(() {
+          _userWeight = profile?.weight ?? 60.0;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _userWeight = 60.0;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (_userWeight == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    
     return ListView.separated(
-      itemCount: blocks.length,
+      itemCount: widget.blocks.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        final block = blocks[index];
+        final block = widget.blocks[index];
+        final targetWatts = (block.targetPwr * _userWeight!).toInt();
         return WorkoutMenuItem(
           type: block.blockType,
-          power: block.targetPower,
+          power: targetWatts,
           duration: block.durationSeconds,
         );
       },

@@ -10,18 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_13_075332) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_11_083745) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "workout_blocks", force: :cascade do |t|
     t.bigint "workout_id", null: false
     t.integer "order_index"
-    t.integer "target_power"
     t.integer "duration"
     t.string "block_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "target_pwr", precision: 10, scale: 2
     t.index ["workout_id"], name: "index_workout_blocks_on_workout_id"
   end
 

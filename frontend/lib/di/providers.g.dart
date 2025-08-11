@@ -64,7 +64,7 @@ final getWorkoutBlocksUseCaseProvider =
 typedef GetWorkoutBlocksUseCaseRef
     = AutoDisposeProviderRef<GetWorkoutBlocksUseCase>;
 String _$manageWorkoutUseCaseHash() =>
-    r'54c631171e91d635af05cada1c5d5145e02d8bef';
+    r'232087f6c92272bc35330389ec633ca14f52f1c5';
 
 /// See also [manageWorkoutUseCase].
 @ProviderFor(manageWorkoutUseCase)
@@ -172,6 +172,66 @@ final powerMeterDataSourceProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef PowerMeterDataSourceRef = AutoDisposeProviderRef<PowerMeterDataSource>;
+String _$userProfileRepositoryHash() =>
+    r'bf99993d075f1653c1bf51c425ccca2dbdcca1cc';
+
+/// See also [userProfileRepository].
+@ProviderFor(userProfileRepository)
+final userProfileRepositoryProvider =
+    AutoDisposeProvider<UserProfileRepository>.internal(
+  userProfileRepository,
+  name: r'userProfileRepositoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$userProfileRepositoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef UserProfileRepositoryRef
+    = AutoDisposeProviderRef<UserProfileRepository>;
+String _$getUserProfileUseCaseHash() =>
+    r'c9fb583fbf694935134b08849822b8a1f491c515';
+
+/// See also [getUserProfileUseCase].
+@ProviderFor(getUserProfileUseCase)
+final getUserProfileUseCaseProvider =
+    AutoDisposeProvider<GetUserProfileUseCase>.internal(
+  getUserProfileUseCase,
+  name: r'getUserProfileUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getUserProfileUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef GetUserProfileUseCaseRef
+    = AutoDisposeProviderRef<GetUserProfileUseCase>;
+String _$saveUserWeightUseCaseHash() =>
+    r'baa850e68d40a2f4cee4f485807cbc067254ce4f';
+
+/// See also [saveUserWeightUseCase].
+@ProviderFor(saveUserWeightUseCase)
+final saveUserWeightUseCaseProvider =
+    AutoDisposeProvider<SaveUserWeightUseCase>.internal(
+  saveUserWeightUseCase,
+  name: r'saveUserWeightUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$saveUserWeightUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef SaveUserWeightUseCaseRef
+    = AutoDisposeProviderRef<SaveUserWeightUseCase>;
 String _$mockModeStateHash() => r'310596d04cea66eb1dbc5e238a51543d1c559221';
 
 /// See also [MockModeState].

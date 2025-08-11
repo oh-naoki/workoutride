@@ -54,7 +54,7 @@ class ScanScreen extends HookConsumerWidget {
                     ),
                   ),
                 for (final result in uiState.scanResults)
-                  ListTile(
+                  DeviceListTile(
                     title: result.deviceName,
                     onTap: () {
                       ref.read(scanScreenStateNotifierProvider.notifier).onDeviceTap(result);
@@ -77,8 +77,8 @@ class ScanScreen extends HookConsumerWidget {
   }
 }
 
-class ListTile extends StatelessWidget {
-  const ListTile({
+class DeviceListTile extends StatelessWidget {
+  const DeviceListTile({
     super.key,
     required this.title,
     required this.onTap,

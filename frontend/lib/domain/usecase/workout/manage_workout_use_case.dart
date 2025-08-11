@@ -7,6 +7,8 @@ import 'package:workoutride/domain/model/workout/workout_timer_state.dart';
 import 'package:workoutride/domain/model/power_alert_message.dart';
 import 'package:workoutride/domain/service/power_zone_analyzer.dart';
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart';
+import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart';
+import 'package:workoutride/di/providers.dart';
 
 part 'manage_workout_use_case.g.dart';
 
@@ -15,26 +17,34 @@ ManageWorkoutUseCase manageWorkoutUseCase(ManageWorkoutUseCaseRef ref) {
   return ManageWorkoutUseCase(
     ref.watch(getCalculatedPowerMeterDataUseCaseProvider),
     ref.watch(powerZoneAnalyzerProvider),
+    ref.watch(getUserProfileUseCaseProvider),
   );
 }
 
 class ManageWorkoutUseCase {
   final GetCalculatedPowerMeterDataUseCase _getPowerMeterDataUseCase;
   final PowerZoneAnalyzer _powerZoneAnalyzer;
+  final GetUserProfileUseCase _getUserProfileUseCase;
   Timer? _timer;
   bool _isPaused = false;
   StreamController<(WorkoutTimerState, WorkoutProgressState, PowerAlertMessage?)>? _controller;
+  double? _userWeight;
 
   ManageWorkoutUseCase(
     this._getPowerMeterDataUseCase,
     this._powerZoneAnalyzer,
+    this._getUserProfileUseCase,
   );
 
-  Stream<(WorkoutTimerState, WorkoutProgressState, PowerAlertMessage?)> call(List<WorkoutBlock> blocks) {
+  Stream<(WorkoutTimerState, WorkoutProgressState, PowerAlertMessage?)> call(List<WorkoutBlock> blocks) async* {
     // 前回の状態をリセット
     _timer?.cancel();
     _controller?.close();
     _isPaused = false;
+    
+    // 体重を取得
+    final userProfile = await _getUserProfileUseCase();
+    _userWeight = userProfile?.weight ?? 60.0;
     
     final totalSeconds = blocks.fold(0, (sum, block) => sum + block.durationSeconds);
     
@@ -56,9 +66,10 @@ class ManageWorkoutUseCase {
         if (currentBlock != null) {
           PowerAlertMessage? alertMessage;
           
-          if (_powerZoneAnalyzer.isBelowTargetZone(powerData.power, currentBlock.targetPower)) {
+          final targetWatts = (currentBlock.targetPwr * _userWeight!).toInt();
+          if (_powerZoneAnalyzer.isBelowTargetZone(powerData.power, targetWatts)) {
             alertMessage = PowerAlertMessage.powerTooLow;
-          } else if (_powerZoneAnalyzer.isAboveTargetZone(powerData.power, currentBlock.targetPower)) {
+          } else if (_powerZoneAnalyzer.isAboveTargetZone(powerData.power, targetWatts)) {
             alertMessage = PowerAlertMessage.powerTooHigh;
           }
           
@@ -125,7 +136,7 @@ class ManageWorkoutUseCase {
       powerSubscription.cancel();
     };
 
-    return controller.stream;
+    yield* controller.stream;
   }
 
   void pauseWorkout() {
