@@ -1,17 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:workoutride/data/ble_connector.dart';
+import 'package:workoutride/data/power_meter_data_source.dart';
 import 'package:workoutride/domain/usecase/get_power_meter_data_use_case.dart';
 
-import 'get_power_meter_data_use_case_test.mocks.dart';
+import 'get_power_meter_data_use_case_test.mocks.dart' as mocks;
 
-@GenerateMocks([BleConnector])
+@GenerateMocks([PowerMeterDataSource])
 void main() {
-  late MockBleConnector mockBleConnector;
+  late mocks.MockPowerMeterDataSource mockPowerMeterDataSource;
 
   setUp(() {
-    mockBleConnector = MockBleConnector();
+    mockPowerMeterDataSource = mocks.MockPowerMeterDataSource();
   });
 
   // Test data constants
@@ -29,16 +29,16 @@ void main() {
   group('GetPowerMeterDataUseCase', () {
     // Test group for BLE connection
     group('BLE Connection', () {
-      test('should subscribe to BLE connector notifications for power meter characteristic', () {
+      test('should subscribe to power meter data source for raw data', () {
         // Arrange
-        final useCase = GetPowerMeterDataUseCase(mockBleConnector);
-        when(mockBleConnector.notify("2A63")).thenAnswer((_) => const Stream.empty());
+        final useCase = GetPowerMeterDataUseCase(mockPowerMeterDataSource);
+        when(mockPowerMeterDataSource.getRawData()).thenAnswer((_) => const Stream.empty());
 
         // Act
         useCase.call();
 
         // Assert
-        verify(mockBleConnector.notify("2A63")).called(1);
+        verify(mockPowerMeterDataSource.getRawData()).called(1);
       });
     });
 
@@ -46,7 +46,7 @@ void main() {
     group('Data Processing', () {
       test('should correctly parse basic power data with flags and power value', () {
         // Arrange
-        final useCase = GetPowerMeterDataUseCase(mockBleConnector);
+        final useCase = GetPowerMeterDataUseCase(mockPowerMeterDataSource);
         final data = testData['basicPowerData']!;
 
         // Act
@@ -59,7 +59,7 @@ void main() {
 
       test('should correctly parse power data with balance information', () {
         // Arrange
-        final useCase = GetPowerMeterDataUseCase(mockBleConnector);
+        final useCase = GetPowerMeterDataUseCase(mockPowerMeterDataSource);
         final data = testData['powerBalanceData']!;
 
         // Act
@@ -72,7 +72,7 @@ void main() {
 
       test('should correctly calculate cadence from crank revolution data and time', () {
         // Arrange
-        final useCase = GetPowerMeterDataUseCase(mockBleConnector);
+        final useCase = GetPowerMeterDataUseCase(mockPowerMeterDataSource);
         final data1 = testData['initialCrankData']!;
         final data2 = testData['crankDataWithRevs']!;
 
@@ -90,7 +90,7 @@ void main() {
 
       test('should handle empty data', () {
         // Arrange
-        final useCase = GetPowerMeterDataUseCase(mockBleConnector);
+        final useCase = GetPowerMeterDataUseCase(mockPowerMeterDataSource);
         final data = testData['emptyData']!;
 
         // Act
@@ -103,7 +103,7 @@ void main() {
 
       test('should handle invalid data format', () {
         // Arrange
-        final useCase = GetPowerMeterDataUseCase(mockBleConnector);
+        final useCase = GetPowerMeterDataUseCase(mockPowerMeterDataSource);
         final data = testData['invalidData']!;
 
         // Act
@@ -116,7 +116,7 @@ void main() {
 
       test('should handle minimum and maximum power values', () {
         // Arrange
-        final useCase = GetPowerMeterDataUseCase(mockBleConnector);
+        final useCase = GetPowerMeterDataUseCase(mockPowerMeterDataSource);
         final minPowerData = testData['minPowerData']!;
         final maxPowerData = testData['maxPowerData']!;
 
@@ -134,7 +134,7 @@ void main() {
     group('Error Handling', () {
       test('should handle null data', () {
         // Arrange
-        final useCase = GetPowerMeterDataUseCase(mockBleConnector);
+        final useCase = GetPowerMeterDataUseCase(mockPowerMeterDataSource);
 
         // Act
         final result = useCase.processData([]);
@@ -144,10 +144,10 @@ void main() {
         expect(result.cadence, equals(0));
       });
 
-      test('should handle BLE connection error', () async {
+      test('should handle power meter data source error', () async {
         // Arrange
-        final useCase = GetPowerMeterDataUseCase(mockBleConnector);
-        when(mockBleConnector.notify("2A63")).thenThrow(Exception("BLE connection error"));
+        final useCase = GetPowerMeterDataUseCase(mockPowerMeterDataSource);
+        when(mockPowerMeterDataSource.getRawData()).thenThrow(Exception("Data source error"));
 
         // Act & Assert
         expect(() => useCase.call(), throwsException);

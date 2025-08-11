@@ -5,9 +5,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
 
-import 'package:flutter_blue_plus/flutter_blue_plus.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:workoutride/data/ble_connector.dart' as _i2;
+import 'package:workoutride/data/power_meter_data_source.dart' as _i2;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -23,48 +22,20 @@ import 'package:workoutride/data/ble_connector.dart' as _i2;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-/// A class which mocks [BleConnector].
+/// A class which mocks [PowerMeterDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockBleConnector extends _i1.Mock implements _i2.BleConnector {
-  MockBleConnector() {
+class MockPowerMeterDataSource extends _i1.Mock
+    implements _i2.PowerMeterDataSource {
+  MockPowerMeterDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Future<void> initialize() => (super.noSuchMethod(
+  _i3.Stream<List<int>> getRawData() => (super.noSuchMethod(
         Invocation.method(
-          #initialize,
+          #getRawData,
           [],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
-
-  @override
-  _i3.Stream<List<_i4.ScanResult>> scan() => (super.noSuchMethod(
-        Invocation.method(
-          #scan,
-          [],
-        ),
-        returnValue: _i3.Stream<List<_i4.ScanResult>>.empty(),
-      ) as _i3.Stream<List<_i4.ScanResult>>);
-
-  @override
-  _i3.Future<void> connect(String? deviceId) => (super.noSuchMethod(
-        Invocation.method(
-          #connect,
-          [deviceId],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
-
-  @override
-  _i3.Stream<List<int>> notify(String? uuid) => (super.noSuchMethod(
-        Invocation.method(
-          #notify,
-          [uuid],
         ),
         returnValue: _i3.Stream<List<int>>.empty(),
       ) as _i3.Stream<List<int>>);
