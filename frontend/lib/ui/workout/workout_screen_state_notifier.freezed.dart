@@ -30,6 +30,8 @@ mixin _$WorkoutScreenUiState {
   String? get errorMessage => throw _privateConstructorUsedError;
   PowerAlertMessage? get powerAlertMessage =>
       throw _privateConstructorUsedError;
+  bool get isCountingDown => throw _privateConstructorUsedError;
+  int get countdownSeconds => throw _privateConstructorUsedError;
 
   /// Create a copy of WorkoutScreenUiState
   /// with the given fields replaced by the non-null parameter values.
@@ -57,7 +59,9 @@ abstract class $WorkoutScreenUiStateCopyWith<$Res> {
       double userWeight,
       int userFtp,
       String? errorMessage,
-      PowerAlertMessage? powerAlertMessage});
+      PowerAlertMessage? powerAlertMessage,
+      bool isCountingDown,
+      int countdownSeconds});
 }
 
 /// @nodoc
@@ -89,6 +93,8 @@ class _$WorkoutScreenUiStateCopyWithImpl<$Res,
     Object? userFtp = null,
     Object? errorMessage = freezed,
     Object? powerAlertMessage = freezed,
+    Object? isCountingDown = null,
+    Object? countdownSeconds = null,
   }) {
     return _then(_value.copyWith(
       workoutBlocks: null == workoutBlocks
@@ -143,6 +149,14 @@ class _$WorkoutScreenUiStateCopyWithImpl<$Res,
           ? _value.powerAlertMessage
           : powerAlertMessage // ignore: cast_nullable_to_non_nullable
               as PowerAlertMessage?,
+      isCountingDown: null == isCountingDown
+          ? _value.isCountingDown
+          : isCountingDown // ignore: cast_nullable_to_non_nullable
+              as bool,
+      countdownSeconds: null == countdownSeconds
+          ? _value.countdownSeconds
+          : countdownSeconds // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -168,7 +182,9 @@ abstract class _$$WorkoutScreenUiStateImplCopyWith<$Res>
       double userWeight,
       int userFtp,
       String? errorMessage,
-      PowerAlertMessage? powerAlertMessage});
+      PowerAlertMessage? powerAlertMessage,
+      bool isCountingDown,
+      int countdownSeconds});
 }
 
 /// @nodoc
@@ -197,6 +213,8 @@ class __$$WorkoutScreenUiStateImplCopyWithImpl<$Res>
     Object? userFtp = null,
     Object? errorMessage = freezed,
     Object? powerAlertMessage = freezed,
+    Object? isCountingDown = null,
+    Object? countdownSeconds = null,
   }) {
     return _then(_$WorkoutScreenUiStateImpl(
       workoutBlocks: null == workoutBlocks
@@ -251,6 +269,14 @@ class __$$WorkoutScreenUiStateImplCopyWithImpl<$Res>
           ? _value.powerAlertMessage
           : powerAlertMessage // ignore: cast_nullable_to_non_nullable
               as PowerAlertMessage?,
+      isCountingDown: null == isCountingDown
+          ? _value.isCountingDown
+          : isCountingDown // ignore: cast_nullable_to_non_nullable
+              as bool,
+      countdownSeconds: null == countdownSeconds
+          ? _value.countdownSeconds
+          : countdownSeconds // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -273,7 +299,9 @@ class _$WorkoutScreenUiStateImpl
       this.userWeight = 60.0,
       this.userFtp = 200,
       this.errorMessage,
-      this.powerAlertMessage})
+      this.powerAlertMessage,
+      this.isCountingDown = true,
+      this.countdownSeconds = 15})
       : _workoutBlocks = workoutBlocks;
 
   final List<WorkoutBlock> _workoutBlocks;
@@ -319,10 +347,16 @@ class _$WorkoutScreenUiStateImpl
   final String? errorMessage;
   @override
   final PowerAlertMessage? powerAlertMessage;
+  @override
+  @JsonKey()
+  final bool isCountingDown;
+  @override
+  @JsonKey()
+  final int countdownSeconds;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'WorkoutScreenUiState(workoutBlocks: $workoutBlocks, isLoading: $isLoading, power: $power, cadence: $cadence, maxPower: $maxPower, targetPower: $targetPower, currentBlockIndex: $currentBlockIndex, elapsedSeconds: $elapsedSeconds, isPaused: $isPaused, userWeight: $userWeight, userFtp: $userFtp, errorMessage: $errorMessage, powerAlertMessage: $powerAlertMessage)';
+    return 'WorkoutScreenUiState(workoutBlocks: $workoutBlocks, isLoading: $isLoading, power: $power, cadence: $cadence, maxPower: $maxPower, targetPower: $targetPower, currentBlockIndex: $currentBlockIndex, elapsedSeconds: $elapsedSeconds, isPaused: $isPaused, userWeight: $userWeight, userFtp: $userFtp, errorMessage: $errorMessage, powerAlertMessage: $powerAlertMessage, isCountingDown: $isCountingDown, countdownSeconds: $countdownSeconds)';
   }
 
   @override
@@ -342,7 +376,9 @@ class _$WorkoutScreenUiStateImpl
       ..add(DiagnosticsProperty('userWeight', userWeight))
       ..add(DiagnosticsProperty('userFtp', userFtp))
       ..add(DiagnosticsProperty('errorMessage', errorMessage))
-      ..add(DiagnosticsProperty('powerAlertMessage', powerAlertMessage));
+      ..add(DiagnosticsProperty('powerAlertMessage', powerAlertMessage))
+      ..add(DiagnosticsProperty('isCountingDown', isCountingDown))
+      ..add(DiagnosticsProperty('countdownSeconds', countdownSeconds));
   }
 
   @override
@@ -372,7 +408,11 @@ class _$WorkoutScreenUiStateImpl
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage) &&
             (identical(other.powerAlertMessage, powerAlertMessage) ||
-                other.powerAlertMessage == powerAlertMessage));
+                other.powerAlertMessage == powerAlertMessage) &&
+            (identical(other.isCountingDown, isCountingDown) ||
+                other.isCountingDown == isCountingDown) &&
+            (identical(other.countdownSeconds, countdownSeconds) ||
+                other.countdownSeconds == countdownSeconds));
   }
 
   @override
@@ -390,7 +430,9 @@ class _$WorkoutScreenUiStateImpl
       userWeight,
       userFtp,
       errorMessage,
-      powerAlertMessage);
+      powerAlertMessage,
+      isCountingDown,
+      countdownSeconds);
 
   /// Create a copy of WorkoutScreenUiState
   /// with the given fields replaced by the non-null parameter values.
@@ -417,7 +459,9 @@ abstract class _WorkoutScreenUiState implements WorkoutScreenUiState {
       final double userWeight,
       final int userFtp,
       final String? errorMessage,
-      final PowerAlertMessage? powerAlertMessage}) = _$WorkoutScreenUiStateImpl;
+      final PowerAlertMessage? powerAlertMessage,
+      final bool isCountingDown,
+      final int countdownSeconds}) = _$WorkoutScreenUiStateImpl;
 
   @override
   List<WorkoutBlock> get workoutBlocks;
@@ -445,6 +489,10 @@ abstract class _WorkoutScreenUiState implements WorkoutScreenUiState {
   String? get errorMessage;
   @override
   PowerAlertMessage? get powerAlertMessage;
+  @override
+  bool get isCountingDown;
+  @override
+  int get countdownSeconds;
 
   /// Create a copy of WorkoutScreenUiState
   /// with the given fields replaced by the non-null parameter values.

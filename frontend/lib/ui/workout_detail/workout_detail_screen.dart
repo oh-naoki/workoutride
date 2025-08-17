@@ -94,15 +94,12 @@ class WorkoutDetailBody extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        try {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => WorkoutScreen(workoutId: workoutId),
-                            ),
-                          );
-                        } catch (e) {
-                        }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WorkoutScreen(workoutId: workoutId),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,

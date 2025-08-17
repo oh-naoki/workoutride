@@ -40,7 +40,7 @@ class ScanScreenStateNotifier extends _$ScanScreenStateNotifier {
         );
       },
       onDone: () {
-        print('Scan completed');
+        // Scan completed
       },
       cancelOnError: true,
     );
@@ -55,19 +55,16 @@ class ScanScreenStateNotifier extends _$ScanScreenStateNotifier {
         errorMessage: null,
       );
 
-      // デバイスに接続
       await ref.read(connectBlePowerMeterUseCaseProvider)(result.deviceAddress);
 
-      // 接続成功を設定
       state = state.copyWith(
         isConnected: true,
         isConnecting: false,
       );
 
-      // 接続成功後にデータの購読を開始
       ref.read(getPowerMeterDataUseCaseProvider)().listen(
         (powerMeterData) {
-          print('Power: ${powerMeterData.power}, Cadence: ${powerMeterData.cadence}');
+          // Power data received
         },
         onError: (error) {
           state = state.copyWith(
@@ -76,7 +73,7 @@ class ScanScreenStateNotifier extends _$ScanScreenStateNotifier {
           );
         },
         onDone: () {
-          print('Power Meter Data completed');
+          // Power Meter Data completed
         },
         cancelOnError: true,
       );

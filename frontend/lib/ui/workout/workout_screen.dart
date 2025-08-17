@@ -77,33 +77,68 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                 flex: 2,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Column(
+                  child: Stack(
                     children: [
-                      Expanded(
-                        child: Meter(
-                          power: uiState.power,
-                          cadence: uiState.cadence,
-                          maxPower: uiState.maxPower,
-                          targetPower: uiState.targetPower,
-                        ),
-                      ),
-                      // パワーアラートメッセージ表示エリア
-                      if (uiState.powerAlertMessage != null)
-                        Container(
-                          margin: const EdgeInsets.only(top: 8.0),
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                          decoration: BoxDecoration(
-                            color: uiState.powerAlertMessage!.color.withValues(alpha: 0.8),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: Text(
-                            uiState.powerAlertMessage!.message,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                      Column(
+                        children: [
+                          Expanded(
+                            child: Meter(
+                              power: uiState.power,
+                              cadence: uiState.cadence,
+                              maxPower: uiState.maxPower,
+                              targetPower: uiState.targetPower,
                             ),
-                            textAlign: TextAlign.center,
+                          ),
+                          // パワーアラートメッセージ表示エリア
+                          if (uiState.powerAlertMessage != null)
+                            Container(
+                              margin: const EdgeInsets.only(top: 8.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                              decoration: BoxDecoration(
+                                color: uiState.powerAlertMessage!.color.withValues(alpha: 0.8),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Text(
+                                uiState.powerAlertMessage!.message,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      // カウントダウン表示（Meterの上に重ねる）
+                      if (uiState.isCountingDown)
+                        Center(
+                          child: Container(
+                            padding: const EdgeInsets.all(32.0),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withValues(alpha: 0.8),
+                              borderRadius: BorderRadius.circular(16.0),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  '${uiState.countdownSeconds}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 72,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                const Text(
+                                  'ワークアウト開始まで',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                     ],
