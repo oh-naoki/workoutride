@@ -3,7 +3,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
+import 'package:workoutride/domain/model/workout/workout_summary.dart';
 import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart';
+import 'package:workoutride/domain/usecase/workout/get_workout_summary_use_case.dart';
 
 part 'workout_detail_screen_state_notifier.freezed.dart';
 part 'workout_detail_screen_state_notifier.g.dart';
@@ -12,6 +14,7 @@ part 'workout_detail_screen_state_notifier.g.dart';
 class WorkoutDetailScreenUiState with _$WorkoutDetailScreenUiState {
   const factory WorkoutDetailScreenUiState({
     @Default([]) List<WorkoutBlock> workoutBlocks,
+    @Default(null) WorkoutSummary? workoutSummary,
     @Default(false) bool isLoading,
     @Default(null) String? errorMessage,
     @Default(null) double? userWeight,
@@ -21,12 +24,15 @@ class WorkoutDetailScreenUiState with _$WorkoutDetailScreenUiState {
 @riverpod
 class WorkoutDetailScreenStateNotifier extends _$WorkoutDetailScreenStateNotifier {
   late final GetWorkoutBlocksUseCase _getWorkoutBlocksUseCase;
+  late final GetWorkoutSummaryUseCase _getWorkoutSummaryUseCase;
   
   @override
   WorkoutDetailScreenUiState build(int workoutId) {
     state = const WorkoutDetailScreenUiState(isLoading: true);
     _getWorkoutBlocksUseCase = ref.read(getWorkoutBlocksUseCaseProvider);
+    _getWorkoutSummaryUseCase = ref.read(getWorkoutSummaryUseCaseProvider);
     _fetchWorkoutBlocks(workoutId);
+    _fetchWorkoutSummary(workoutId);
     _loadUserWeight();
     return state;
   }
@@ -47,6 +53,17 @@ class WorkoutDetailScreenStateNotifier extends _$WorkoutDetailScreenStateNotifie
     }
   }
 
+  Future<void> _fetchWorkoutSummary(int workoutId) async {
+    try {
+      final summary = await _getWorkoutSummaryUseCase.call(workoutId);
+      state = state.copyWith(
+        workoutSummary: summary,
+      );
+    } catch (e) {
+      // エラーが発生してもworkoutSummaryはnullのままにする
+    }
+  }
+
   Future<void> _loadUserWeight() async {
     try {
       final useCase = ref.read(getUserProfileUseCaseProvider);
@@ -62,8 +79,8 @@ class WorkoutDetailScreenStateNotifier extends _$WorkoutDetailScreenStateNotifie
     }
   }
 
-  Future<void> refreshWorkoutBlocks(int workoutId) async {
-    await _fetchWorkoutBlocks(workoutId);
+  Future<void> refreshWorkoutSummary(int workoutId) async {
+    await _fetchWorkoutSummary(workoutId);
   }
 
   void reloadUserWeight() {

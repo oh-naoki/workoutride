@@ -103,6 +103,26 @@ final getWorkoutBlocksUseCaseProvider =
 // ignore: unused_element
 typedef GetWorkoutBlocksUseCaseRef
     = AutoDisposeProviderRef<GetWorkoutBlocksUseCase>;
+String _$getWorkoutSummaryUseCaseHash() =>
+    r'774a1521a46d1e2d00cb8a9efa9e963a87c6a1a2';
+
+/// See also [getWorkoutSummaryUseCase].
+@ProviderFor(getWorkoutSummaryUseCase)
+final getWorkoutSummaryUseCaseProvider =
+    AutoDisposeProvider<GetWorkoutSummaryUseCase>.internal(
+  getWorkoutSummaryUseCase,
+  name: r'getWorkoutSummaryUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getWorkoutSummaryUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef GetWorkoutSummaryUseCaseRef
+    = AutoDisposeProviderRef<GetWorkoutSummaryUseCase>;
 String _$dioHash() => r'e4b4f3046089be068a9e387bcb3ffb4089397160';
 
 /// See also [dio].

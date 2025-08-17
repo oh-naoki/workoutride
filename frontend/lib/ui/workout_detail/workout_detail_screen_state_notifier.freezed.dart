@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$WorkoutDetailScreenUiState {
   List<WorkoutBlock> get workoutBlocks => throw _privateConstructorUsedError;
+  WorkoutSummary? get workoutSummary => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
   double? get userWeight => throw _privateConstructorUsedError;
@@ -37,9 +38,12 @@ abstract class $WorkoutDetailScreenUiStateCopyWith<$Res> {
   @useResult
   $Res call(
       {List<WorkoutBlock> workoutBlocks,
+      WorkoutSummary? workoutSummary,
       bool isLoading,
       String? errorMessage,
       double? userWeight});
+
+  $WorkoutSummaryCopyWith<$Res>? get workoutSummary;
 }
 
 /// @nodoc
@@ -59,6 +63,7 @@ class _$WorkoutDetailScreenUiStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? workoutBlocks = null,
+    Object? workoutSummary = freezed,
     Object? isLoading = null,
     Object? errorMessage = freezed,
     Object? userWeight = freezed,
@@ -68,6 +73,10 @@ class _$WorkoutDetailScreenUiStateCopyWithImpl<$Res,
           ? _value.workoutBlocks
           : workoutBlocks // ignore: cast_nullable_to_non_nullable
               as List<WorkoutBlock>,
+      workoutSummary: freezed == workoutSummary
+          ? _value.workoutSummary
+          : workoutSummary // ignore: cast_nullable_to_non_nullable
+              as WorkoutSummary?,
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
@@ -82,6 +91,20 @@ class _$WorkoutDetailScreenUiStateCopyWithImpl<$Res,
               as double?,
     ) as $Val);
   }
+
+  /// Create a copy of WorkoutDetailScreenUiState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $WorkoutSummaryCopyWith<$Res>? get workoutSummary {
+    if (_value.workoutSummary == null) {
+      return null;
+    }
+
+    return $WorkoutSummaryCopyWith<$Res>(_value.workoutSummary!, (value) {
+      return _then(_value.copyWith(workoutSummary: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -95,9 +118,13 @@ abstract class _$$WorkoutDetailScreenUiStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {List<WorkoutBlock> workoutBlocks,
+      WorkoutSummary? workoutSummary,
       bool isLoading,
       String? errorMessage,
       double? userWeight});
+
+  @override
+  $WorkoutSummaryCopyWith<$Res>? get workoutSummary;
 }
 
 /// @nodoc
@@ -116,6 +143,7 @@ class __$$WorkoutDetailScreenUiStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? workoutBlocks = null,
+    Object? workoutSummary = freezed,
     Object? isLoading = null,
     Object? errorMessage = freezed,
     Object? userWeight = freezed,
@@ -125,6 +153,10 @@ class __$$WorkoutDetailScreenUiStateImplCopyWithImpl<$Res>
           ? _value._workoutBlocks
           : workoutBlocks // ignore: cast_nullable_to_non_nullable
               as List<WorkoutBlock>,
+      workoutSummary: freezed == workoutSummary
+          ? _value.workoutSummary
+          : workoutSummary // ignore: cast_nullable_to_non_nullable
+              as WorkoutSummary?,
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
@@ -148,6 +180,7 @@ class _$WorkoutDetailScreenUiStateImpl
     implements _WorkoutDetailScreenUiState {
   const _$WorkoutDetailScreenUiStateImpl(
       {final List<WorkoutBlock> workoutBlocks = const [],
+      this.workoutSummary = null,
       this.isLoading = false,
       this.errorMessage = null,
       this.userWeight = null})
@@ -164,6 +197,9 @@ class _$WorkoutDetailScreenUiStateImpl
 
   @override
   @JsonKey()
+  final WorkoutSummary? workoutSummary;
+  @override
+  @JsonKey()
   final bool isLoading;
   @override
   @JsonKey()
@@ -174,7 +210,7 @@ class _$WorkoutDetailScreenUiStateImpl
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'WorkoutDetailScreenUiState(workoutBlocks: $workoutBlocks, isLoading: $isLoading, errorMessage: $errorMessage, userWeight: $userWeight)';
+    return 'WorkoutDetailScreenUiState(workoutBlocks: $workoutBlocks, workoutSummary: $workoutSummary, isLoading: $isLoading, errorMessage: $errorMessage, userWeight: $userWeight)';
   }
 
   @override
@@ -183,6 +219,7 @@ class _$WorkoutDetailScreenUiStateImpl
     properties
       ..add(DiagnosticsProperty('type', 'WorkoutDetailScreenUiState'))
       ..add(DiagnosticsProperty('workoutBlocks', workoutBlocks))
+      ..add(DiagnosticsProperty('workoutSummary', workoutSummary))
       ..add(DiagnosticsProperty('isLoading', isLoading))
       ..add(DiagnosticsProperty('errorMessage', errorMessage))
       ..add(DiagnosticsProperty('userWeight', userWeight));
@@ -195,6 +232,8 @@ class _$WorkoutDetailScreenUiStateImpl
             other is _$WorkoutDetailScreenUiStateImpl &&
             const DeepCollectionEquality()
                 .equals(other._workoutBlocks, _workoutBlocks) &&
+            (identical(other.workoutSummary, workoutSummary) ||
+                other.workoutSummary == workoutSummary) &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
             (identical(other.errorMessage, errorMessage) ||
@@ -207,6 +246,7 @@ class _$WorkoutDetailScreenUiStateImpl
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_workoutBlocks),
+      workoutSummary,
       isLoading,
       errorMessage,
       userWeight);
@@ -225,12 +265,15 @@ abstract class _WorkoutDetailScreenUiState
     implements WorkoutDetailScreenUiState {
   const factory _WorkoutDetailScreenUiState(
       {final List<WorkoutBlock> workoutBlocks,
+      final WorkoutSummary? workoutSummary,
       final bool isLoading,
       final String? errorMessage,
       final double? userWeight}) = _$WorkoutDetailScreenUiStateImpl;
 
   @override
   List<WorkoutBlock> get workoutBlocks;
+  @override
+  WorkoutSummary? get workoutSummary;
   @override
   bool get isLoading;
   @override

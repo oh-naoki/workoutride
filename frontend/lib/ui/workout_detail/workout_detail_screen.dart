@@ -43,9 +43,9 @@ class WorkoutDetailBody extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          style: TextStyle(color: Colors.white, fontSize: 20),
+        Text(
+          uiState.workoutSummary?.name ?? 'No name available',
+          style: const TextStyle(color: Colors.white, fontSize: 20),
           maxLines: 3,
           overflow: TextOverflow.ellipsis,
         ),
@@ -94,7 +94,6 @@ class WorkoutDetailBody extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        print('スタートボタンがタップされました: workoutId = $workoutId');
                         try {
                           Navigator.push(
                             context,
@@ -102,9 +101,7 @@ class WorkoutDetailBody extends StatelessWidget {
                               builder: (context) => WorkoutScreen(workoutId: workoutId),
                             ),
                           );
-                          print('WorkoutScreenへの遷移が完了しました');
                         } catch (e) {
-                          print('WorkoutScreenへの遷移でエラーが発生しました: $e');
                         }
                       },
                       style: ElevatedButton.styleFrom(
