@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
-import 'package:workoutride/ui/workout/workout_screen.dart';
 import 'package:workoutride/ui/workout_detail/workout_detail_screen_state_notifier.dart';
+import 'package:workoutride/di/providers.dart';
+import 'package:workoutride/ui/workout/workout_screen.dart';
 
 class WorkoutDetailScreen extends ConsumerWidget {
   final int workoutId;
@@ -12,70 +13,20 @@ class WorkoutDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final uiState = ref.watch(workoutDetailScreenStateNotifierProvider(workoutId));
+    
     return Scaffold(
+      backgroundColor: const Color(0xFF1E1E1E),
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
+        title: const Text(
+          'ワークアウト詳細',
+          style: TextStyle(color: Colors.white),
         ),
+        backgroundColor: const Color(0xFF2D2D2D),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
-      backgroundColor: Colors.black,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              WorkoutDetailHeader(workoutId: workoutId),
-              WorkoutDetailBody(uiState: uiState, workoutId: workoutId),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class WorkoutDetailHeader extends ConsumerWidget {
-  final int workoutId;
-  
-  const WorkoutDetailHeader({super.key, required this.workoutId});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      child: Row(
-        children: [
-          const Text(
-            "Workout Title",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const Spacer(),
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => WorkoutScreen(workoutId: workoutId),
-                ),
-              );
-            },
-            icon: const Icon(
-              Icons.play_arrow,
-              color: Colors.white,
-            ),
-          ),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: WorkoutDetailBody(uiState: uiState, workoutId: workoutId),
       ),
     );
   }
@@ -135,7 +86,46 @@ class WorkoutDetailBody extends StatelessWidget {
                 ),
               );
             } else {
-              return WorkoutMenu(blocks: uiState.workoutBlocks, workoutId: workoutId);
+              return Column(
+                children: [
+                  WorkoutMenu(blocks: uiState.workoutBlocks, workoutId: workoutId),
+                  const SizedBox(height: 32),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        print('スタートボタンがタップされました: workoutId = $workoutId');
+                        try {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => WorkoutScreen(workoutId: workoutId),
+                            ),
+                          );
+                          print('WorkoutScreenへの遷移が完了しました');
+                        } catch (e) {
+                          print('WorkoutScreenへの遷移でエラーが発生しました: $e');
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: const Text(
+                        'ワークアウト開始',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
             }
           },
         ),
@@ -152,25 +142,30 @@ class WorkoutMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final uiState = ref.watch(workoutDetailScreenStateNotifierProvider(workoutId));
+    // FTPを取得（デフォルト値200W）
     
-    final userWeight = uiState.userWeight ?? 60.0;
-    
-    return ListView.separated(
-      itemCount: blocks.length,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        final block = blocks[index];
-        final targetWatts = (block.targetPwr * userWeight).toInt();
-        return WorkoutMenuItem(
-          type: block.blockType,
-          power: targetWatts,
-          duration: block.durationSeconds,
+    return FutureBuilder<int?>(
+      future: ref.read(getUserFtpUseCaseProvider).call(),
+      builder: (context, snapshot) {
+        final ftp = snapshot.data ?? 200; // デフォルト200W
+        
+        return ListView.separated(
+          itemCount: blocks.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            final block = blocks[index];
+            final targetWatts = block.calculateTargetPower(ftp);
+            return WorkoutMenuItem(
+              type: block.blockType,
+              power: targetWatts,
+              duration: block.durationSeconds,
+            );
+          },
+          separatorBuilder: (context, index) {
+            return const SizedBox(height: 8);
+          },
         );
-      },
-      separatorBuilder: (context, index) {
-        return const SizedBox(height: 8);
       },
     );
   }

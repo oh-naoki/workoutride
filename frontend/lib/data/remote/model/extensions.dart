@@ -19,7 +19,7 @@ extension WorkoutBlockDtoExtension on WorkoutBlockDto {
       id: id,
       workoutId: workout_id,
       orderIndex: order_index,
-      targetPwr: target_pwr,
+      targetFtpPercentage: target_ftp_percentage,
       durationSeconds: duration,
       blockType: block_type,
       createdAt: DateTime.parse(created_at),

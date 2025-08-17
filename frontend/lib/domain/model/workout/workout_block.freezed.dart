@@ -19,7 +19,7 @@ mixin _$WorkoutBlock {
   int get id => throw _privateConstructorUsedError;
   int get workoutId => throw _privateConstructorUsedError;
   int get orderIndex => throw _privateConstructorUsedError;
-  double get targetPwr => throw _privateConstructorUsedError;
+  int get targetFtpPercentage => throw _privateConstructorUsedError;
   int get durationSeconds => throw _privateConstructorUsedError;
   String get blockType => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
@@ -42,7 +42,7 @@ abstract class $WorkoutBlockCopyWith<$Res> {
       {int id,
       int workoutId,
       int orderIndex,
-      double targetPwr,
+      int targetFtpPercentage,
       int durationSeconds,
       String blockType,
       DateTime createdAt,
@@ -67,7 +67,7 @@ class _$WorkoutBlockCopyWithImpl<$Res, $Val extends WorkoutBlock>
     Object? id = null,
     Object? workoutId = null,
     Object? orderIndex = null,
-    Object? targetPwr = null,
+    Object? targetFtpPercentage = null,
     Object? durationSeconds = null,
     Object? blockType = null,
     Object? createdAt = null,
@@ -86,10 +86,10 @@ class _$WorkoutBlockCopyWithImpl<$Res, $Val extends WorkoutBlock>
           ? _value.orderIndex
           : orderIndex // ignore: cast_nullable_to_non_nullable
               as int,
-      targetPwr: null == targetPwr
-          ? _value.targetPwr
-          : targetPwr // ignore: cast_nullable_to_non_nullable
-              as double,
+      targetFtpPercentage: null == targetFtpPercentage
+          ? _value.targetFtpPercentage
+          : targetFtpPercentage // ignore: cast_nullable_to_non_nullable
+              as int,
       durationSeconds: null == durationSeconds
           ? _value.durationSeconds
           : durationSeconds // ignore: cast_nullable_to_non_nullable
@@ -122,7 +122,7 @@ abstract class _$$WorkoutBlockImplCopyWith<$Res>
       {int id,
       int workoutId,
       int orderIndex,
-      double targetPwr,
+      int targetFtpPercentage,
       int durationSeconds,
       String blockType,
       DateTime createdAt,
@@ -145,7 +145,7 @@ class __$$WorkoutBlockImplCopyWithImpl<$Res>
     Object? id = null,
     Object? workoutId = null,
     Object? orderIndex = null,
-    Object? targetPwr = null,
+    Object? targetFtpPercentage = null,
     Object? durationSeconds = null,
     Object? blockType = null,
     Object? createdAt = null,
@@ -164,10 +164,10 @@ class __$$WorkoutBlockImplCopyWithImpl<$Res>
           ? _value.orderIndex
           : orderIndex // ignore: cast_nullable_to_non_nullable
               as int,
-      targetPwr: null == targetPwr
-          ? _value.targetPwr
-          : targetPwr // ignore: cast_nullable_to_non_nullable
-              as double,
+      targetFtpPercentage: null == targetFtpPercentage
+          ? _value.targetFtpPercentage
+          : targetFtpPercentage // ignore: cast_nullable_to_non_nullable
+              as int,
       durationSeconds: null == durationSeconds
           ? _value.durationSeconds
           : durationSeconds // ignore: cast_nullable_to_non_nullable
@@ -190,16 +190,17 @@ class __$$WorkoutBlockImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$WorkoutBlockImpl implements _WorkoutBlock {
+class _$WorkoutBlockImpl extends _WorkoutBlock {
   const _$WorkoutBlockImpl(
       {required this.id,
       required this.workoutId,
       required this.orderIndex,
-      required this.targetPwr,
+      required this.targetFtpPercentage,
       required this.durationSeconds,
       required this.blockType,
       required this.createdAt,
-      required this.updatedAt});
+      required this.updatedAt})
+      : super._();
 
   @override
   final int id;
@@ -208,7 +209,7 @@ class _$WorkoutBlockImpl implements _WorkoutBlock {
   @override
   final int orderIndex;
   @override
-  final double targetPwr;
+  final int targetFtpPercentage;
   @override
   final int durationSeconds;
   @override
@@ -220,7 +221,7 @@ class _$WorkoutBlockImpl implements _WorkoutBlock {
 
   @override
   String toString() {
-    return 'WorkoutBlock(id: $id, workoutId: $workoutId, orderIndex: $orderIndex, targetPwr: $targetPwr, durationSeconds: $durationSeconds, blockType: $blockType, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'WorkoutBlock(id: $id, workoutId: $workoutId, orderIndex: $orderIndex, targetFtpPercentage: $targetFtpPercentage, durationSeconds: $durationSeconds, blockType: $blockType, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -233,8 +234,8 @@ class _$WorkoutBlockImpl implements _WorkoutBlock {
                 other.workoutId == workoutId) &&
             (identical(other.orderIndex, orderIndex) ||
                 other.orderIndex == orderIndex) &&
-            (identical(other.targetPwr, targetPwr) ||
-                other.targetPwr == targetPwr) &&
+            (identical(other.targetFtpPercentage, targetFtpPercentage) ||
+                other.targetFtpPercentage == targetFtpPercentage) &&
             (identical(other.durationSeconds, durationSeconds) ||
                 other.durationSeconds == durationSeconds) &&
             (identical(other.blockType, blockType) ||
@@ -247,7 +248,7 @@ class _$WorkoutBlockImpl implements _WorkoutBlock {
 
   @override
   int get hashCode => Object.hash(runtimeType, id, workoutId, orderIndex,
-      targetPwr, durationSeconds, blockType, createdAt, updatedAt);
+      targetFtpPercentage, durationSeconds, blockType, createdAt, updatedAt);
 
   /// Create a copy of WorkoutBlock
   /// with the given fields replaced by the non-null parameter values.
@@ -258,16 +259,17 @@ class _$WorkoutBlockImpl implements _WorkoutBlock {
       __$$WorkoutBlockImplCopyWithImpl<_$WorkoutBlockImpl>(this, _$identity);
 }
 
-abstract class _WorkoutBlock implements WorkoutBlock {
+abstract class _WorkoutBlock extends WorkoutBlock {
   const factory _WorkoutBlock(
       {required final int id,
       required final int workoutId,
       required final int orderIndex,
-      required final double targetPwr,
+      required final int targetFtpPercentage,
       required final int durationSeconds,
       required final String blockType,
       required final DateTime createdAt,
       required final DateTime updatedAt}) = _$WorkoutBlockImpl;
+  const _WorkoutBlock._() : super._();
 
   @override
   int get id;
@@ -276,7 +278,7 @@ abstract class _WorkoutBlock implements WorkoutBlock {
   @override
   int get orderIndex;
   @override
-  double get targetPwr;
+  int get targetFtpPercentage;
   @override
   int get durationSeconds;
   @override

@@ -14,7 +14,7 @@ class _WorkoutApiClient implements WorkoutApiClient {
     this.baseUrl,
     this.errorLogger,
   }) {
-    baseUrl ??= 'http://192.168.0.139:3000/api/v1';
+    baseUrl ??= 'http://192.168.0.156:3000/api/v1';
   }
 
   final Dio _dio;

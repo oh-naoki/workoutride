@@ -173,7 +173,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                               },
                               child: _buildWorkoutCard(
                                 name: block.blockType,
-                                power: (block.targetPwr * uiState.userWeight).toInt(),
+                                power: block.calculateTargetPower(uiState.userFtp ?? 200),
                                 time: _formatDuration(block.durationSeconds),
                                 isActive: isCurrentBlock,
                                 progress: isCurrentBlock 

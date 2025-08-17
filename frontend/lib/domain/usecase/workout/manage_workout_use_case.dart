@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:workoutride/domain/model/power_alert_message.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/domain/model/workout/workout_progress_state.dart';
 import 'package:workoutride/domain/model/workout/workout_timer_state.dart';
-import 'package:workoutride/domain/model/power_alert_message.dart';
 import 'package:workoutride/domain/service/power_zone_analyzer.dart';
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart';
 import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart';
@@ -13,60 +13,56 @@ import 'package:workoutride/di/providers.dart';
 part 'manage_workout_use_case.g.dart';
 
 @riverpod
-ManageWorkoutUseCase manageWorkoutUseCase(ManageWorkoutUseCaseRef ref) {
-  return ManageWorkoutUseCase(
-    ref.watch(getCalculatedPowerMeterDataUseCaseProvider),
-    ref.watch(powerZoneAnalyzerProvider),
-    ref.watch(getUserProfileUseCaseProvider),
-  );
-}
-
-class ManageWorkoutUseCase {
-  final GetCalculatedPowerMeterDataUseCase _getPowerMeterDataUseCase;
-  final PowerZoneAnalyzer _powerZoneAnalyzer;
-  final GetUserProfileUseCase _getUserProfileUseCase;
+class ManageWorkoutUseCase extends _$ManageWorkoutUseCase {
+  late final GetCalculatedPowerMeterDataUseCase _getCalculatedPowerMeterDataUseCase;
+  late final PowerZoneAnalyzer _powerZoneAnalyzer;
+  late final GetUserProfileUseCase _getUserProfileUseCase;
+  
   Timer? _timer;
-  bool _isPaused = false;
   StreamController<(WorkoutTimerState, WorkoutProgressState, PowerAlertMessage?)>? _controller;
+  bool _isPaused = false;
   double? _userWeight;
+  int? _userFtp;
 
-  ManageWorkoutUseCase(
-    this._getPowerMeterDataUseCase,
-    this._powerZoneAnalyzer,
-    this._getUserProfileUseCase,
-  );
+  @override
+  Stream<(WorkoutTimerState, WorkoutProgressState, PowerAlertMessage?)> build(
+    List<WorkoutBlock> blocks,
+  ) async* {
+    _getCalculatedPowerMeterDataUseCase = ref.read(getCalculatedPowerMeterDataUseCaseProvider);
+    _powerZoneAnalyzer = ref.read(powerZoneAnalyzerProvider);
+    _getUserProfileUseCase = ref.read(getUserProfileUseCaseProvider);
 
-  Stream<(WorkoutTimerState, WorkoutProgressState, PowerAlertMessage?)> call(List<WorkoutBlock> blocks) async* {
-    // 前回の状態をリセット
-    _timer?.cancel();
-    _controller?.close();
-    _isPaused = false;
-    
-    // 体重を取得
-    final userProfile = await _getUserProfileUseCase();
+    // ユーザープロファイルを取得
+    final userProfile = await _getUserProfileUseCase.call();
     _userWeight = userProfile?.weight ?? 60.0;
+    _userFtp = userProfile?.ftp ?? 200;
+
+    final totalSeconds = blocks.fold<int>(0, (sum, block) => sum + block.durationSeconds);
     
-    final totalSeconds = blocks.fold(0, (sum, block) => sum + block.durationSeconds);
+    // 初期状態
+    var currentTimerState = WorkoutTimerState(
+      elapsedSeconds: 0,
+      isRunning: true,
+    );
     
     var currentProgressState = WorkoutProgressState(
-      blocks: blocks,
-      totalSeconds: totalSeconds,
+      currentBlockIndex: 0,
+      elapsedSeconds: 0,
+      isCompleted: false,
     );
-
-    var currentTimerState = const WorkoutTimerState();
-    var currentPowerAlertMessage = null;
-
-    final controller = StreamController<(WorkoutTimerState, WorkoutProgressState, PowerAlertMessage?)>();
-    _controller = controller;
+    
+    PowerAlertMessage? currentPowerAlertMessage = null;
+    
+    _controller = StreamController<(WorkoutTimerState, WorkoutProgressState, PowerAlertMessage?)>();
     
     // パワーメーターのデータストリームを購読
-    final powerSubscription = _getPowerMeterDataUseCase().listen((powerData) {
-      if (!controller.isClosed) {
+    final powerSubscription = _getCalculatedPowerMeterDataUseCase().listen((powerData) {
+      if (!_controller!.isClosed) {
         final currentBlock = currentProgressState.currentBlock;
         if (currentBlock != null) {
           PowerAlertMessage? alertMessage;
           
-          final targetWatts = (currentBlock.targetPwr * _userWeight!).toInt();
+          final targetWatts = currentBlock.calculateTargetPower(_userFtp!);
           if (_powerZoneAnalyzer.isBelowTargetZone(powerData.power, targetWatts)) {
             alertMessage = PowerAlertMessage.powerTooLow;
           } else if (_powerZoneAnalyzer.isAboveTargetZone(powerData.power, targetWatts)) {
@@ -74,14 +70,14 @@ class ManageWorkoutUseCase {
           }
           
           currentPowerAlertMessage = alertMessage;
-          controller.add((currentTimerState, currentProgressState, currentPowerAlertMessage));
+          _controller!.add((currentTimerState, currentProgressState, currentPowerAlertMessage));
         }
       }
     });
 
     // タイマーを開始
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (controller.isClosed) {
+      if (_controller!.isClosed) {
         timer.cancel();
         return;
       }
@@ -128,15 +124,15 @@ class ManageWorkoutUseCase {
         );
       }
 
-      controller.add((currentTimerState, currentProgressState, currentPowerAlertMessage));
+      _controller!.add((currentTimerState, currentProgressState, currentPowerAlertMessage));
     });
 
-    controller.onCancel = () {
+    _controller!.onCancel = () {
       _timer?.cancel();
       powerSubscription.cancel();
     };
 
-    yield* controller.stream;
+    yield* _controller!.stream;
   }
 
   void pauseWorkout() {

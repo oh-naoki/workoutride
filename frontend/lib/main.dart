@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:workoutride/ui/home/home_screen.dart';
+import 'package:workoutride/ui/workout/workout_screen.dart';
+import 'package:workoutride/ui/workout_detail/workout_detail_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workoutride/di/providers.dart';
@@ -29,6 +31,17 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const HomeScreen());
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const HomeScreen(),
+          '/workout': (context) {
+            final workoutId = ModalRoute.of(context)!.settings.arguments as int;
+            return WorkoutScreen(workoutId: workoutId);
+          },
+          '/workout_detail': (context) {
+            final workoutId = ModalRoute.of(context)!.settings.arguments as int;
+            return WorkoutDetailScreen(workoutId: workoutId);
+          },
+        });
   }
 }

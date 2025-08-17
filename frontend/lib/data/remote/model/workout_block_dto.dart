@@ -3,7 +3,7 @@ class WorkoutBlockDto {
   final int id;
   final int workout_id;
   final int order_index;
-  final double target_pwr;
+  final int target_ftp_percentage;
   final int duration;
   final String block_type;
   final String created_at;
@@ -13,7 +13,7 @@ class WorkoutBlockDto {
     required this.id,
     required this.workout_id,
     required this.order_index,
-    required this.target_pwr,
+    required this.target_ftp_percentage,
     required this.duration,
     required this.block_type,
     required this.created_at,
@@ -25,7 +25,9 @@ class WorkoutBlockDto {
       id: json['id'] is String ? int.parse(json['id']) : (json['id'] as num).toInt(),
       workout_id: json['workout_id'] is String ? int.parse(json['workout_id']) : (json['workout_id'] as num).toInt(),
       order_index: json['order_index'] is String ? int.parse(json['order_index']) : (json['order_index'] as num).toInt(),
-      target_pwr: json['target_pwr'] is String ? double.parse(json['target_pwr']) : (json['target_pwr'] as num).toDouble(),
+      target_ftp_percentage: json['target_ftp_percentage'] is String 
+          ? double.parse(json['target_ftp_percentage']).round()
+          : (json['target_ftp_percentage'] as num).toInt(),
       duration: json['duration'] is String ? int.parse(json['duration']) : (json['duration'] as num).toInt(),
       block_type: json['block_type'] as String,
       created_at: json['created_at'] as String,
@@ -38,7 +40,7 @@ class WorkoutBlockDto {
       'id': id,
       'workout_id': workout_id,
       'order_index': order_index,
-      'target_pwr': target_pwr,
+      'target_ftp_percentage': target_ftp_percentage,
       'duration': duration,
       'block_type': block_type,
       'created_at': created_at,

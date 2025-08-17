@@ -6,9 +6,14 @@ class SaveUserWeightUseCase {
 
   SaveUserWeightUseCase({required this.repository});
 
-  Future<void> call(double weight) {
+  Future<void> call(double weight) async {
+    // 既存のFTPを取得
+    final currentFtp = await repository.getFtp();
+    final ftp = currentFtp ?? 200; // デフォルト200W
+    
     final profile = UserProfile(
       weight: weight,
+      ftp: ftp,
       updatedAt: DateTime.now(),
     );
     return repository.saveUserProfile(profile);

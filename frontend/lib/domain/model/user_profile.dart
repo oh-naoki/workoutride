@@ -6,6 +6,7 @@ part 'user_profile.freezed.dart';
 class UserProfile with _$UserProfile {
   const factory UserProfile({
     required double weight,
+    required int ftp,
     required DateTime updatedAt,
   }) = _UserProfile;
 }

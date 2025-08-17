@@ -3,22 +3,23 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i3;
+import 'dart:async' as _i6;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:workoutride/domain/model/power_alert_message.dart' as _i10;
-import 'package:workoutride/domain/model/power_meter_data.dart' as _i6;
-import 'package:workoutride/domain/model/workout/workout_block.dart' as _i4;
+import 'package:riverpod_annotation/riverpod_annotation.dart' as _i2;
+import 'package:workoutride/domain/model/power_alert_message.dart' as _i11;
+import 'package:workoutride/domain/model/power_meter_data.dart' as _i9;
+import 'package:workoutride/domain/model/workout/workout_block.dart' as _i7;
 import 'package:workoutride/domain/model/workout/workout_progress_state.dart'
-    as _i9;
+    as _i4;
 import 'package:workoutride/domain/model/workout/workout_timer_state.dart'
-    as _i8;
+    as _i3;
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart'
-    as _i5;
+    as _i8;
 import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart'
-    as _i2;
+    as _i5;
 import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart'
-    as _i7;
+    as _i10;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -34,51 +35,94 @@ import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart'
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
+class _FakeAutoDisposeStreamNotifierProviderRef_0<T> extends _i1.SmartFake
+    implements _i2.AutoDisposeStreamNotifierProviderRef<T> {
+  _FakeAutoDisposeStreamNotifierProviderRef_0(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeAsyncValue_1<T> extends _i1.SmartFake implements _i2.AsyncValue<T> {
+  _FakeAsyncValue_1(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeWorkoutTimerState_2 extends _i1.SmartFake
+    implements _i3.WorkoutTimerState {
+  _FakeWorkoutTimerState_2(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeWorkoutProgressState_3 extends _i1.SmartFake
+    implements _i4.WorkoutProgressState {
+  _FakeWorkoutProgressState_3(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [GetWorkoutBlocksUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockGetWorkoutBlocksUseCase extends _i1.Mock
-    implements _i2.GetWorkoutBlocksUseCase {
+    implements _i5.GetWorkoutBlocksUseCase {
   MockGetWorkoutBlocksUseCase() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Future<List<_i4.WorkoutBlock>> call(int? workoutId) =>
+  _i6.Future<List<_i7.WorkoutBlock>> call(int? workoutId) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [workoutId],
         ),
         returnValue:
-            _i3.Future<List<_i4.WorkoutBlock>>.value(<_i4.WorkoutBlock>[]),
-      ) as _i3.Future<List<_i4.WorkoutBlock>>);
+            _i6.Future<List<_i7.WorkoutBlock>>.value(<_i7.WorkoutBlock>[]),
+      ) as _i6.Future<List<_i7.WorkoutBlock>>);
 }
 
 /// A class which mocks [GetCalculatedPowerMeterDataUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockGetCalculatedPowerMeterDataUseCase extends _i1.Mock
-    implements _i5.GetCalculatedPowerMeterDataUseCase {
+    implements _i8.GetCalculatedPowerMeterDataUseCase {
   MockGetCalculatedPowerMeterDataUseCase() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Stream<_i6.PowerMeterData> call() => (super.noSuchMethod(
+  _i6.Stream<_i9.PowerMeterData> call() => (super.noSuchMethod(
         Invocation.method(
           #call,
           [],
         ),
-        returnValue: _i3.Stream<_i6.PowerMeterData>.empty(),
-      ) as _i3.Stream<_i6.PowerMeterData>);
+        returnValue: _i6.Stream<_i9.PowerMeterData>.empty(),
+      ) as _i6.Stream<_i9.PowerMeterData>);
 }
 
 /// A class which mocks [ManageWorkoutUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockManageWorkoutUseCase extends _i1.Mock
-    implements _i7.ManageWorkoutUseCase {
+    implements _i10.ManageWorkoutUseCase {
   MockManageWorkoutUseCase() {
     _i1.throwOnMissingStub(this);
   }
@@ -90,24 +134,126 @@ class MockManageWorkoutUseCase extends _i1.Mock
       ) as bool);
 
   @override
-  _i3.Stream<
-          (_i8.WorkoutTimerState, _i9.WorkoutProgressState, _i10.PowerAlertMessage?)>
-      call(List<_i4.WorkoutBlock>? blocks) => (super.noSuchMethod(
+  List<_i7.WorkoutBlock> get blocks => (super.noSuchMethod(
+        Invocation.getter(#blocks),
+        returnValue: <_i7.WorkoutBlock>[],
+      ) as List<_i7.WorkoutBlock>);
+
+  @override
+  set blocks(List<_i7.WorkoutBlock>? _blocks) => super.noSuchMethod(
+        Invocation.setter(
+          #blocks,
+          _blocks,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i2.AutoDisposeStreamNotifierProviderRef<
+          (_i3.WorkoutTimerState, _i4.WorkoutProgressState, _i11.PowerAlertMessage?)>
+      get ref => (super.noSuchMethod(
+            Invocation.getter(#ref),
+            returnValue: _FakeAutoDisposeStreamNotifierProviderRef_0<
+                (
+                  _i3.WorkoutTimerState,
+                  _i4.WorkoutProgressState,
+                  _i11.PowerAlertMessage?
+                )>(
+              this,
+              Invocation.getter(#ref),
+            ),
+          ) as _i2.AutoDisposeStreamNotifierProviderRef<
+              (
+                _i3.WorkoutTimerState,
+                _i4.WorkoutProgressState,
+                _i11.PowerAlertMessage?
+              )>);
+
+  @override
+  _i2.AsyncValue<
+          (_i3.WorkoutTimerState, _i4.WorkoutProgressState, _i11.PowerAlertMessage?)>
+      get state => (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeAsyncValue_1<
+                (
+                  _i3.WorkoutTimerState,
+                  _i4.WorkoutProgressState,
+                  _i11.PowerAlertMessage?
+                )>(
+              this,
+              Invocation.getter(#state),
+            ),
+          ) as _i2.AsyncValue<
+              (
+                _i3.WorkoutTimerState,
+                _i4.WorkoutProgressState,
+                _i11.PowerAlertMessage?
+              )>);
+
+  @override
+  set state(
+          _i2.AsyncValue<
+                  (
+                    _i3.WorkoutTimerState,
+                    _i4.WorkoutProgressState,
+                    _i11.PowerAlertMessage?
+                  )>?
+              newState) =>
+      super.noSuchMethod(
+        Invocation.setter(
+          #state,
+          newState,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i6.Future<
+          (_i3.WorkoutTimerState, _i4.WorkoutProgressState, _i11.PowerAlertMessage?)>
+      get future => (super.noSuchMethod(
+            Invocation.getter(#future),
+            returnValue: _i6.Future<
+                (
+                  _i3.WorkoutTimerState,
+                  _i4.WorkoutProgressState,
+                  _i11.PowerAlertMessage?
+                )>.value((
+              _FakeWorkoutTimerState_2(
+                this,
+                Invocation.getter(#future),
+              ),
+              _FakeWorkoutProgressState_3(
+                this,
+                Invocation.getter(#future),
+              ),
+              null
+            )),
+          ) as _i6.Future<
+              (
+                _i3.WorkoutTimerState,
+                _i4.WorkoutProgressState,
+                _i11.PowerAlertMessage?
+              )>);
+
+  @override
+  _i6.Stream<
+          (_i3.WorkoutTimerState, _i4.WorkoutProgressState, _i11.PowerAlertMessage?)>
+      build(List<_i7.WorkoutBlock>? blocks) => (super.noSuchMethod(
             Invocation.method(
-              #call,
+              #build,
               [blocks],
             ),
-            returnValue: _i3.Stream<
+            returnValue: _i6.Stream<
                 (
-                  _i8.WorkoutTimerState,
-                  _i9.WorkoutProgressState,
-                  _i10.PowerAlertMessage?
+                  _i3.WorkoutTimerState,
+                  _i4.WorkoutProgressState,
+                  _i11.PowerAlertMessage?
                 )>.empty(),
-          ) as _i3.Stream<
+          ) as _i6.Stream<
               (
-                _i8.WorkoutTimerState,
-                _i9.WorkoutProgressState,
-                _i10.PowerAlertMessage?
+                _i3.WorkoutTimerState,
+                _i4.WorkoutProgressState,
+                _i11.PowerAlertMessage?
               )>);
 
   @override
@@ -136,4 +282,125 @@ class MockManageWorkoutUseCase extends _i1.Mock
         ),
         returnValueForMissingStub: null,
       );
+
+  @override
+  void listenSelf(
+    void Function(
+      _i2.AsyncValue<
+          (
+            _i3.WorkoutTimerState,
+            _i4.WorkoutProgressState,
+            _i11.PowerAlertMessage?
+          )>?,
+      _i2.AsyncValue<
+          (
+            _i3.WorkoutTimerState,
+            _i4.WorkoutProgressState,
+            _i11.PowerAlertMessage?
+          )>,
+    )? listener, {
+    void Function(
+      Object,
+      StackTrace,
+    )? onError,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #listenSelf,
+          [listener],
+          {#onError: onError},
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i6.Future<
+      (
+        _i3.WorkoutTimerState,
+        _i4.WorkoutProgressState,
+        _i11.PowerAlertMessage?
+      )> update(
+    _i6.FutureOr<
+                (
+                  _i3.WorkoutTimerState,
+                  _i4.WorkoutProgressState,
+                  _i11.PowerAlertMessage?
+                )>
+            Function((_i3.WorkoutTimerState, _i4.WorkoutProgressState, _i11.PowerAlertMessage?))?
+        cb, {
+    _i6.FutureOr<
+            (
+              _i3.WorkoutTimerState,
+              _i4.WorkoutProgressState,
+              _i11.PowerAlertMessage?
+            )>
+        Function(
+      Object,
+      StackTrace,
+    )? onError,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #update,
+          [cb],
+          {#onError: onError},
+        ),
+        returnValue: _i6.Future<
+            (
+              _i3.WorkoutTimerState,
+              _i4.WorkoutProgressState,
+              _i11.PowerAlertMessage?
+            )>.value((
+          _FakeWorkoutTimerState_2(
+            this,
+            Invocation.method(
+              #update,
+              [cb],
+              {#onError: onError},
+            ),
+          ),
+          _FakeWorkoutProgressState_3(
+            this,
+            Invocation.method(
+              #update,
+              [cb],
+              {#onError: onError},
+            ),
+          ),
+          null
+        )),
+      ) as _i6.Future<
+          (
+            _i3.WorkoutTimerState,
+            _i4.WorkoutProgressState,
+            _i11.PowerAlertMessage?
+          )>);
+
+  @override
+  bool updateShouldNotify(
+    _i2.AsyncValue<
+            (
+              _i3.WorkoutTimerState,
+              _i4.WorkoutProgressState,
+              _i11.PowerAlertMessage?
+            )>?
+        previous,
+    _i2.AsyncValue<
+            (
+              _i3.WorkoutTimerState,
+              _i4.WorkoutProgressState,
+              _i11.PowerAlertMessage?
+            )>?
+        next,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #updateShouldNotify,
+          [
+            previous,
+            next,
+          ],
+        ),
+        returnValue: false,
+      ) as bool);
 }

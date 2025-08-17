@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$UserProfile {
   double get weight => throw _privateConstructorUsedError;
+  int get ftp => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
 
   /// Create a copy of UserProfile
@@ -32,7 +33,7 @@ abstract class $UserProfileCopyWith<$Res> {
           UserProfile value, $Res Function(UserProfile) then) =
       _$UserProfileCopyWithImpl<$Res, UserProfile>;
   @useResult
-  $Res call({double weight, DateTime updatedAt});
+  $Res call({double weight, int ftp, DateTime updatedAt});
 }
 
 /// @nodoc
@@ -51,6 +52,7 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
   @override
   $Res call({
     Object? weight = null,
+    Object? ftp = null,
     Object? updatedAt = null,
   }) {
     return _then(_value.copyWith(
@@ -58,6 +60,10 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
           ? _value.weight
           : weight // ignore: cast_nullable_to_non_nullable
               as double,
+      ftp: null == ftp
+          ? _value.ftp
+          : ftp // ignore: cast_nullable_to_non_nullable
+              as int,
       updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
@@ -74,7 +80,7 @@ abstract class _$$UserProfileImplCopyWith<$Res>
       __$$UserProfileImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({double weight, DateTime updatedAt});
+  $Res call({double weight, int ftp, DateTime updatedAt});
 }
 
 /// @nodoc
@@ -91,6 +97,7 @@ class __$$UserProfileImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? weight = null,
+    Object? ftp = null,
     Object? updatedAt = null,
   }) {
     return _then(_$UserProfileImpl(
@@ -98,6 +105,10 @@ class __$$UserProfileImplCopyWithImpl<$Res>
           ? _value.weight
           : weight // ignore: cast_nullable_to_non_nullable
               as double,
+      ftp: null == ftp
+          ? _value.ftp
+          : ftp // ignore: cast_nullable_to_non_nullable
+              as int,
       updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
@@ -109,16 +120,19 @@ class __$$UserProfileImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$UserProfileImpl implements _UserProfile {
-  const _$UserProfileImpl({required this.weight, required this.updatedAt});
+  const _$UserProfileImpl(
+      {required this.weight, required this.ftp, required this.updatedAt});
 
   @override
   final double weight;
+  @override
+  final int ftp;
   @override
   final DateTime updatedAt;
 
   @override
   String toString() {
-    return 'UserProfile(weight: $weight, updatedAt: $updatedAt)';
+    return 'UserProfile(weight: $weight, ftp: $ftp, updatedAt: $updatedAt)';
   }
 
   @override
@@ -127,12 +141,13 @@ class _$UserProfileImpl implements _UserProfile {
         (other.runtimeType == runtimeType &&
             other is _$UserProfileImpl &&
             (identical(other.weight, weight) || other.weight == weight) &&
+            (identical(other.ftp, ftp) || other.ftp == ftp) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, weight, updatedAt);
+  int get hashCode => Object.hash(runtimeType, weight, ftp, updatedAt);
 
   /// Create a copy of UserProfile
   /// with the given fields replaced by the non-null parameter values.
@@ -146,10 +161,13 @@ class _$UserProfileImpl implements _UserProfile {
 abstract class _UserProfile implements UserProfile {
   const factory _UserProfile(
       {required final double weight,
+      required final int ftp,
       required final DateTime updatedAt}) = _$UserProfileImpl;
 
   @override
   double get weight;
+  @override
+  int get ftp;
   @override
   DateTime get updatedAt;
 

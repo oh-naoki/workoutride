@@ -10,9 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_11_083745) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_11_134119) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "user_ftps", force: :cascade do |t|
+    t.integer "ftp_value", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "workout_blocks", force: :cascade do |t|
     t.bigint "workout_id", null: false
@@ -21,7 +27,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_11_083745) do
     t.string "block_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.decimal "target_pwr", precision: 10, scale: 2
+    t.decimal "target_ftp_percentage", precision: 10, scale: 2
     t.index ["workout_id"], name: "index_workout_blocks_on_workout_id"
   end
 

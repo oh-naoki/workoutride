@@ -26,6 +26,7 @@ mixin _$WorkoutScreenUiState {
   int get elapsedSeconds => throw _privateConstructorUsedError;
   bool get isPaused => throw _privateConstructorUsedError;
   double get userWeight => throw _privateConstructorUsedError;
+  int get userFtp => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
   PowerAlertMessage? get powerAlertMessage =>
       throw _privateConstructorUsedError;
@@ -54,6 +55,7 @@ abstract class $WorkoutScreenUiStateCopyWith<$Res> {
       int elapsedSeconds,
       bool isPaused,
       double userWeight,
+      int userFtp,
       String? errorMessage,
       PowerAlertMessage? powerAlertMessage});
 }
@@ -84,6 +86,7 @@ class _$WorkoutScreenUiStateCopyWithImpl<$Res,
     Object? elapsedSeconds = null,
     Object? isPaused = null,
     Object? userWeight = null,
+    Object? userFtp = null,
     Object? errorMessage = freezed,
     Object? powerAlertMessage = freezed,
   }) {
@@ -128,6 +131,10 @@ class _$WorkoutScreenUiStateCopyWithImpl<$Res,
           ? _value.userWeight
           : userWeight // ignore: cast_nullable_to_non_nullable
               as double,
+      userFtp: null == userFtp
+          ? _value.userFtp
+          : userFtp // ignore: cast_nullable_to_non_nullable
+              as int,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -159,6 +166,7 @@ abstract class _$$WorkoutScreenUiStateImplCopyWith<$Res>
       int elapsedSeconds,
       bool isPaused,
       double userWeight,
+      int userFtp,
       String? errorMessage,
       PowerAlertMessage? powerAlertMessage});
 }
@@ -186,6 +194,7 @@ class __$$WorkoutScreenUiStateImplCopyWithImpl<$Res>
     Object? elapsedSeconds = null,
     Object? isPaused = null,
     Object? userWeight = null,
+    Object? userFtp = null,
     Object? errorMessage = freezed,
     Object? powerAlertMessage = freezed,
   }) {
@@ -230,6 +239,10 @@ class __$$WorkoutScreenUiStateImplCopyWithImpl<$Res>
           ? _value.userWeight
           : userWeight // ignore: cast_nullable_to_non_nullable
               as double,
+      userFtp: null == userFtp
+          ? _value.userFtp
+          : userFtp // ignore: cast_nullable_to_non_nullable
+              as int,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -258,6 +271,7 @@ class _$WorkoutScreenUiStateImpl
       this.elapsedSeconds = 0,
       this.isPaused = false,
       this.userWeight = 60.0,
+      this.userFtp = 200,
       this.errorMessage,
       this.powerAlertMessage})
       : _workoutBlocks = workoutBlocks;
@@ -299,13 +313,16 @@ class _$WorkoutScreenUiStateImpl
   @JsonKey()
   final double userWeight;
   @override
+  @JsonKey()
+  final int userFtp;
+  @override
   final String? errorMessage;
   @override
   final PowerAlertMessage? powerAlertMessage;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'WorkoutScreenUiState(workoutBlocks: $workoutBlocks, isLoading: $isLoading, power: $power, cadence: $cadence, maxPower: $maxPower, targetPower: $targetPower, currentBlockIndex: $currentBlockIndex, elapsedSeconds: $elapsedSeconds, isPaused: $isPaused, userWeight: $userWeight, errorMessage: $errorMessage, powerAlertMessage: $powerAlertMessage)';
+    return 'WorkoutScreenUiState(workoutBlocks: $workoutBlocks, isLoading: $isLoading, power: $power, cadence: $cadence, maxPower: $maxPower, targetPower: $targetPower, currentBlockIndex: $currentBlockIndex, elapsedSeconds: $elapsedSeconds, isPaused: $isPaused, userWeight: $userWeight, userFtp: $userFtp, errorMessage: $errorMessage, powerAlertMessage: $powerAlertMessage)';
   }
 
   @override
@@ -323,6 +340,7 @@ class _$WorkoutScreenUiStateImpl
       ..add(DiagnosticsProperty('elapsedSeconds', elapsedSeconds))
       ..add(DiagnosticsProperty('isPaused', isPaused))
       ..add(DiagnosticsProperty('userWeight', userWeight))
+      ..add(DiagnosticsProperty('userFtp', userFtp))
       ..add(DiagnosticsProperty('errorMessage', errorMessage))
       ..add(DiagnosticsProperty('powerAlertMessage', powerAlertMessage));
   }
@@ -350,6 +368,7 @@ class _$WorkoutScreenUiStateImpl
                 other.isPaused == isPaused) &&
             (identical(other.userWeight, userWeight) ||
                 other.userWeight == userWeight) &&
+            (identical(other.userFtp, userFtp) || other.userFtp == userFtp) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage) &&
             (identical(other.powerAlertMessage, powerAlertMessage) ||
@@ -369,6 +388,7 @@ class _$WorkoutScreenUiStateImpl
       elapsedSeconds,
       isPaused,
       userWeight,
+      userFtp,
       errorMessage,
       powerAlertMessage);
 
@@ -395,6 +415,7 @@ abstract class _WorkoutScreenUiState implements WorkoutScreenUiState {
       final int elapsedSeconds,
       final bool isPaused,
       final double userWeight,
+      final int userFtp,
       final String? errorMessage,
       final PowerAlertMessage? powerAlertMessage}) = _$WorkoutScreenUiStateImpl;
 
@@ -418,6 +439,8 @@ abstract class _WorkoutScreenUiState implements WorkoutScreenUiState {
   bool get isPaused;
   @override
   double get userWeight;
+  @override
+  int get userFtp;
   @override
   String? get errorMessage;
   @override

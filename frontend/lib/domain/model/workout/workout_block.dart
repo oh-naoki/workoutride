@@ -8,10 +8,17 @@ class WorkoutBlock with _$WorkoutBlock {
     required int id,
     required int workoutId,
     required int orderIndex,
-    required double targetPwr,
+    required int targetFtpPercentage,
     required int durationSeconds,
     required String blockType,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) = _WorkoutBlock;
+
+  const WorkoutBlock._();
+
+  /// FTPから実際のターゲットパワーを計算
+  int calculateTargetPower(int userFtp) {
+    return (userFtp * targetFtpPercentage / 100).round();
+  }
 }

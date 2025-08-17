@@ -17,6 +17,8 @@ import 'package:workoutride/domain/repository/user_profile_repository.dart';
 import 'package:workoutride/data/repository/user_profile_repository_impl.dart';
 import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart';
 import 'package:workoutride/domain/usecase/user_profile/save_user_weight_use_case.dart';
+import 'package:workoutride/domain/usecase/user_profile/get_user_ftp_use_case.dart';
+import 'package:workoutride/domain/usecase/user_profile/save_user_ftp_use_case.dart';
 import 'package:workoutride/domain/usecase/auto_connect_ble_power_meter_use_case.dart';
 
 part 'providers.g.dart';
@@ -81,15 +83,6 @@ GetWorkoutBlocksUseCase getWorkoutBlocksUseCase(GetWorkoutBlocksUseCaseRef ref) 
   return GetWorkoutBlocksUseCase(ref.read(workoutRepositoryProvider));
 }
 
-@riverpod
-ManageWorkoutUseCase manageWorkoutUseCase(ManageWorkoutUseCaseRef ref) {
-  return ManageWorkoutUseCase(
-    ref.watch(getCalculatedPowerMeterDataUseCaseProvider),
-    ref.watch(powerZoneAnalyzerProvider),
-    ref.watch(getUserProfileUseCaseProvider),
-  );
-}
-
 // DIプロバイダー
 @riverpod
 Dio dio(DioRef ref) {
@@ -144,6 +137,16 @@ GetUserProfileUseCase getUserProfileUseCase(GetUserProfileUseCaseRef ref) {
 @riverpod
 SaveUserWeightUseCase saveUserWeightUseCase(SaveUserWeightUseCaseRef ref) {
   return SaveUserWeightUseCase(repository: ref.read(userProfileRepositoryProvider));
+}
+
+@riverpod
+GetUserFtpUseCase getUserFtpUseCase(GetUserFtpUseCaseRef ref) {
+  return GetUserFtpUseCase(ref.read(userProfileRepositoryProvider));
+}
+
+@riverpod
+SaveUserFtpUseCase saveUserFtpUseCase(SaveUserFtpUseCaseRef ref) {
+  return SaveUserFtpUseCase(ref.read(userProfileRepositoryProvider));
 }
 
 @riverpod
