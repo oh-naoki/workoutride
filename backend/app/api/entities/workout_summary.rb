@@ -6,6 +6,5 @@ module Entities
     expose :category
     expose :created_at
     expose :updated_at
-    expose :workouts, using: Entities::WorkoutId
   end
 end

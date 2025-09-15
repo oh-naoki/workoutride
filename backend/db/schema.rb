@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_11_134119) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_15_142244) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -21,14 +21,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_11_134119) do
   end
 
   create_table "workout_blocks", force: :cascade do |t|
-    t.bigint "workout_id", null: false
     t.integer "order_index"
     t.integer "duration"
     t.string "block_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "target_ftp_percentage", precision: 10, scale: 2
-    t.index ["workout_id"], name: "index_workout_blocks_on_workout_id"
+    t.bigint "workout_summary_id", null: false
+    t.index ["workout_summary_id"], name: "index_workout_blocks_on_workout_summary_id"
   end
 
   create_table "workout_summaries", force: :cascade do |t|
@@ -39,13 +39,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_11_134119) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "workouts", force: :cascade do |t|
-    t.bigint "workout_summary_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["workout_summary_id"], name: "index_workouts_on_workout_summary_id"
-  end
-
-  add_foreign_key "workout_blocks", "workouts"
-  add_foreign_key "workouts", "workout_summaries"
+  add_foreign_key "workout_blocks", "workout_summaries"
 end
