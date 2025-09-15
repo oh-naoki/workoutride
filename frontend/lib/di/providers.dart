@@ -21,6 +21,9 @@ import 'package:workoutride/domain/usecase/user_profile/save_user_weight_use_cas
 import 'package:workoutride/domain/usecase/user_profile/get_user_ftp_use_case.dart';
 import 'package:workoutride/domain/usecase/user_profile/save_user_ftp_use_case.dart';
 import 'package:workoutride/domain/usecase/auto_connect_ble_power_meter_use_case.dart';
+import 'package:workoutride/domain/usecase/connect_ble_power_meter_use_case.dart';
+import 'package:workoutride/domain/usecase/scan_ble_device_usecase.dart';
+import 'package:workoutride/domain/usecase/get_power_meter_data_use_case.dart';
 
 part 'providers.g.dart';
 
@@ -158,6 +161,45 @@ SaveUserFtpUseCase saveUserFtpUseCase(SaveUserFtpUseCaseRef ref) {
 @riverpod
 AutoConnectBlePowerMeterUseCase autoConnectBlePowerMeterUseCase(AutoConnectBlePowerMeterUseCaseRef ref) {
   return AutoConnectBlePowerMeterUseCase(ref.read(bleConnectorProvider));
+}
+
+@riverpod
+BleConnector bleConnector(BleConnectorRef ref) {
+  return BleConnector(ref.read(sharedPreferencesProvider));
+}
+
+@riverpod
+ConnectBlePowerMeterUseCase connectBlePowerMeterUseCase(ConnectBlePowerMeterUseCaseRef ref) {
+  return ConnectBlePowerMeterUseCase(ref.read(bleConnectorProvider));
+}
+
+@riverpod
+ScanBleDeviceUseCase scanBleDeviceUseCase(ScanBleDeviceUseCaseRef ref) {
+  return ScanBleDeviceUseCase(ref.read(bleConnectorProvider));
+}
+
+@riverpod
+GetPowerMeterDataUseCase getPowerMeterDataUseCase(GetPowerMeterDataUseCaseRef ref) {
+  return GetPowerMeterDataUseCase(ref.read(powerMeterDataSourceProvider));
+}
+
+@riverpod
+GetCalculatedPowerMeterDataUseCase getCalculatedPowerMeterDataUseCase(GetCalculatedPowerMeterDataUseCaseRef ref) {
+  return GetCalculatedPowerMeterDataUseCase(ref.read(getPowerMeterDataUseCaseProvider));
+}
+
+@riverpod
+PowerZoneAnalyzer powerZoneAnalyzer(PowerZoneAnalyzerRef ref) {
+  return PowerZoneAnalyzer();
+}
+
+@riverpod
+ManageWorkoutUseCase manageWorkoutUseCase(ManageWorkoutUseCaseRef ref) {
+  return ManageWorkoutUseCase(
+    ref.read(getCalculatedPowerMeterDataUseCaseProvider),
+    ref.read(powerZoneAnalyzerProvider),
+    ref.read(getUserProfileUseCaseProvider),
+  );
 }
 
 

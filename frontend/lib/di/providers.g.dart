@@ -330,5 +330,137 @@ final autoConnectBlePowerMeterUseCaseProvider =
 // ignore: unused_element
 typedef AutoConnectBlePowerMeterUseCaseRef
     = AutoDisposeProviderRef<AutoConnectBlePowerMeterUseCase>;
+String _$bleConnectorHash() => r'fe15f7ae82ca4d4fe2b20b83ce8e1afa8cb0a89d';
+
+/// See also [bleConnector].
+@ProviderFor(bleConnector)
+final bleConnectorProvider = AutoDisposeProvider<BleConnector>.internal(
+  bleConnector,
+  name: r'bleConnectorProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$bleConnectorHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef BleConnectorRef = AutoDisposeProviderRef<BleConnector>;
+String _$connectBlePowerMeterUseCaseHash() =>
+    r'a461162f052640cb4cacfe97d7bbbee52d077fec';
+
+/// See also [connectBlePowerMeterUseCase].
+@ProviderFor(connectBlePowerMeterUseCase)
+final connectBlePowerMeterUseCaseProvider =
+    AutoDisposeProvider<ConnectBlePowerMeterUseCase>.internal(
+  connectBlePowerMeterUseCase,
+  name: r'connectBlePowerMeterUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$connectBlePowerMeterUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef ConnectBlePowerMeterUseCaseRef
+    = AutoDisposeProviderRef<ConnectBlePowerMeterUseCase>;
+String _$scanBleDeviceUseCaseHash() =>
+    r'9c3cdc829a1338f7954863d6bfbd7db51ecd66b0';
+
+/// See also [scanBleDeviceUseCase].
+@ProviderFor(scanBleDeviceUseCase)
+final scanBleDeviceUseCaseProvider =
+    AutoDisposeProvider<ScanBleDeviceUseCase>.internal(
+  scanBleDeviceUseCase,
+  name: r'scanBleDeviceUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$scanBleDeviceUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef ScanBleDeviceUseCaseRef = AutoDisposeProviderRef<ScanBleDeviceUseCase>;
+String _$getPowerMeterDataUseCaseHash() =>
+    r'63ff5dee9253d44d224606dd936173946d2ad609';
+
+/// See also [getPowerMeterDataUseCase].
+@ProviderFor(getPowerMeterDataUseCase)
+final getPowerMeterDataUseCaseProvider =
+    AutoDisposeProvider<GetPowerMeterDataUseCase>.internal(
+  getPowerMeterDataUseCase,
+  name: r'getPowerMeterDataUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getPowerMeterDataUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef GetPowerMeterDataUseCaseRef
+    = AutoDisposeProviderRef<GetPowerMeterDataUseCase>;
+String _$getCalculatedPowerMeterDataUseCaseHash() =>
+    r'676102694588427f57a681030a605058552695df';
+
+/// See also [getCalculatedPowerMeterDataUseCase].
+@ProviderFor(getCalculatedPowerMeterDataUseCase)
+final getCalculatedPowerMeterDataUseCaseProvider =
+    AutoDisposeProvider<GetCalculatedPowerMeterDataUseCase>.internal(
+  getCalculatedPowerMeterDataUseCase,
+  name: r'getCalculatedPowerMeterDataUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getCalculatedPowerMeterDataUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef GetCalculatedPowerMeterDataUseCaseRef
+    = AutoDisposeProviderRef<GetCalculatedPowerMeterDataUseCase>;
+String _$powerZoneAnalyzerHash() => r'0300748b5a7e3156fb7068132cd9d4b4b286761a';
+
+/// See also [powerZoneAnalyzer].
+@ProviderFor(powerZoneAnalyzer)
+final powerZoneAnalyzerProvider =
+    AutoDisposeProvider<PowerZoneAnalyzer>.internal(
+  powerZoneAnalyzer,
+  name: r'powerZoneAnalyzerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$powerZoneAnalyzerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef PowerZoneAnalyzerRef = AutoDisposeProviderRef<PowerZoneAnalyzer>;
+String _$manageWorkoutUseCaseHash() =>
+    r'a866ac464fdae175587ee53b006c17b236ed9302';
+
+/// See also [manageWorkoutUseCase].
+@ProviderFor(manageWorkoutUseCase)
+final manageWorkoutUseCaseProvider =
+    AutoDisposeProvider<ManageWorkoutUseCase>.internal(
+  manageWorkoutUseCase,
+  name: r'manageWorkoutUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$manageWorkoutUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef ManageWorkoutUseCaseRef = AutoDisposeProviderRef<ManageWorkoutUseCase>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

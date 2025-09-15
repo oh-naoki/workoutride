@@ -1,22 +1,8 @@
 import 'dart:collection';
 
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:workoutride/domain/usecase/get_power_meter_data_use_case.dart';
 
 import '../model/power_meter_data.dart';
-
-part 'get_calculated_power_meter_data_usecase.g.dart';
-
-@riverpod
-GetCalculatedPowerMeterDataUseCase getCalculatedPowerMeterDataUseCase(
-  GetCalculatedPowerMeterDataUseCaseRef ref,
-) {
-  return GetCalculatedPowerMeterDataUseCase(
-    ref.read(
-      getPowerMeterDataUseCaseProvider,
-    ),
-  );
-}
 
 class GetCalculatedPowerMeterDataUseCase {
   final GetPowerMeterDataUseCase _getPowerMeterDataUseCase;

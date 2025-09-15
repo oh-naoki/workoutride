@@ -1,15 +1,5 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:workoutride/data/power_meter_data_source.dart';
-import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/domain/model/power_meter_data.dart';
-
-part 'get_power_meter_data_use_case.g.dart';
-
-@riverpod
-GetPowerMeterDataUseCase getPowerMeterDataUseCase(GetPowerMeterDataUseCaseRef ref) {
-  final dataSource = ref.watch(powerMeterDataSourceProvider);
-  return GetPowerMeterDataUseCase(dataSource);
-}
 
 class GetPowerMeterDataUseCase {
   final PowerMeterDataSource _powerMeterDataSource;

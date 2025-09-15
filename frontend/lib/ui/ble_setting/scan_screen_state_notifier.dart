@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/domain/usecase/connect_ble_power_meter_use_case.dart';
 import 'package:workoutride/domain/usecase/get_power_meter_data_use_case.dart';
 import 'package:workoutride/domain/usecase/scan_ble_device_usecase.dart';

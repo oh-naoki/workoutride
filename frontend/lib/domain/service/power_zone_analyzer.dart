@@ -1,12 +1,3 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-part 'power_zone_analyzer.g.dart';
-
-@riverpod
-PowerZoneAnalyzer powerZoneAnalyzer(PowerZoneAnalyzerRef ref) {
-  return PowerZoneAnalyzer();
-}
-
 class PowerZoneAnalyzer {
   static const double _tolerancePercentage = 0.1; // 10%の許容範囲
 

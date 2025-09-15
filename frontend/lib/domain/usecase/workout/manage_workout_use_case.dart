@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:workoutride/domain/model/power_alert_message.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/domain/model/workout/workout_progress_state.dart';
@@ -8,15 +7,11 @@ import 'package:workoutride/domain/model/workout/workout_timer_state.dart';
 import 'package:workoutride/domain/service/power_zone_analyzer.dart';
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart';
 import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart';
-import 'package:workoutride/di/providers.dart';
 
-part 'manage_workout_use_case.g.dart';
-
-@riverpod
-class ManageWorkoutUseCase extends _$ManageWorkoutUseCase {
-  late final GetCalculatedPowerMeterDataUseCase _getCalculatedPowerMeterDataUseCase;
-  late final PowerZoneAnalyzer _powerZoneAnalyzer;
-  late final GetUserProfileUseCase _getUserProfileUseCase;
+class ManageWorkoutUseCase {
+  final GetCalculatedPowerMeterDataUseCase _getCalculatedPowerMeterDataUseCase;
+  final PowerZoneAnalyzer _powerZoneAnalyzer;
+  final GetUserProfileUseCase _getUserProfileUseCase;
   
   Timer? _timer;
   StreamController<(WorkoutTimerState, WorkoutProgressState, PowerAlertMessage?)>? _controller;
@@ -24,14 +19,15 @@ class ManageWorkoutUseCase extends _$ManageWorkoutUseCase {
   double? _userWeight;
   int? _userFtp;
 
-  @override
-  Stream<(WorkoutTimerState, WorkoutProgressState, PowerAlertMessage?)> build(
+  ManageWorkoutUseCase(
+    this._getCalculatedPowerMeterDataUseCase,
+    this._powerZoneAnalyzer,
+    this._getUserProfileUseCase,
+  );
+
+  Stream<(WorkoutTimerState, WorkoutProgressState, PowerAlertMessage?)> call(
     List<WorkoutBlock> blocks,
   ) async* {
-    _getCalculatedPowerMeterDataUseCase = ref.read(getCalculatedPowerMeterDataUseCaseProvider);
-    _powerZoneAnalyzer = ref.read(powerZoneAnalyzerProvider);
-    _getUserProfileUseCase = ref.read(getUserProfileUseCaseProvider);
-
     // ユーザープロファイルを取得
     final userProfile = await _getUserProfileUseCase.call();
     _userWeight = userProfile?.weight ?? 60.0;

@@ -2,16 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:workoutride/di/providers.dart';
-
-part 'ble_connector.g.dart';
-
-@riverpod
-BleConnector bleConnector(BleConnectorRef ref) {
-  return BleConnector(ref.read(sharedPreferencesProvider));
-}
 
 class BleConnector {
   static const String _deviceIdKey = 'last_connected_device_id';

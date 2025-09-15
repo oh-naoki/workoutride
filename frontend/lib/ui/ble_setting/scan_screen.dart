@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:workoutride/data/ble_connector.dart';
+import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/ui/ble_setting/scan_screen_state_notifier.dart';
 
 class ScanScreen extends HookConsumerWidget {
