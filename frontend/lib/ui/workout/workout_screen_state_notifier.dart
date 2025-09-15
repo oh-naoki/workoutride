@@ -8,6 +8,7 @@ import 'package:workoutride/domain/model/power_alert_message.dart';
 import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart';
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart';
 import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart';
+import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart';
 
 part 'workout_screen_state_notifier.freezed.dart';
 part 'workout_screen_state_notifier.g.dart';
@@ -38,6 +39,7 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
   late final GetWorkoutBlocksUseCase _getWorkoutBlocksUseCase;
   late final GetCalculatedPowerMeterDataUseCase _getPowerMeterDataUseCase;
   late final GetUserProfileUseCase _getUserProfileUseCase;
+  late final ManageWorkoutUseCase _manageWorkoutUseCase;
   double? _userWeight;
   int? _userFtp;
   StreamSubscription? _workoutSubscription;
@@ -46,7 +48,6 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
   
   @override
   WorkoutScreenUiState build(int workoutId) {
-    // 既存のサブスクリプションをキャンセル
     _powerSubscription?.cancel();
     _workoutSubscription?.cancel();
     _countdownTimer?.cancel();
@@ -54,11 +55,13 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
     _getWorkoutBlocksUseCase = ref.read(getWorkoutBlocksUseCaseProvider);
     _getPowerMeterDataUseCase = ref.read(getCalculatedPowerMeterDataUseCaseProvider);
     _getUserProfileUseCase = ref.read(getUserProfileUseCaseProvider);
+    _manageWorkoutUseCase = ref.read(manageWorkoutUseCaseProvider);
 
     ref.onDispose(() {
       _powerSubscription?.cancel();
       _workoutSubscription?.cancel();
       _countdownTimer?.cancel();
+      _manageWorkoutUseCase.dispose();
     });
 
     _initializeWorkout(workoutId);
@@ -75,7 +78,6 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
           isCountingDown: false,
           countdownSeconds: 15,
         );
-        // カウントダウン完了時にワークアウトを開始
         _startWorkoutAfterCountdown();
       } else {
         state = state.copyWith(
@@ -86,10 +88,34 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
   }
 
   void _startWorkoutAfterCountdown() {
-    if (state.workoutBlocks.isNotEmpty) {
-      _startWorkout(state.workoutBlocks);
-      _startListeningToPowerMeterData();
-    }
+    if (state.workoutBlocks.isEmpty) return;
+    // ManageWorkoutUseCaseのストリームを購読し、UiStateへ反映
+    _workoutSubscription = _manageWorkoutUseCase(state.workoutBlocks).listen((frame) {
+      final timerState = frame.timer;
+      final progressState = frame.progress;
+      final alert = frame.alert;
+
+      // 現在ブロックに応じてターゲットパワーを更新
+      final nextTarget = (progressState.currentBlockIndex < state.workoutBlocks.length)
+          ? state.workoutBlocks[progressState.currentBlockIndex].calculateTargetPower(_userFtp!)
+          : state.targetPower;
+
+      state = state.copyWith(
+        elapsedSeconds: timerState.elapsedSeconds,
+        isPaused: !timerState.isRunning,
+        currentBlockIndex: progressState.currentBlockIndex,
+        targetPower: nextTarget,
+        powerAlertMessage: alert,
+      );
+    });
+
+    // パワーメーターデータは従来通り購読
+    _powerSubscription = _getPowerMeterDataUseCase().listen((powerMeterData) {
+      state = state.copyWith(
+        power: powerMeterData.power,
+        cadence: powerMeterData.cadence,
+      );
+    });
   }
 
   Future<void> _initializeWorkout(int workoutId) async {
@@ -123,65 +149,22 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
     }
   }
 
-  void _startWorkout(List<WorkoutBlock> blocks) {
-    _workoutSubscription?.cancel();
-    
-    state = state.copyWith(
-      currentBlockIndex: 0,
-      elapsedSeconds: 0,
-      isPaused: false,
-    );
-    
-    _workoutSubscription = Stream.periodic(const Duration(seconds: 1)).listen((_) {
-      if (!state.isPaused) {
-        final newElapsedSeconds = state.elapsedSeconds + 1;
-        
-        var currentBlockEndTime = 0;
-        for (var i = 0; i <= state.currentBlockIndex; i++) {
-          if (i < blocks.length) {
-            currentBlockEndTime += blocks[i].durationSeconds;
-          }
-        }
-        
-        if (newElapsedSeconds >= currentBlockEndTime && 
-            state.currentBlockIndex < blocks.length - 1) {
-          state = state.copyWith(
-            currentBlockIndex: state.currentBlockIndex + 1,
-            elapsedSeconds: newElapsedSeconds,
-            targetPower: blocks[state.currentBlockIndex + 1].calculateTargetPower(_userFtp!),
-          );
-        } else if (newElapsedSeconds >= currentBlockEndTime) {
-          state = state.copyWith(
-            elapsedSeconds: newElapsedSeconds,
-            isPaused: true,
-          );
-        } else {
-          state = state.copyWith(
-            elapsedSeconds: newElapsedSeconds,
-          );
-        }
-      }
-    });
-  }
-
-  void _startListeningToPowerMeterData() {
-    _powerSubscription?.cancel();
-    
-    _powerSubscription = _getPowerMeterDataUseCase().listen((powerMeterData) {
-      state = state.copyWith(
-        power: powerMeterData.power,
-        cadence: powerMeterData.cadence,
-      );
-    });
-  }
+  // 内部タイマーロジックはUseCaseへ移譲したため削除
 
   void togglePauseResume() {
-    state = state.copyWith(isPaused: !state.isPaused);
+    final shouldPause = !state.isPaused;
+    if (shouldPause) {
+      _manageWorkoutUseCase.pauseWorkout();
+    } else {
+      _manageWorkoutUseCase.resumeWorkout();
+    }
+    state = state.copyWith(isPaused: shouldPause);
   }
 
   void stopWorkout() {
     _workoutSubscription?.cancel();
     _powerSubscription?.cancel();
+    _manageWorkoutUseCase.dispose();
   }
 
   Future<void> refreshWorkoutBlocks() async {
