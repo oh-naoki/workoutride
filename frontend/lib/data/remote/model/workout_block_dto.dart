@@ -1,7 +1,7 @@
 
 class WorkoutBlockDto {
   final int id;
-  final int workout_id;
+  final int workout_summary_id;
   final int order_index;
   final int target_ftp_percentage;
   final int duration;
@@ -11,7 +11,7 @@ class WorkoutBlockDto {
 
   const WorkoutBlockDto({
     required this.id,
-    required this.workout_id,
+    required this.workout_summary_id,
     required this.order_index,
     required this.target_ftp_percentage,
     required this.duration,
@@ -23,7 +23,7 @@ class WorkoutBlockDto {
   factory WorkoutBlockDto.fromJson(Map<String, dynamic> json) {
     return WorkoutBlockDto(
       id: json['id'] is String ? int.parse(json['id']) : (json['id'] as num).toInt(),
-      workout_id: json['workout_id'] is String ? int.parse(json['workout_id']) : (json['workout_id'] as num).toInt(),
+      workout_summary_id: json['workout_summary_id'] is String ? int.parse(json['workout_summary_id']) : (json['workout_summary_id'] as num).toInt(),
       order_index: json['order_index'] is String ? int.parse(json['order_index']) : (json['order_index'] as num).toInt(),
       target_ftp_percentage: json['target_ftp_percentage'] is String 
           ? double.parse(json['target_ftp_percentage']).round()
@@ -38,7 +38,7 @@ class WorkoutBlockDto {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'workout_id': workout_id,
+      'workout_summary_id': workout_summary_id,
       'order_index': order_index,
       'target_ftp_percentage': target_ftp_percentage,
       'duration': duration,

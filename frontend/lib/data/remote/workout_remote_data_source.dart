@@ -15,21 +15,8 @@ class WorkoutRemoteDataSource {
     return summaries.map((e) => e.toDomain()).toList();
   }
 
-  Future<WorkoutSummary?> getWorkoutSummary(int workoutId) async {
-    final summaries = await getWorkoutSummaries();
-    try {
-      // WorkoutSummaryのworkouts配列内のIDで検索
-      final summary = summaries.firstWhere((summary) => 
-        summary.workouts.any((workout) => workout.id == workoutId)
-      );
-      return summary;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  Future<List<WorkoutBlock>> getWorkoutBlocks(int workoutId) async {
-    final List<WorkoutBlockDto> blocks = await _apiClient.getWorkoutBlocks(workoutId);
+  Future<List<WorkoutBlock>> getWorkoutBlocks(int workoutSummaryId) async {
+    final List<WorkoutBlockDto> blocks = await _apiClient.getWorkoutBlocks(workoutSummaryId);
     return blocks.map((e) => e.toDomain()).toList();
   }
 }

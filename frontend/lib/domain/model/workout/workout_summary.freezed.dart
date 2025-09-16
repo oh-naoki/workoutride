@@ -22,7 +22,6 @@ mixin _$WorkoutSummary {
   String get category => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
-  List<WorkoutId> get workouts => throw _privateConstructorUsedError;
 
   /// Create a copy of WorkoutSummary
   /// with the given fields replaced by the non-null parameter values.
@@ -43,8 +42,7 @@ abstract class $WorkoutSummaryCopyWith<$Res> {
       int totalDuration,
       String category,
       DateTime createdAt,
-      DateTime updatedAt,
-      List<WorkoutId> workouts});
+      DateTime updatedAt});
 }
 
 /// @nodoc
@@ -68,7 +66,6 @@ class _$WorkoutSummaryCopyWithImpl<$Res, $Val extends WorkoutSummary>
     Object? category = null,
     Object? createdAt = null,
     Object? updatedAt = null,
-    Object? workouts = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -95,10 +92,6 @@ class _$WorkoutSummaryCopyWithImpl<$Res, $Val extends WorkoutSummary>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      workouts: null == workouts
-          ? _value.workouts
-          : workouts // ignore: cast_nullable_to_non_nullable
-              as List<WorkoutId>,
     ) as $Val);
   }
 }
@@ -117,8 +110,7 @@ abstract class _$$WorkoutSummaryImplCopyWith<$Res>
       int totalDuration,
       String category,
       DateTime createdAt,
-      DateTime updatedAt,
-      List<WorkoutId> workouts});
+      DateTime updatedAt});
 }
 
 /// @nodoc
@@ -140,7 +132,6 @@ class __$$WorkoutSummaryImplCopyWithImpl<$Res>
     Object? category = null,
     Object? createdAt = null,
     Object? updatedAt = null,
-    Object? workouts = null,
   }) {
     return _then(_$WorkoutSummaryImpl(
       id: null == id
@@ -167,10 +158,6 @@ class __$$WorkoutSummaryImplCopyWithImpl<$Res>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      workouts: null == workouts
-          ? _value._workouts
-          : workouts // ignore: cast_nullable_to_non_nullable
-              as List<WorkoutId>,
     ));
   }
 }
@@ -184,9 +171,7 @@ class _$WorkoutSummaryImpl implements _WorkoutSummary {
       required this.totalDuration,
       required this.category,
       required this.createdAt,
-      required this.updatedAt,
-      required final List<WorkoutId> workouts})
-      : _workouts = workouts;
+      required this.updatedAt});
 
   @override
   final int id;
@@ -200,17 +185,10 @@ class _$WorkoutSummaryImpl implements _WorkoutSummary {
   final DateTime createdAt;
   @override
   final DateTime updatedAt;
-  final List<WorkoutId> _workouts;
-  @override
-  List<WorkoutId> get workouts {
-    if (_workouts is EqualUnmodifiableListView) return _workouts;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_workouts);
-  }
 
   @override
   String toString() {
-    return 'WorkoutSummary(id: $id, name: $name, totalDuration: $totalDuration, category: $category, createdAt: $createdAt, updatedAt: $updatedAt, workouts: $workouts)';
+    return 'WorkoutSummary(id: $id, name: $name, totalDuration: $totalDuration, category: $category, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -227,20 +205,12 @@ class _$WorkoutSummaryImpl implements _WorkoutSummary {
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt) &&
-            const DeepCollectionEquality().equals(other._workouts, _workouts));
+                other.updatedAt == updatedAt));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      name,
-      totalDuration,
-      category,
-      createdAt,
-      updatedAt,
-      const DeepCollectionEquality().hash(_workouts));
+      runtimeType, id, name, totalDuration, category, createdAt, updatedAt);
 
   /// Create a copy of WorkoutSummary
   /// with the given fields replaced by the non-null parameter values.
@@ -259,8 +229,7 @@ abstract class _WorkoutSummary implements WorkoutSummary {
       required final int totalDuration,
       required final String category,
       required final DateTime createdAt,
-      required final DateTime updatedAt,
-      required final List<WorkoutId> workouts}) = _$WorkoutSummaryImpl;
+      required final DateTime updatedAt}) = _$WorkoutSummaryImpl;
 
   @override
   int get id;
@@ -274,8 +243,6 @@ abstract class _WorkoutSummary implements WorkoutSummary {
   DateTime get createdAt;
   @override
   DateTime get updatedAt;
-  @override
-  List<WorkoutId> get workouts;
 
   /// Create a copy of WorkoutSummary
   /// with the given fields replaced by the non-null parameter values.

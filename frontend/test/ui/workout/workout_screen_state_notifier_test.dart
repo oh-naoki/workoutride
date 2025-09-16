@@ -8,7 +8,6 @@ import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/domain/model/workout/workout_progress_state.dart';
 import 'package:workoutride/domain/model/workout/workout_timer_state.dart';
 import 'package:workoutride/domain/model/power_meter_data.dart';
-import 'package:workoutride/domain/model/power_alert_message.dart';
 import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart';
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart';
 import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart' as workout_usecase;
@@ -102,15 +101,15 @@ void main() {
             .thenAnswer((_) => Stream.fromIterable([testPowerMeterData]));
         when(mockManageWorkoutUseCase.call(testWorkoutBlocks))
             .thenAnswer((_) => Stream.fromIterable([
-              (
-                const WorkoutTimerState(elapsedSeconds: 0, isRunning: true),
-                WorkoutProgressState(
+              workout_usecase.WorkoutFrame(
+                timer: const WorkoutTimerState(elapsedSeconds: 0, isRunning: true),
+                progress: WorkoutProgressState(
                   blocks: testWorkoutBlocks,
                   totalSeconds: 900,
                   currentBlockIndex: 0,
                   elapsedSeconds: 0,
                 ),
-                null
+                alert: null,
               )
             ]));
 
@@ -151,15 +150,15 @@ void main() {
             .thenAnswer((_) => Stream.fromIterable([testPowerMeterData]));
         when(mockManageWorkoutUseCase.call(testWorkoutBlocks))
             .thenAnswer((_) => Stream.fromIterable([
-              (
-                const WorkoutTimerState(elapsedSeconds: 0, isRunning: true),
-                WorkoutProgressState(
+              workout_usecase.WorkoutFrame(
+                timer: const WorkoutTimerState(elapsedSeconds: 0, isRunning: true),
+                progress: WorkoutProgressState(
                   blocks: testWorkoutBlocks,
                   totalSeconds: 900,
                   currentBlockIndex: 0,
                   elapsedSeconds: 0,
                 ),
-                null
+                alert: null,
               )
             ]));
 
@@ -184,15 +183,15 @@ void main() {
             .thenAnswer((_) => Stream.fromIterable([testPowerMeterData]));
         when(mockManageWorkoutUseCase.call(testWorkoutBlocks))
             .thenAnswer((_) => Stream.fromIterable([
-              (
-                const WorkoutTimerState(elapsedSeconds: 0, isRunning: true),
-                WorkoutProgressState(
+              workout_usecase.WorkoutFrame(
+                timer: const WorkoutTimerState(elapsedSeconds: 0, isRunning: true),
+                progress: WorkoutProgressState(
                   blocks: testWorkoutBlocks,
                   totalSeconds: 900,
                   currentBlockIndex: 0,
                   elapsedSeconds: 0,
                 ),
-                null
+                alert: null,
               )
             ]));
 
@@ -216,15 +215,15 @@ void main() {
             .thenAnswer((_) => Stream.fromIterable([testPowerMeterData]));
         when(mockManageWorkoutUseCase.call(testWorkoutBlocks))
             .thenAnswer((_) => Stream.fromIterable([
-              (
-                const WorkoutTimerState(elapsedSeconds: 0, isRunning: true),
-                WorkoutProgressState(
+              workout_usecase.WorkoutFrame(
+                timer: const WorkoutTimerState(elapsedSeconds: 0, isRunning: true),
+                progress: WorkoutProgressState(
                   blocks: testWorkoutBlocks,
                   totalSeconds: 900,
                   currentBlockIndex: 0,
                   elapsedSeconds: 0,
                 ),
-                null
+                alert: null,
               )
             ]));
 
@@ -256,15 +255,15 @@ void main() {
             .thenAnswer((_) => Stream.fromIterable([testPowerMeterData]));
         when(mockManageWorkoutUseCase.call(testWorkoutBlocks))
             .thenAnswer((_) => Stream.fromIterable([
-              (
-                const WorkoutTimerState(elapsedSeconds: 0, isRunning: true),
-                WorkoutProgressState(
+              workout_usecase.WorkoutFrame(
+                timer: const WorkoutTimerState(elapsedSeconds: 0, isRunning: true),
+                progress: WorkoutProgressState(
                   blocks: testWorkoutBlocks,
                   totalSeconds: 900,
                   currentBlockIndex: 0,
                   elapsedSeconds: 0,
                 ),
-                null
+                alert: null,
               )
             ]));
 

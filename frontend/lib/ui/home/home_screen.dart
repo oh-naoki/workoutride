@@ -145,16 +145,14 @@ class WorkoutItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (summary.workouts.isNotEmpty) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => WorkoutDetailScreen(
-                workoutId: summary.workouts[0].id,
-              ),
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => WorkoutDetailScreen(
+              workoutId: summary.id,
             ),
-          );
-        }
+          ),
+        );
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

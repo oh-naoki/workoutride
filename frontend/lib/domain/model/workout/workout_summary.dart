@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:workoutride/domain/model/workout/workout_id.dart';
 
 part 'workout_summary.freezed.dart';
 
@@ -12,6 +11,5 @@ class WorkoutSummary with _$WorkoutSummary {
     required String category,
     required DateTime createdAt,
     required DateTime updatedAt,
-    required List<WorkoutId> workouts,
   }) = _WorkoutSummary;
 }

@@ -1,8 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:workoutride/ui/workout/workout_screen_state_notifier.dart';
 
 class Meter extends StatelessWidget {
   final int power;

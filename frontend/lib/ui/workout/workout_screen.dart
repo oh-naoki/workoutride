@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workoutride/component/meter.dart';
-import 'package:workoutride/domain/model/power_alert_message.dart';
 import 'package:workoutride/ui/workout/developer_menu.dart';
 import 'package:workoutride/ui/workout/workout_screen_state_notifier.dart';
 
@@ -208,7 +207,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                               },
                               child: _buildWorkoutCard(
                                 name: block.blockType,
-                                power: block.calculateTargetPower(uiState.userFtp ?? 200),
+                                power: block.calculateTargetPower(uiState.userFtp),
                                 time: _formatDuration(block.durationSeconds),
                                 isActive: isCurrentBlock,
                                 progress: isCurrentBlock 

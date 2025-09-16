@@ -26,7 +26,6 @@ mixin _$WorkoutSummaryDto {
   String get category => throw _privateConstructorUsedError;
   String get created_at => throw _privateConstructorUsedError;
   String get updated_at => throw _privateConstructorUsedError;
-  List<WorkoutIdDto> get workouts => throw _privateConstructorUsedError;
 
   /// Serializes this WorkoutSummaryDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -50,8 +49,7 @@ abstract class $WorkoutSummaryDtoCopyWith<$Res> {
       int total_duration,
       String category,
       String created_at,
-      String updated_at,
-      List<WorkoutIdDto> workouts});
+      String updated_at});
 }
 
 /// @nodoc
@@ -75,7 +73,6 @@ class _$WorkoutSummaryDtoCopyWithImpl<$Res, $Val extends WorkoutSummaryDto>
     Object? category = null,
     Object? created_at = null,
     Object? updated_at = null,
-    Object? workouts = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -102,10 +99,6 @@ class _$WorkoutSummaryDtoCopyWithImpl<$Res, $Val extends WorkoutSummaryDto>
           ? _value.updated_at
           : updated_at // ignore: cast_nullable_to_non_nullable
               as String,
-      workouts: null == workouts
-          ? _value.workouts
-          : workouts // ignore: cast_nullable_to_non_nullable
-              as List<WorkoutIdDto>,
     ) as $Val);
   }
 }
@@ -124,8 +117,7 @@ abstract class _$$WorkoutSummaryDtoImplCopyWith<$Res>
       int total_duration,
       String category,
       String created_at,
-      String updated_at,
-      List<WorkoutIdDto> workouts});
+      String updated_at});
 }
 
 /// @nodoc
@@ -147,7 +139,6 @@ class __$$WorkoutSummaryDtoImplCopyWithImpl<$Res>
     Object? category = null,
     Object? created_at = null,
     Object? updated_at = null,
-    Object? workouts = null,
   }) {
     return _then(_$WorkoutSummaryDtoImpl(
       id: null == id
@@ -174,10 +165,6 @@ class __$$WorkoutSummaryDtoImplCopyWithImpl<$Res>
           ? _value.updated_at
           : updated_at // ignore: cast_nullable_to_non_nullable
               as String,
-      workouts: null == workouts
-          ? _value._workouts
-          : workouts // ignore: cast_nullable_to_non_nullable
-              as List<WorkoutIdDto>,
     ));
   }
 }
@@ -191,9 +178,7 @@ class _$WorkoutSummaryDtoImpl implements _WorkoutSummaryDto {
       required this.total_duration,
       required this.category,
       required this.created_at,
-      required this.updated_at,
-      required final List<WorkoutIdDto> workouts})
-      : _workouts = workouts;
+      required this.updated_at});
 
   factory _$WorkoutSummaryDtoImpl.fromJson(Map<String, dynamic> json) =>
       _$$WorkoutSummaryDtoImplFromJson(json);
@@ -210,17 +195,10 @@ class _$WorkoutSummaryDtoImpl implements _WorkoutSummaryDto {
   final String created_at;
   @override
   final String updated_at;
-  final List<WorkoutIdDto> _workouts;
-  @override
-  List<WorkoutIdDto> get workouts {
-    if (_workouts is EqualUnmodifiableListView) return _workouts;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_workouts);
-  }
 
   @override
   String toString() {
-    return 'WorkoutSummaryDto(id: $id, name: $name, total_duration: $total_duration, category: $category, created_at: $created_at, updated_at: $updated_at, workouts: $workouts)';
+    return 'WorkoutSummaryDto(id: $id, name: $name, total_duration: $total_duration, category: $category, created_at: $created_at, updated_at: $updated_at)';
   }
 
   @override
@@ -237,21 +215,13 @@ class _$WorkoutSummaryDtoImpl implements _WorkoutSummaryDto {
             (identical(other.created_at, created_at) ||
                 other.created_at == created_at) &&
             (identical(other.updated_at, updated_at) ||
-                other.updated_at == updated_at) &&
-            const DeepCollectionEquality().equals(other._workouts, _workouts));
+                other.updated_at == updated_at));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      name,
-      total_duration,
-      category,
-      created_at,
-      updated_at,
-      const DeepCollectionEquality().hash(_workouts));
+      runtimeType, id, name, total_duration, category, created_at, updated_at);
 
   /// Create a copy of WorkoutSummaryDto
   /// with the given fields replaced by the non-null parameter values.
@@ -277,8 +247,7 @@ abstract class _WorkoutSummaryDto implements WorkoutSummaryDto {
       required final int total_duration,
       required final String category,
       required final String created_at,
-      required final String updated_at,
-      required final List<WorkoutIdDto> workouts}) = _$WorkoutSummaryDtoImpl;
+      required final String updated_at}) = _$WorkoutSummaryDtoImpl;
 
   factory _WorkoutSummaryDto.fromJson(Map<String, dynamic> json) =
       _$WorkoutSummaryDtoImpl.fromJson;
@@ -295,8 +264,6 @@ abstract class _WorkoutSummaryDto implements WorkoutSummaryDto {
   String get created_at;
   @override
   String get updated_at;
-  @override
-  List<WorkoutIdDto> get workouts;
 
   /// Create a copy of WorkoutSummaryDto
   /// with the given fields replaced by the non-null parameter values.

@@ -71,22 +71,13 @@ class BleConnector {
       // 接続状態を確認
       final isConnected = device.isConnected;
       if (!isConnected) {
-        // 接続に失敗した場合、保存されたデバイスIDを削除
-        await _clearSavedDeviceId();
         return false;
       }
       
       return true;
     } catch (e) {
-      // 接続エラーの場合、保存されたデバイスIDを削除
-      await _clearSavedDeviceId();
       return false;
     }
-  }
-
-  /// 保存されたデバイスIDを削除
-  Future<void> _clearSavedDeviceId() async {
-    await _sharedPreferences.remove(_deviceIdKey);
   }
 
   /// デバイスの切断

@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:workoutride/di/providers.dart';
-import 'package:workoutride/domain/model/user_profile.dart';
 
 part 'settings_screen_state_notifier.freezed.dart';
 part 'settings_screen_state_notifier.g.dart';
