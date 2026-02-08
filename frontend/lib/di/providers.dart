@@ -1,10 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workoutride/data/remote/api/auth_api_client.dart';
 import 'package:workoutride/data/remote/api/workout_api_client.dart';
+import 'package:workoutride/data/remote/interceptor/auth_interceptor.dart';
 import 'package:workoutride/data/remote/workout_remote_data_source.dart';
+import 'package:workoutride/data/repository/auth_repository_impl.dart';
 import 'package:workoutride/data/repository/workout_repository_impl.dart';
+import 'package:workoutride/domain/repository/auth_repository.dart';
 import 'package:workoutride/domain/repository/workout_repository.dart';
 import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart';
 import 'package:workoutride/domain/usecase/workout/get_workout_results_use_case.dart';
@@ -34,6 +40,33 @@ const _mockPatternKey = 'mock_pattern';
 @Riverpod(keepAlive: true)
 SharedPreferences sharedPreferences(Ref ref) {
   throw UnimplementedError();
+}
+
+// Auth providers
+@Riverpod(keepAlive: true)
+FlutterSecureStorage secureStorage(Ref ref) {
+  return const FlutterSecureStorage();
+}
+
+@Riverpod(keepAlive: true)
+GoogleSignIn googleSignIn(Ref ref) {
+  return GoogleSignIn(
+    scopes: ['email', 'profile'],
+  );
+}
+
+@Riverpod(keepAlive: true)
+AuthApiClient authApiClient(Ref ref) {
+  return AuthApiClient(ref.watch(dioProvider));
+}
+
+@riverpod
+AuthRepository authRepository(Ref ref) {
+  return AuthRepositoryImpl(
+    ref.watch(authApiClientProvider),
+    ref.watch(googleSignInProvider),
+    ref.watch(secureStorageProvider),
+  );
 }
 
 class MockModeStateNotifier extends StateNotifier<bool> {
@@ -96,6 +129,12 @@ GetWorkoutBlocksUseCase getWorkoutBlocksUseCase(Ref ref) {
 @riverpod
 Dio dio(Ref ref) {
   final dio = Dio();
+
+  // AuthInterceptorを追加
+  dio.interceptors.add(
+    AuthInterceptor(ref.read(secureStorageProvider)),
+  );
+
   // iOSシミュレータでHTTPSを許可する設定
   dio.options.validateStatus = (status) {
     return status != null && status >= 200 && status < 400;

@@ -23,6 +23,73 @@ final sharedPreferencesProvider = Provider<SharedPreferences>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SharedPreferencesRef = ProviderRef<SharedPreferences>;
+String _$secureStorageHash() => r'a4f75721472cf77465bf47f759c90de5ca30856e';
+
+/// See also [secureStorage].
+@ProviderFor(secureStorage)
+final secureStorageProvider = Provider<FlutterSecureStorage>.internal(
+  secureStorage,
+  name: r'secureStorageProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$secureStorageHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef SecureStorageRef = ProviderRef<FlutterSecureStorage>;
+String _$googleSignInHash() => r'd8439bc335832b8824537004ef2d6ba1b5ccc2b5';
+
+/// See also [googleSignIn].
+@ProviderFor(googleSignIn)
+final googleSignInProvider = Provider<GoogleSignIn>.internal(
+  googleSignIn,
+  name: r'googleSignInProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$googleSignInHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef GoogleSignInRef = ProviderRef<GoogleSignIn>;
+String _$authApiClientHash() => r'786912ba8f721e3635d1d84130e3c732558b9aac';
+
+/// See also [authApiClient].
+@ProviderFor(authApiClient)
+final authApiClientProvider = Provider<AuthApiClient>.internal(
+  authApiClient,
+  name: r'authApiClientProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$authApiClientHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef AuthApiClientRef = ProviderRef<AuthApiClient>;
+String _$authRepositoryHash() => r'bf49dd93f034ea0ca440c9d093d75667bc89a643';
+
+/// See also [authRepository].
+@ProviderFor(authRepository)
+final authRepositoryProvider = AutoDisposeProvider<AuthRepository>.internal(
+  authRepository,
+  name: r'authRepositoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$authRepositoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef AuthRepositoryRef = AutoDisposeProviderRef<AuthRepository>;
 String _$mockModeStateNotifierHash() =>
     r'b4014b1335839b7cd8940d18d2911adbc19de57b';
 
@@ -103,7 +170,7 @@ final getWorkoutBlocksUseCaseProvider =
 // ignore: unused_element
 typedef GetWorkoutBlocksUseCaseRef
     = AutoDisposeProviderRef<GetWorkoutBlocksUseCase>;
-String _$dioHash() => r'32ee59fd42cfc5db72c815e500185133e1cf6f98';
+String _$dioHash() => r'eeb262793ac923cd7d19578aedc7bb2e740d5e1b';
 
 /// See also [dio].
 @ProviderFor(dio)
