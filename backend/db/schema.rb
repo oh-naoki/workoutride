@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_15_142244) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_16_000002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -18,6 +18,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_15_142244) do
     t.integer "ftp_value", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "workout_block_results", force: :cascade do |t|
+    t.bigint "workout_result_id", null: false
+    t.bigint "workout_block_id", null: false
+    t.integer "average_power"
+    t.integer "max_power"
+    t.integer "average_cadence"
+    t.integer "duration_seconds", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["workout_block_id"], name: "index_workout_block_results_on_workout_block_id"
+    t.index ["workout_result_id"], name: "index_workout_block_results_on_workout_result_id"
   end
 
   create_table "workout_blocks", force: :cascade do |t|
@@ -31,6 +44,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_15_142244) do
     t.index ["workout_summary_id"], name: "index_workout_blocks_on_workout_summary_id"
   end
 
+  create_table "workout_results", force: :cascade do |t|
+    t.bigint "workout_summary_id", null: false
+    t.datetime "started_at", null: false
+    t.datetime "finished_at"
+    t.integer "total_duration_seconds", null: false
+    t.integer "average_power"
+    t.integer "max_power"
+    t.integer "average_cadence"
+    t.string "status", default: "completed", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["workout_summary_id"], name: "index_workout_results_on_workout_summary_id"
+  end
+
   create_table "workout_summaries", force: :cascade do |t|
     t.string "name"
     t.integer "total_duration"
@@ -39,5 +66,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_15_142244) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "workout_block_results", "workout_blocks"
+  add_foreign_key "workout_block_results", "workout_results"
   add_foreign_key "workout_blocks", "workout_summaries"
+  add_foreign_key "workout_results", "workout_summaries"
 end

@@ -5,5 +5,6 @@ module V1
     content_type :json, 'application/json;charset=UTF-8'
 
     mount V1::Workouts
+    mount V1::WorkoutResults
   end
 end

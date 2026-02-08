@@ -1,19 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workoutride/domain/model/workout/workout_summary.dart';
+import 'package:workoutride/ui/history/history_screen.dart';
 import 'package:workoutride/ui/settings/settings_screen.dart';
 import 'package:workoutride/ui/home/home_screen_state_notifier.dart';
 import 'package:workoutride/ui/workout_detail/workout_detail_screen.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  int _currentIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
     final uiState = ref.watch(homeScreenStateNotifierProvider);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Home", style: TextStyle(color: Colors.white)),
+        title: Text(
+          _currentIndex == 0 ? 'Home' : '履歴',
+          style: const TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.black,
         centerTitle: true,
         actions: [
@@ -31,48 +43,76 @@ class HomeScreen extends ConsumerWidget {
         ],
       ),
       backgroundColor: Colors.black,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // BLE接続状態表示
-            BleConnectionStatus(uiState: uiState),
-            const SectionTitle(title: "ワークアウト一覧"),
-            Builder(
-              builder: (context) {
-                if (uiState.isLoading) {
-                  return const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                } else if (uiState.errorMessage != null) {
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        'エラーが発生しました: ${uiState.errorMessage}',
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                    ),
-                  );
-                } else if (uiState.workoutSummaries.isEmpty) {
-                  return const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Text(
-                        'ワークアウトがありません',
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  );
-                } else {
-                  return WorkoutList(summaries: uiState.workoutSummaries);
-                }
-              },
+      body: IndexedStack(
+        index: _currentIndex,
+        children: [
+          // ワークアウト一覧タブ
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                BleConnectionStatus(uiState: uiState),
+                const SectionTitle(title: "ワークアウト一覧"),
+                Builder(
+                  builder: (context) {
+                    if (uiState.isLoading) {
+                      return const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    } else if (uiState.errorMessage != null) {
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            'エラーが発生しました: ${uiState.errorMessage}',
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ),
+                      );
+                    } else if (uiState.workoutSummaries.isEmpty) {
+                      return const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Text(
+                            'ワークアウトがありません',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      );
+                    } else {
+                      return WorkoutList(summaries: uiState.workoutSummaries);
+                    }
+                  },
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          // 履歴タブ
+          const HistoryScreen(),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        backgroundColor: const Color(0xFF1C1C1C),
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white54,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.fitness_center),
+            label: 'ワークアウト',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            label: '履歴',
+          ),
+        ],
       ),
     );
   }
@@ -108,7 +148,7 @@ class SectionTitle extends StatelessWidget {
 
 class WorkoutList extends StatelessWidget {
   final List<WorkoutSummary> summaries;
-  
+
   const WorkoutList({super.key, required this.summaries});
 
   @override
@@ -132,9 +172,9 @@ class WorkoutList extends StatelessWidget {
 
 class WorkoutItem extends StatelessWidget {
   final WorkoutSummary summary;
-  
+
   const WorkoutItem({super.key, required this.summary});
-  
+
   String _formatDuration(int seconds) {
     final minutes = seconds ~/ 60;
     final remainingSeconds = seconds % 60;
@@ -193,7 +233,7 @@ class WorkoutItem extends StatelessWidget {
 
 class BleConnectionStatus extends ConsumerWidget {
   final HomeScreenUiState uiState;
-  
+
   const BleConnectionStatus({super.key, required this.uiState});
 
   @override
@@ -212,15 +252,15 @@ class BleConnectionStatus extends ConsumerWidget {
       child: Row(
         children: [
           Icon(
-            uiState.isConnectingBle 
+            uiState.isConnectingBle
               ? Icons.bluetooth_searching
-              : uiState.isBleConnected 
-                ? Icons.bluetooth_connected 
+              : uiState.isBleConnected
+                ? Icons.bluetooth_connected
                 : Icons.bluetooth_disabled,
-            color: uiState.isConnectingBle 
+            color: uiState.isConnectingBle
               ? Colors.blue
-              : uiState.isBleConnected 
-                ? Colors.green 
+              : uiState.isBleConnected
+                ? Colors.green
                 : Colors.orange,
             size: 20,
           ),
@@ -230,9 +270,9 @@ class BleConnectionStatus extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  uiState.isConnectingBle 
+                  uiState.isConnectingBle
                     ? 'パワーメーターに接続中...'
-                    : uiState.isBleConnected 
+                    : uiState.isBleConnected
                       ? 'パワーメーターに接続済み'
                       : 'パワーメーターが未接続',
                   style: const TextStyle(

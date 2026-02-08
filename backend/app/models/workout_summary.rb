@@ -1,4 +1,4 @@
 class WorkoutSummary < ApplicationRecord
-  has_many :workouts, dependent: :destroy
-  has_many :workout_blocks, dependent: :destroy, through: :workouts
+  has_many :workout_blocks, dependent: :destroy
+  has_many :workout_results, dependent: :destroy
 end

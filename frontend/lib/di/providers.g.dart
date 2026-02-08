@@ -442,5 +442,45 @@ final manageWorkoutUseCaseProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ManageWorkoutUseCaseRef = AutoDisposeProviderRef<ManageWorkoutUseCase>;
+String _$saveWorkoutResultUseCaseHash() =>
+    r'77653cb50c4563e1d0b811b425bcd68bc8b5ce20';
+
+/// See also [saveWorkoutResultUseCase].
+@ProviderFor(saveWorkoutResultUseCase)
+final saveWorkoutResultUseCaseProvider =
+    AutoDisposeProvider<SaveWorkoutResultUseCase>.internal(
+  saveWorkoutResultUseCase,
+  name: r'saveWorkoutResultUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$saveWorkoutResultUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef SaveWorkoutResultUseCaseRef
+    = AutoDisposeProviderRef<SaveWorkoutResultUseCase>;
+String _$getWorkoutResultsUseCaseHash() =>
+    r'32b84e1928a92b4e7b97ff253200bd7b1cb2c20e';
+
+/// See also [getWorkoutResultsUseCase].
+@ProviderFor(getWorkoutResultsUseCase)
+final getWorkoutResultsUseCaseProvider =
+    AutoDisposeProvider<GetWorkoutResultsUseCase>.internal(
+  getWorkoutResultsUseCase,
+  name: r'getWorkoutResultsUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getWorkoutResultsUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef GetWorkoutResultsUseCaseRef
+    = AutoDisposeProviderRef<GetWorkoutResultsUseCase>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

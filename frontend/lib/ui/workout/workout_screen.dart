@@ -318,11 +318,13 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
               child: const Text('キャンセル'),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.of(context).pop();
-                // ワークアウト終了して前画面に戻る
-                notifier.stopWorkout();
-                Navigator.of(context).pop();
+                // ワークアウト結果を保存してから前画面に戻る
+                await notifier.stopWorkout();
+                if (mounted) {
+                  Navigator.of(this.context).pop();
+                }
               },
               child: const Text('終了'),
             ),
