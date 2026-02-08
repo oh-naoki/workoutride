@@ -1,12 +1,18 @@
 module V1
   class WorkoutResults < Grape::API
+    helpers Helpers::AuthHelper
+
+    before do
+      authenticate!
+    end
+
     resource :workout_results do
       desc 'ワークアウト結果の一覧を取得'
       params do
         optional :workout_summary_id, type: Integer, desc: 'ワークアウトサマリーIDでフィルタ'
       end
       get do
-        results = ::WorkoutResult.includes(:workout_block_results).order(created_at: :desc)
+        results = current_user.workout_results.includes(:workout_block_results).order(created_at: :desc)
         results = results.where(workout_summary_id: params[:workout_summary_id]) if params[:workout_summary_id]
         present results, with: Entities::WorkoutResult
       end
@@ -16,7 +22,7 @@ module V1
         requires :id, type: Integer, desc: 'ワークアウト結果ID'
       end
       get ':id' do
-        result = ::WorkoutResult.includes(:workout_block_results).find(params[:id])
+        result = current_user.workout_results.includes(:workout_block_results).find(params[:id])
         present result, with: Entities::WorkoutResult
       end
 
@@ -39,7 +45,7 @@ module V1
         end
       end
       post do
-        result = ::WorkoutResult.new(
+        result = current_user.workout_results.new(
           workout_summary_id: params[:workout_summary_id],
           started_at: params[:started_at],
           finished_at: params[:finished_at],

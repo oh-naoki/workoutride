@@ -110,6 +110,10 @@ backend/node_modules
 backend/yarn-error.log
 backend/yarn-debug.log*
 backend/.yarn-integrity
+backend/.env.development
+backend/.env.test
+backend/.env.production
+backend/test_auth_manual.md
 
 # Coverage
 coverage/

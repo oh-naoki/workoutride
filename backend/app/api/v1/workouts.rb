@@ -1,5 +1,11 @@
 module V1
   class Workouts < Grape::API
+    helpers Helpers::AuthHelper
+
+    before do
+      authenticate!
+    end
+
     resource :workout_summaries do
       desc 'ワークアウトサマリーの一覧を取得'
       get do

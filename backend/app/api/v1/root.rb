@@ -4,6 +4,7 @@ module V1
     format :json
     content_type :json, 'application/json;charset=UTF-8'
 
+    mount V1::Auth
     mount V1::Workouts
     mount V1::WorkoutResults
   end

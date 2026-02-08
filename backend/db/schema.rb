@@ -10,14 +10,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_16_000002) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_08_082700) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "auth_tokens", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "token", null: false
+    t.datetime "expires_at", null: false
+    t.datetime "last_used_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["token"], name: "index_auth_tokens_on_token", unique: true
+    t.index ["user_id", "expires_at"], name: "index_auth_tokens_on_user_id_and_expires_at"
+    t.index ["user_id"], name: "index_auth_tokens_on_user_id"
+  end
 
   create_table "user_ftps", force: :cascade do |t|
     t.integer "ftp_value", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["user_id", "created_at"], name: "index_user_ftps_on_user_id_and_created_at"
+    t.index ["user_id"], name: "index_user_ftps_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "provider", default: "google", null: false
+    t.string "uid", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
   end
 
   create_table "workout_block_results", force: :cascade do |t|
@@ -55,6 +78,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_16_000002) do
     t.string "status", default: "completed", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_workout_results_on_user_id"
     t.index ["workout_summary_id"], name: "index_workout_results_on_workout_summary_id"
   end
 
@@ -66,8 +91,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_16_000002) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "auth_tokens", "users"
+  add_foreign_key "user_ftps", "users"
   add_foreign_key "workout_block_results", "workout_blocks"
   add_foreign_key "workout_block_results", "workout_results"
   add_foreign_key "workout_blocks", "workout_summaries"
+  add_foreign_key "workout_results", "users"
   add_foreign_key "workout_results", "workout_summaries"
 end

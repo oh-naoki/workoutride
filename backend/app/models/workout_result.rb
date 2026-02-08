@@ -1,4 +1,5 @@
 class WorkoutResult < ApplicationRecord
+  belongs_to :user, optional: true
   belongs_to :workout_summary
   has_many :workout_block_results, dependent: :destroy
 
