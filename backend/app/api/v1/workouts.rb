@@ -1,6 +1,8 @@
 module V1
   class Workouts < Grape::API
-    helpers Helpers::AuthHelper
+    helpers do
+      include ::Helpers::AuthHelper
+    end
 
     before do
       authenticate!

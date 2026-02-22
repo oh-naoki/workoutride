@@ -6,7 +6,7 @@ import 'package:workoutride/data/remote/model/workout_summary_dto.dart';
 
 part 'workout_api_client.g.dart';
 
-@RestApi(baseUrl: "http://192.168.0.153:3000/api/v1")
+@RestApi(baseUrl: "http://192.168.0.168:3000/api/v1")
 abstract class WorkoutApiClient {
   factory WorkoutApiClient(Dio dio) = _WorkoutApiClient;
 

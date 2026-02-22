@@ -15,8 +15,7 @@ class GoogleAuthService
   private
 
   def verify_token
-    verifier = Google::Auth::IDTokens.verifier
-    verifier.verify(@id_token, aud: GOOGLE_CLIENT_ID)
+    Google::Auth::IDTokens.verify_oidc(@id_token, aud: GOOGLE_CLIENT_ID)
   rescue Google::Auth::IDTokens::VerificationError => e
     raise Grape::Exceptions::Validation.new(
       params: ['id_token'],

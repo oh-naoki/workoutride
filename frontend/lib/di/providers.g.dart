@@ -40,7 +40,7 @@ final secureStorageProvider = Provider<FlutterSecureStorage>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SecureStorageRef = ProviderRef<FlutterSecureStorage>;
-String _$googleSignInHash() => r'd8439bc335832b8824537004ef2d6ba1b5ccc2b5';
+String _$googleSignInHash() => r'e04c7e645a541bc2272934b094e3f0c65b834759';
 
 /// See also [googleSignIn].
 @ProviderFor(googleSignIn)

@@ -1,187 +1,101 @@
-# 🚀 次回セッション クイックスタート
+# 次回セッション クイックスタート
 
-**前回の状態**: Tier 2 実装完了（コード完成、GCC設定待ち）
-**次のタスク**: Google Cloud Console設定 → 実機テスト
+**前回の状態**: GCC設定途中、Android実機テスト未完了
+**次のタスク**: Android実機テスト → 動作確認 → コミット
 
 ---
 
-## 📋 3ステップで再開
+## 今回のセッションで完了したこと
 
-### Step 1: 状態確認（1分）
+### Google Cloud Console 設定 (完了)
+- [x] GCPプロジェクト `WorkoutRide` 作成
+- [x] OAuth同意画面設定（外部、テストユーザー追加済み）
+- [x] iOS Client ID 作成
+- [x] Android Client ID 作成 (SHA-1登録済み)
+- [x] Web Client ID 作成 (serverClientId / Backend検証用)
+
+### Client ID 一覧
+| 種類 | Client ID |
+|------|-----------|
+| iOS | `286301513915-3pm1uigk28ph9kkkdvpdv401qjudld81.apps.googleusercontent.com` |
+| Android | `286301513915-6mg9p8mcan9iegf8llrdmsai0vqbnf6k.apps.googleusercontent.com` |
+| Web | `286301513915-c78mhj94noqq6ro5jr3hba5983df2vhs.apps.googleusercontent.com` |
+
+### コード修正 (未コミット)
+1. **`backend/.env.development`** — `GOOGLE_CLIENT_ID` を Web Client ID に設定
+2. **`frontend/ios/Runner/Info.plist`** — iOS URL Scheme 追加 (CFBundleURLTypes)
+3. **`frontend/lib/di/providers.dart`** — `GoogleSignIn` に `serverClientId` (Web Client ID) 追加
+4. **`frontend/lib/ui/auth/auth_state_notifier.dart`** — エラー握りつぶしバグ修正（エラーが画面に表示されるように）
+
+### openjdk インストール済み
+- `brew install openjdk` 実行済み（SHA-1取得のため）
+- パス: `/opt/homebrew/opt/openjdk/bin`
+
+---
+
+## 次回やること
+
+### 1. Android 実機テスト (最優先)
 
 ```bash
-cd /Users/ohnaoki/development/workoutride
+# Backend 起動
+cd /Users/ohnaoki/development/workoutride/backend
+rails s -b 0.0.0.0
 
-# 最新のコミット確認
-git log --oneline -3
-
-# 期待する出力:
-# 01e4fc6 Add Tier 2 documentation and status summary
-# 80acecb Implement Tier 2: Google Authentication Infrastructure (Frontend)
-# 3d49554 Implement Tier 2: Google Authentication Infrastructure (Backend)
-
-# ドキュメント確認
-ls docs/
-# 期待: google-oauth-setup.md
-
-ls TIER2_STATUS.md
-# 期待: TIER2_STATUS.md
+# 別ターミナルで Flutter 実行
+cd /Users/ohnaoki/development/workoutride/frontend
+flutter run -d adb-37271FDJH00AW3-qYdn8m._adb-tls-connect._tcp
+# ※ デバイスIDは `flutter devices` で再確認
 ```
 
-### Step 2: ドキュメント読む（5分）
+### 2. テスト手順
 
-```bash
-# 詳細な手順書
-cat docs/google-oauth-setup.md
+1. アプリ起動 → LoginScreen 表示確認
+2. 「Sign in with Google」タップ
+3. Google 認証画面 → アカウント選択
+4. ログイン成功 → HomeScreen 表示
+5. アプリ再起動 → 自動ログイン確認
 
-# 実装状況サマリー
-cat TIER2_STATUS.md
+### 3. エラーが出た場合
 
-# プロジェクトメモリ
-cat ~/.claude/projects/-Users-ohnaoki-development-workoutride/memory/MEMORY.md
-```
+前回の症状: アカウント選択後に画面遷移しない → エラー表示修正済みなので、次回はエラーメッセージが表示されるはず
 
-### Step 3: Google Cloud Console設定開始（30-60分）
+**よくある原因**:
+- Backend が起動していない / Pixel から到達できない
+- API base URL (`192.168.0.214:3000`) が現在のIPと違う → `workout_api_client.dart` と `auth_api_client.dart` を確認
+- Web Client ID の不一致
 
-手順書に従って実施: `docs/google-oauth-setup.md`
-
----
-
-## ⚡ 超クイック再開（既に手順を知っている場合）
-
-### 必須タスク
-
-1. **Google Cloud Console**
-   - [https://console.cloud.google.com/](https://console.cloud.google.com/)
-   - プロジェクト作成 → OAuth設定 → iOS/Android Client ID作成
-
-2. **Backend設定**
-   ```bash
-   # backend/.env.development 編集
-   GOOGLE_CLIENT_ID=<iOS Client ID>
-   ```
-
-3. **iOS設定**
-   ```bash
-   # frontend/ios/Runner/Info.plist に URL Scheme追加
-   # 詳細は docs/google-oauth-setup.md 参照
-   ```
-
-4. **テスト**
-   ```bash
-   # Backend起動
-   cd backend && rails s
-
-   # Frontend実機起動（別ターミナル）
-   cd frontend && flutter run
-   ```
-
----
-
-## 🎯 期待する結果
-
-### テスト成功の条件
-
-- ✅ ログイン画面でGoogle Sign-In動作
-- ✅ 認証成功後HomeScreen表示
-- ✅ アプリ再起動で自動ログイン
-- ✅ バックエンドが401を返さない
-
-### テスト失敗時
-
-`docs/google-oauth-setup.md` のトラブルシューティングを参照
-
----
-
-## 📝 前回のセッション概要
-
-### 実装内容
-
-**Backend** (commit: 3d49554):
-- User, AuthToken モデル
-- Google ID token検証サービス
-- Auth API (POST /auth/google, DELETE /auth/logout, GET /auth/me)
-- 全APIに認証追加
-
-**Frontend** (commit: 80acecb):
-- User model (id, provider, uid)
-- AuthRepository + GoogleSignIn統合
-- AuthInterceptor (Bearer token自動付与)
-- LoginScreen
-- 認証状態管理
-
-### アーキテクチャ決定
-
-- **D案採用**: User は id, provider, uid のみ
-- **GoogleUserInfo 削除**: OpenID Connect的に正しい設計
-- **トークンベース認証**: シンプルで高速
-
----
-
-## 🔗 重要なファイル
-
-### ドキュメント
-- `docs/google-oauth-setup.md` - OAuth設定手順（最重要）
-- `TIER2_STATUS.md` - 実装完了状況
-- `memory/MEMORY.md` - プロジェクト全体の記録
-
-### Backend
-- `backend/.env.development.example` - 環境変数テンプレート
-- `backend/app/api/v1/auth.rb` - 認証API
-- `backend/app/models/user.rb`, `auth_token.rb` - モデル
-
-### Frontend
-- `frontend/lib/ui/auth/login_screen.dart` - ログイン画面
-- `frontend/lib/data/repository/auth_repository_impl.dart` - 認証ロジック
-- `frontend/lib/di/providers.dart` - DI設定
-
----
-
-## 💡 次回セッションで聞くこと
-
-Claude Codeに次のように伝えればOK:
+### 4. 成功したらコミット
 
 ```
-「Tier 2の続きです。Google Cloud Consoleの設定をしたいです。」
+git add backend/.env.development frontend/ios/Runner/Info.plist \
+  frontend/lib/di/providers.dart frontend/lib/ui/auth/auth_state_notifier.dart
+git commit -m "Configure Google OAuth credentials and fix auth error handling"
+```
 
-または
+### 5. その後 → Tier 3 へ
 
-「TIER2_STATUS.mdとgoogle-oauth-setup.mdを読んで、
-次のステップを教えてください。」
+- ワークアウト CRUD API + 作成UI
+- UserFtp 機能
+
+---
+
+## 変更済みファイル (未コミット)
+
+```
+modified: backend/.env.development
+modified: frontend/ios/Runner/Info.plist
+modified: frontend/lib/di/providers.dart
+modified: frontend/lib/ui/auth/auth_state_notifier.dart
 ```
 
 ---
 
-## ⚠️ 注意事項
+## 重要な注意
 
-### GCC設定時
-
-- **Client ID**: iOSとAndroidで別々に作成
-- **Backend**: iOSのClient IDを使用
-- **SHA-1**: Androidは必須、デバッグ用も登録
-- **テストユーザー**: 自分のGmailアドレスを必ず追加
-
-### 実機テスト
-
-- **エミュレータでは動作しない可能性あり**
-- **実機またはシミュレータで確認**
-- **初回は必ずGoogle認証画面が表示される**
-
----
-
-## 🎉 完了後
-
-GCC設定が完了し、実機テストが成功したら:
-
-### オプション A: Tier 3 に進む
-- ワークアウトCRUD API
-- UserFtp機能
-- FTP設定UI
-
-### オプション B: 認証機能を拡張
-- ログアウトボタン追加
-- プロフィール画面
-- ユーザー情報表示
+- **Backend の `GOOGLE_CLIENT_ID`**: Web Client ID を使う（iOS/Android 両方の ID トークンの `aud` が Web Client ID になるため）
+- **`serverClientId`**: Android で ID トークンを取得するために必須。iOS でも同じ Web Client ID を使えば Backend と `aud` が一致する
+- **API base URL**: `192.168.0.214:3000` にハードコード中。自宅のIPが変わった場合は要変更
 
 ---
 

@@ -1,6 +1,8 @@
 module V1
   class Auth < Grape::API
-    helpers Helpers::AuthHelper
+    helpers do
+      include ::Helpers::AuthHelper
+    end
 
     resource :auth do
       desc 'Sign in with Google'
@@ -15,7 +17,9 @@ module V1
           token: auth_token.token,
           expires_at: auth_token.expires_at.iso8601,
           user: {
-            id: user.id
+            id: user.id,
+            provider: user.provider,
+            uid: user.uid
           }
         }
       end

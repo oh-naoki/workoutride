@@ -5,7 +5,7 @@ import 'package:workoutride/data/remote/model/auth/user_dto.dart';
 
 part 'auth_api_client.g.dart';
 
-@RestApi(baseUrl: "http://192.168.0.214:3000/api/v1")
+@RestApi(baseUrl: "http://192.168.0.168:3000/api/v1")
 abstract class AuthApiClient {
   factory AuthApiClient(Dio dio) = _AuthApiClient;
 

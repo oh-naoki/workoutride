@@ -21,13 +21,11 @@ class AuthStateNotifier extends _$AuthStateNotifier {
   Future<void> signInWithGoogle() async {
     state = const AsyncValue.data(AuthState.loading());
 
-    state = await AsyncValue.guard(() async {
+    try {
       final user = await ref.read(authRepositoryProvider).signInWithGoogle();
-      return AuthState.authenticated(user: user);
-    });
-
-    if (state.hasError) {
-      state = const AsyncValue.data(AuthState.unauthenticated());
+      state = AsyncValue.data(AuthState.authenticated(user: user));
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
     }
   }
 

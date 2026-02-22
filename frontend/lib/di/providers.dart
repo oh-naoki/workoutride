@@ -52,6 +52,7 @@ FlutterSecureStorage secureStorage(Ref ref) {
 GoogleSignIn googleSignIn(Ref ref) {
   return GoogleSignIn(
     scopes: ['email', 'profile'],
+    serverClientId: '286301513915-c78mhj94noqq6ro5jr3hba5983df2vhs.apps.googleusercontent.com',
   );
 }
 
