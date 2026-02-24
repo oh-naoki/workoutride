@@ -14,8 +14,7 @@ sst_summary = WorkoutSummary.create!(
   category: "FTP向上"
 )
 
-sst_workout = sst_summary.workouts.create!
-sst_workout.workout_blocks.create!([
+sst_summary.workout_blocks.create!([
   { order_index: 1, duration: 900, block_type: "ウォームアップ", target_ftp_percentage: 60 }, # 15分
   { order_index: 2, duration: 900, block_type: "メインセット1", target_ftp_percentage: 90 }, # 15分
   { order_index: 3, duration: 300, block_type: "軽いペダリング", target_ftp_percentage: 50 }, # 5分
@@ -32,8 +31,7 @@ vo2_summary = WorkoutSummary.create!(
   category: "最大酸素摂取量向上"
 )
 
-vo2_workout = vo2_summary.workouts.create!
-vo2_workout.workout_blocks.create!([
+vo2_summary.workout_blocks.create!([
   { order_index: 1, duration: 600, block_type: "ウォームアップ", target_ftp_percentage: 60 }, # 10分
   { order_index: 2, duration: 180, block_type: "インターバル1", target_ftp_percentage: 125 }, # 3分 - 125%
   { order_index: 3, duration: 180, block_type: "軽いペダリング", target_ftp_percentage: 50 }, # 3分
@@ -56,8 +54,7 @@ threshold_summary = WorkoutSummary.create!(
   category: "乳酸閾値向上"
 )
 
-threshold_workout = threshold_summary.workouts.create!
-threshold_workout.workout_blocks.create!([
+threshold_summary.workout_blocks.create!([
   { order_index: 1, duration: 600, block_type: "ウォームアップ", target_ftp_percentage: 60 }, # 10分
   { order_index: 2, duration: 1200, block_type: "閾値セット1", target_ftp_percentage: 95 }, # 20分
   { order_index: 3, duration: 600, block_type: "軽いペダリング", target_ftp_percentage: 50 }, # 10分
@@ -72,8 +69,7 @@ endurance_summary = WorkoutSummary.create!(
   category: "基礎持久力向上"
 )
 
-endurance_workout = endurance_summary.workouts.create!
-endurance_workout.workout_blocks.create!([
+endurance_summary.workout_blocks.create!([
   { order_index: 1, duration: 600, block_type: "ウォームアップ", target_ftp_percentage: 60 }, # 10分
   { order_index: 2, duration: 2700, block_type: "エンデュランス1", target_ftp_percentage: 75 }, # 45分
   { order_index: 3, duration: 600, block_type: "軽いペダリング", target_ftp_percentage: 50 }, # 10分
@@ -88,7 +84,6 @@ sprint_summary = WorkoutSummary.create!(
   category: "短時間高出力向上"
 )
 
-sprint_workout = sprint_summary.workouts.create!
 sprint_blocks = []
 sprint_blocks << { order_index: 1, duration: 600, block_type: "ウォームアップ", target_ftp_percentage: 60 } # 10分
 
@@ -101,7 +96,7 @@ sprint_blocks << { order_index: 1, duration: 600, block_type: "ウォームア�
 end
 
 sprint_blocks << { order_index: 21, duration: 600, block_type: "クールダウン", target_ftp_percentage: 50 } # 10分
-sprint_workout.workout_blocks.create!(sprint_blocks)
+sprint_summary.workout_blocks.create!(sprint_blocks)
 
 # 6. Hill Climb Training
 hill_summary = WorkoutSummary.create!(
@@ -110,7 +105,6 @@ hill_summary = WorkoutSummary.create!(
   category: "登坂能力向上"
 )
 
-hill_workout = hill_summary.workouts.create!
 hill_blocks = []
 hill_blocks << { order_index: 1, duration: 600, block_type: "ウォームアップ", target_ftp_percentage: 60 } # 10分
 
@@ -123,7 +117,7 @@ hill_blocks << { order_index: 1, duration: 600, block_type: "ウォームアッ�
 end
 
 hill_blocks << { order_index: 11, duration: 600, block_type: "クールダウン", target_ftp_percentage: 50 } # 10分
-hill_workout.workout_blocks.create!(hill_blocks)
+hill_summary.workout_blocks.create!(hill_blocks)
 
 # 7. Tempo Ride
 tempo_summary = WorkoutSummary.create!(
@@ -132,8 +126,7 @@ tempo_summary = WorkoutSummary.create!(
   category: "中強度持久力向上"
 )
 
-tempo_workout = tempo_summary.workouts.create!
-tempo_workout.workout_blocks.create!([
+tempo_summary.workout_blocks.create!([
   { order_index: 1, duration: 600, block_type: "ウォームアップ", target_ftp_percentage: 60 }, # 10分
   { order_index: 2, duration: 900, block_type: "テンポ1", target_ftp_percentage: 85 }, # 15分
   { order_index: 3, duration: 480, block_type: "軽いペダリング", target_ftp_percentage: 50 }, # 8分
@@ -150,7 +143,6 @@ crit_summary = WorkoutSummary.create!(
   category: "レース対応能力向上"
 )
 
-crit_workout = crit_summary.workouts.create!
 crit_blocks = []
 crit_blocks << { order_index: 1, duration: 600, block_type: "ウォームアップ", target_ftp_percentage: 60 } # 10分
 
@@ -165,7 +157,7 @@ crit_blocks << { order_index: 1, duration: 600, block_type: "ウォームアッ�
 end
 
 crit_blocks << { order_index: 65, duration: 600, block_type: "クールダウン", target_ftp_percentage: 50 } # 10分
-crit_workout.workout_blocks.create!(crit_blocks)
+crit_summary.workout_blocks.create!(crit_blocks)
 
 # 9. Recovery Ride
 recovery_summary = WorkoutSummary.create!(
@@ -174,8 +166,7 @@ recovery_summary = WorkoutSummary.create!(
   category: "回復促進"
 )
 
-recovery_workout = recovery_summary.workouts.create!
-recovery_workout.workout_blocks.create!([
+recovery_summary.workout_blocks.create!([
   { order_index: 1, duration: 3600, block_type: "リカバリーライド", target_ftp_percentage: 55 } # 60分
 ])
 
@@ -186,8 +177,7 @@ tt_summary = WorkoutSummary.create!(
   category: "個人タイムトライアル対応"
 )
 
-tt_workout = tt_summary.workouts.create!
-tt_workout.workout_blocks.create!([
+tt_summary.workout_blocks.create!([
   { order_index: 1, duration: 600, block_type: "ウォームアップ", target_ftp_percentage: 60 }, # 10分
   { order_index: 2, duration: 1200, block_type: "TTセット1", target_ftp_percentage: 95 }, # 20分
   { order_index: 3, duration: 900, block_type: "軽いペダリング", target_ftp_percentage: 50 }, # 15分

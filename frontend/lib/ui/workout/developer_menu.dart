@@ -10,8 +10,8 @@ class DeveloperMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mockModeNotifier = ref.watch(mockModeStateNotifierProvider);
     final mockPatternNotifier = ref.watch(mockPatternStateNotifierProvider);
-    final isMock = mockModeNotifier.state;
-    final currentPattern = mockPatternNotifier.state;
+    final isMock = mockModeNotifier.value;
+    final currentPattern = mockPatternNotifier.value;
 
     return Container(
       color: Colors.black,

@@ -6,7 +6,7 @@ part of 'providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$sharedPreferencesHash() => r'3a9f8412df34c1653d08100c9826aa2125b80f7f';
+String _$sharedPreferencesHash() => r'1a6250efdc19e86c923ceb598a77ff74d64378e6';
 
 /// See also [sharedPreferences].
 @ProviderFor(sharedPreferences)
@@ -23,8 +23,75 @@ final sharedPreferencesProvider = Provider<SharedPreferences>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SharedPreferencesRef = ProviderRef<SharedPreferences>;
+String _$secureStorageHash() => r'a4f75721472cf77465bf47f759c90de5ca30856e';
+
+/// See also [secureStorage].
+@ProviderFor(secureStorage)
+final secureStorageProvider = Provider<FlutterSecureStorage>.internal(
+  secureStorage,
+  name: r'secureStorageProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$secureStorageHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef SecureStorageRef = ProviderRef<FlutterSecureStorage>;
+String _$googleSignInHash() => r'e04c7e645a541bc2272934b094e3f0c65b834759';
+
+/// See also [googleSignIn].
+@ProviderFor(googleSignIn)
+final googleSignInProvider = Provider<GoogleSignIn>.internal(
+  googleSignIn,
+  name: r'googleSignInProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$googleSignInHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef GoogleSignInRef = ProviderRef<GoogleSignIn>;
+String _$authApiClientHash() => r'786912ba8f721e3635d1d84130e3c732558b9aac';
+
+/// See also [authApiClient].
+@ProviderFor(authApiClient)
+final authApiClientProvider = Provider<AuthApiClient>.internal(
+  authApiClient,
+  name: r'authApiClientProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$authApiClientHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef AuthApiClientRef = ProviderRef<AuthApiClient>;
+String _$authRepositoryHash() => r'bf49dd93f034ea0ca440c9d093d75667bc89a643';
+
+/// See also [authRepository].
+@ProviderFor(authRepository)
+final authRepositoryProvider = AutoDisposeProvider<AuthRepository>.internal(
+  authRepository,
+  name: r'authRepositoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$authRepositoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef AuthRepositoryRef = AutoDisposeProviderRef<AuthRepository>;
 String _$mockModeStateNotifierHash() =>
-    r'd657e9d1103e5b2d70d12df39b39a3d3cdb5ed61';
+    r'b4014b1335839b7cd8940d18d2911adbc19de57b';
 
 /// See also [mockModeStateNotifier].
 @ProviderFor(mockModeStateNotifier)
@@ -44,7 +111,7 @@ final mockModeStateNotifierProvider =
 typedef MockModeStateNotifierRef
     = AutoDisposeProviderRef<MockModeStateNotifier>;
 String _$mockPatternStateNotifierHash() =>
-    r'9ac1c54ff7ec8155272b35007d920ee9ec734f7c';
+    r'ff4f1aa8b4c0bb06a18ca637a345a38e1fcbb535';
 
 /// See also [mockPatternStateNotifier].
 @ProviderFor(mockPatternStateNotifier)
@@ -64,7 +131,7 @@ final mockPatternStateNotifierProvider =
 typedef MockPatternStateNotifierRef
     = AutoDisposeProviderRef<MockPatternStateNotifier>;
 String _$getWorkoutSummariesUseCaseHash() =>
-    r'3a69bc2b489f4f08cb0e2d4573c41f39a45ffda5';
+    r'8d8b235dfcadc3ceaf1ca3977c7d77944ac44bad';
 
 /// See also [getWorkoutSummariesUseCase].
 @ProviderFor(getWorkoutSummariesUseCase)
@@ -84,7 +151,7 @@ final getWorkoutSummariesUseCaseProvider =
 typedef GetWorkoutSummariesUseCaseRef
     = AutoDisposeProviderRef<GetWorkoutSummariesUseCase>;
 String _$getWorkoutBlocksUseCaseHash() =>
-    r'cd9834ef6a32881507137154a8bb1b5f36ea0f18';
+    r'874219015b7c0a911f5add030fb3734b820c6640';
 
 /// See also [getWorkoutBlocksUseCase].
 @ProviderFor(getWorkoutBlocksUseCase)
@@ -103,27 +170,7 @@ final getWorkoutBlocksUseCaseProvider =
 // ignore: unused_element
 typedef GetWorkoutBlocksUseCaseRef
     = AutoDisposeProviderRef<GetWorkoutBlocksUseCase>;
-String _$getWorkoutSummaryUseCaseHash() =>
-    r'774a1521a46d1e2d00cb8a9efa9e963a87c6a1a2';
-
-/// See also [getWorkoutSummaryUseCase].
-@ProviderFor(getWorkoutSummaryUseCase)
-final getWorkoutSummaryUseCaseProvider =
-    AutoDisposeProvider<GetWorkoutSummaryUseCase>.internal(
-  getWorkoutSummaryUseCase,
-  name: r'getWorkoutSummaryUseCaseProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$getWorkoutSummaryUseCaseHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef GetWorkoutSummaryUseCaseRef
-    = AutoDisposeProviderRef<GetWorkoutSummaryUseCase>;
-String _$dioHash() => r'e4b4f3046089be068a9e387bcb3ffb4089397160';
+String _$dioHash() => r'eeb262793ac923cd7d19578aedc7bb2e740d5e1b';
 
 /// See also [dio].
 @ProviderFor(dio)
@@ -139,7 +186,7 @@ final dioProvider = AutoDisposeProvider<Dio>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef DioRef = AutoDisposeProviderRef<Dio>;
-String _$workoutApiClientHash() => r'7f551060952c0c318c25d0acd3aa210c3bc2f5d1';
+String _$workoutApiClientHash() => r'45c6243ec1dff56bb5cc98afb8798e80456e647a';
 
 /// See also [workoutApiClient].
 @ProviderFor(workoutApiClient)
@@ -157,7 +204,7 @@ final workoutApiClientProvider = AutoDisposeProvider<WorkoutApiClient>.internal(
 // ignore: unused_element
 typedef WorkoutApiClientRef = AutoDisposeProviderRef<WorkoutApiClient>;
 String _$workoutRemoteDataSourceHash() =>
-    r'2ef0e889252957a372e2944c1cb516dff22a5b8d';
+    r'898d07cacada98d85391680cccf1c9217a8efc72';
 
 /// See also [workoutRemoteDataSource].
 @ProviderFor(workoutRemoteDataSource)
@@ -176,7 +223,7 @@ final workoutRemoteDataSourceProvider =
 // ignore: unused_element
 typedef WorkoutRemoteDataSourceRef
     = AutoDisposeProviderRef<WorkoutRemoteDataSource>;
-String _$workoutRepositoryHash() => r'f0bb84b95b74e5303b85908ecf3c7bc999a1dd7f';
+String _$workoutRepositoryHash() => r'dc8316dfb202e593e5ebcba8fc228bafe2749ae3';
 
 /// See also [workoutRepository].
 @ProviderFor(workoutRepository)
@@ -195,7 +242,7 @@ final workoutRepositoryProvider =
 // ignore: unused_element
 typedef WorkoutRepositoryRef = AutoDisposeProviderRef<WorkoutRepository>;
 String _$powerMeterDataSourceHash() =>
-    r'efd24f9c54d522c8a99b83b22d00cd78e44b7b43';
+    r'dab7543e53197bf24ca9473bd9aa86dc97b3b5b2';
 
 /// See also [powerMeterDataSource].
 @ProviderFor(powerMeterDataSource)
@@ -214,7 +261,7 @@ final powerMeterDataSourceProvider =
 // ignore: unused_element
 typedef PowerMeterDataSourceRef = AutoDisposeProviderRef<PowerMeterDataSource>;
 String _$userProfileRepositoryHash() =>
-    r'bf99993d075f1653c1bf51c425ccca2dbdcca1cc';
+    r'24a4d0caf811949093d2f168c4a938bf7e19b8ca';
 
 /// See also [userProfileRepository].
 @ProviderFor(userProfileRepository)
@@ -234,7 +281,7 @@ final userProfileRepositoryProvider =
 typedef UserProfileRepositoryRef
     = AutoDisposeProviderRef<UserProfileRepository>;
 String _$getUserProfileUseCaseHash() =>
-    r'c9fb583fbf694935134b08849822b8a1f491c515';
+    r'6a55722f1260718b970e8238f05505ee4a7ea1f5';
 
 /// See also [getUserProfileUseCase].
 @ProviderFor(getUserProfileUseCase)
@@ -254,7 +301,7 @@ final getUserProfileUseCaseProvider =
 typedef GetUserProfileUseCaseRef
     = AutoDisposeProviderRef<GetUserProfileUseCase>;
 String _$saveUserWeightUseCaseHash() =>
-    r'baa850e68d40a2f4cee4f485807cbc067254ce4f';
+    r'e6a249c2e1867b6386c09bb0170cd3911d94170a';
 
 /// See also [saveUserWeightUseCase].
 @ProviderFor(saveUserWeightUseCase)
@@ -273,7 +320,7 @@ final saveUserWeightUseCaseProvider =
 // ignore: unused_element
 typedef SaveUserWeightUseCaseRef
     = AutoDisposeProviderRef<SaveUserWeightUseCase>;
-String _$getUserFtpUseCaseHash() => r'503adfa6ec6aa077308931d2893b914dda4918d2';
+String _$getUserFtpUseCaseHash() => r'6d9b6e526ab8bee9e45d69d7e0bd52c0051fd78b';
 
 /// See also [getUserFtpUseCase].
 @ProviderFor(getUserFtpUseCase)
@@ -292,7 +339,7 @@ final getUserFtpUseCaseProvider =
 // ignore: unused_element
 typedef GetUserFtpUseCaseRef = AutoDisposeProviderRef<GetUserFtpUseCase>;
 String _$saveUserFtpUseCaseHash() =>
-    r'94e3c229110ba050c65fea8089ebf43b218d73a2';
+    r'2969747d52d72571f0af87081d60145dc34ba7e2';
 
 /// See also [saveUserFtpUseCase].
 @ProviderFor(saveUserFtpUseCase)
@@ -311,7 +358,7 @@ final saveUserFtpUseCaseProvider =
 // ignore: unused_element
 typedef SaveUserFtpUseCaseRef = AutoDisposeProviderRef<SaveUserFtpUseCase>;
 String _$autoConnectBlePowerMeterUseCaseHash() =>
-    r'd7590bdc84d6346f9f041765d2bd662f87d5cfc6';
+    r'44655517e018cc5679979f4e1a4e173077388fce';
 
 /// See also [autoConnectBlePowerMeterUseCase].
 @ProviderFor(autoConnectBlePowerMeterUseCase)
@@ -330,7 +377,7 @@ final autoConnectBlePowerMeterUseCaseProvider =
 // ignore: unused_element
 typedef AutoConnectBlePowerMeterUseCaseRef
     = AutoDisposeProviderRef<AutoConnectBlePowerMeterUseCase>;
-String _$bleConnectorHash() => r'fe15f7ae82ca4d4fe2b20b83ce8e1afa8cb0a89d';
+String _$bleConnectorHash() => r'f29ddceb8cb911e65a208c82019df9d2d59d45ec';
 
 /// See also [bleConnector].
 @ProviderFor(bleConnector)
@@ -347,7 +394,7 @@ final bleConnectorProvider = AutoDisposeProvider<BleConnector>.internal(
 // ignore: unused_element
 typedef BleConnectorRef = AutoDisposeProviderRef<BleConnector>;
 String _$connectBlePowerMeterUseCaseHash() =>
-    r'a461162f052640cb4cacfe97d7bbbee52d077fec';
+    r'26385837d49fb09ae9918789ab73a1007b6276f5';
 
 /// See also [connectBlePowerMeterUseCase].
 @ProviderFor(connectBlePowerMeterUseCase)
@@ -367,7 +414,7 @@ final connectBlePowerMeterUseCaseProvider =
 typedef ConnectBlePowerMeterUseCaseRef
     = AutoDisposeProviderRef<ConnectBlePowerMeterUseCase>;
 String _$scanBleDeviceUseCaseHash() =>
-    r'9c3cdc829a1338f7954863d6bfbd7db51ecd66b0';
+    r'7b755055dd1329ec9a0452a6ea986a13df9993b6';
 
 /// See also [scanBleDeviceUseCase].
 @ProviderFor(scanBleDeviceUseCase)
@@ -386,7 +433,7 @@ final scanBleDeviceUseCaseProvider =
 // ignore: unused_element
 typedef ScanBleDeviceUseCaseRef = AutoDisposeProviderRef<ScanBleDeviceUseCase>;
 String _$getPowerMeterDataUseCaseHash() =>
-    r'63ff5dee9253d44d224606dd936173946d2ad609';
+    r'450656c932d98078f1e2ff2979da5ab1bc3f5003';
 
 /// See also [getPowerMeterDataUseCase].
 @ProviderFor(getPowerMeterDataUseCase)
@@ -406,7 +453,7 @@ final getPowerMeterDataUseCaseProvider =
 typedef GetPowerMeterDataUseCaseRef
     = AutoDisposeProviderRef<GetPowerMeterDataUseCase>;
 String _$getCalculatedPowerMeterDataUseCaseHash() =>
-    r'676102694588427f57a681030a605058552695df';
+    r'bbb4cb92ca490a5ef4836b9ebfedc34c6e6986d7';
 
 /// See also [getCalculatedPowerMeterDataUseCase].
 @ProviderFor(getCalculatedPowerMeterDataUseCase)
@@ -425,7 +472,7 @@ final getCalculatedPowerMeterDataUseCaseProvider =
 // ignore: unused_element
 typedef GetCalculatedPowerMeterDataUseCaseRef
     = AutoDisposeProviderRef<GetCalculatedPowerMeterDataUseCase>;
-String _$powerZoneAnalyzerHash() => r'0300748b5a7e3156fb7068132cd9d4b4b286761a';
+String _$powerZoneAnalyzerHash() => r'30e9c54ce85c6ea7e55c573af4963a1ea3e68569';
 
 /// See also [powerZoneAnalyzer].
 @ProviderFor(powerZoneAnalyzer)
@@ -444,7 +491,7 @@ final powerZoneAnalyzerProvider =
 // ignore: unused_element
 typedef PowerZoneAnalyzerRef = AutoDisposeProviderRef<PowerZoneAnalyzer>;
 String _$manageWorkoutUseCaseHash() =>
-    r'a866ac464fdae175587ee53b006c17b236ed9302';
+    r'f96f0886246869b6abeadf9f46fd34766da59a15';
 
 /// See also [manageWorkoutUseCase].
 @ProviderFor(manageWorkoutUseCase)
@@ -462,5 +509,45 @@ final manageWorkoutUseCaseProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ManageWorkoutUseCaseRef = AutoDisposeProviderRef<ManageWorkoutUseCase>;
+String _$saveWorkoutResultUseCaseHash() =>
+    r'77653cb50c4563e1d0b811b425bcd68bc8b5ce20';
+
+/// See also [saveWorkoutResultUseCase].
+@ProviderFor(saveWorkoutResultUseCase)
+final saveWorkoutResultUseCaseProvider =
+    AutoDisposeProvider<SaveWorkoutResultUseCase>.internal(
+  saveWorkoutResultUseCase,
+  name: r'saveWorkoutResultUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$saveWorkoutResultUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef SaveWorkoutResultUseCaseRef
+    = AutoDisposeProviderRef<SaveWorkoutResultUseCase>;
+String _$getWorkoutResultsUseCaseHash() =>
+    r'32b84e1928a92b4e7b97ff253200bd7b1cb2c20e';
+
+/// See also [getWorkoutResultsUseCase].
+@ProviderFor(getWorkoutResultsUseCase)
+final getWorkoutResultsUseCaseProvider =
+    AutoDisposeProvider<GetWorkoutResultsUseCase>.internal(
+  getWorkoutResultsUseCase,
+  name: r'getWorkoutResultsUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getWorkoutResultsUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef GetWorkoutResultsUseCaseRef
+    = AutoDisposeProviderRef<GetWorkoutResultsUseCase>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

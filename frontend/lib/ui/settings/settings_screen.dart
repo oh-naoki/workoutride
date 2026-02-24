@@ -4,6 +4,7 @@ import 'package:workoutride/ui/ble_setting/scan_screen.dart';
 import 'package:workoutride/ui/settings/weight_registration_dialog.dart';
 import 'package:workoutride/ui/settings/ftp_registration_dialog.dart';
 import 'package:workoutride/ui/settings/settings_screen_state_notifier.dart';
+import 'package:workoutride/ui/auth/auth_state_notifier.dart';
 import 'package:workoutride/di/providers.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -54,6 +55,33 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
+  Future<void> _showLogoutDialog(BuildContext context, WidgetRef ref) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('ログアウト'),
+        content: const Text('本当にログアウトしますか？'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('キャンセル'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.red,
+            ),
+            child: const Text('ログアウト'),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true && context.mounted) {
+      await ref.read(authStateNotifierProvider.notifier).signOut();
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final uiState = ref.watch(settingsScreenStateNotifierProvider);
@@ -76,7 +104,7 @@ class SettingsScreen extends ConsumerWidget {
                     margin: const EdgeInsets.all(16),
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.red.withOpacity(0.1),
+                      color: Colors.red.withValues(alpha: 0.1),
                       border: Border.all(color: Colors.red),
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -133,6 +161,14 @@ class SettingsScreen extends ConsumerWidget {
                         icon: Icons.bluetooth,
                         onTap: () => _navigateToBleSetting(context),
                       ),
+                      const SizedBox(height: 32),
+                      _buildSectionTitle('アカウント'),
+                      _buildDangerSettingTile(
+                        title: 'ログアウト',
+                        subtitle: 'アカウントからログアウトします',
+                        icon: Icons.logout,
+                        onTap: () => _showLogoutDialog(context, ref),
+                      ),
                     ],
                   ),
                 ),
@@ -181,6 +217,37 @@ class SettingsScreen extends ConsumerWidget {
           ),
         ),
         trailing: const Icon(Icons.chevron_right, color: Colors.white),
+        onTap: onTap,
+      ),
+    );
+  }
+
+  Widget _buildDangerSettingTile({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return Card(
+      color: Colors.grey[900],
+      child: ListTile(
+        leading: Icon(icon, color: Colors.red),
+        title: Text(
+          title,
+          style: const TextStyle(
+            color: Colors.red,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        subtitle: Text(
+          subtitle,
+          style: TextStyle(
+            color: Colors.grey[400],
+            fontSize: 14,
+          ),
+        ),
+        trailing: const Icon(Icons.chevron_right, color: Colors.red),
         onTap: onTap,
       ),
     );

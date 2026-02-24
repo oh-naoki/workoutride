@@ -15,9 +15,6 @@ _$WorkoutSummaryDtoImpl _$$WorkoutSummaryDtoImplFromJson(
       category: json['category'] as String,
       created_at: json['created_at'] as String,
       updated_at: json['updated_at'] as String,
-      workouts: (json['workouts'] as List<dynamic>)
-          .map((e) => WorkoutIdDto.fromJson(e as Map<String, dynamic>))
-          .toList(),
     );
 
 Map<String, dynamic> _$$WorkoutSummaryDtoImplToJson(
@@ -29,5 +26,4 @@ Map<String, dynamic> _$$WorkoutSummaryDtoImplToJson(
       'category': instance.category,
       'created_at': instance.created_at,
       'updated_at': instance.updated_at,
-      'workouts': instance.workouts,
     };
