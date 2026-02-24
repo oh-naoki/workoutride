@@ -6,6 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workoutride/data/remote/api/auth_api_client.dart';
 import 'package:workoutride/data/remote/api/workout_api_client.dart';
+import 'package:workoutride/data/remote/api/user_ftp_api_client.dart';
 import 'package:workoutride/data/remote/interceptor/auth_interceptor.dart';
 import 'package:workoutride/data/remote/workout_remote_data_source.dart';
 import 'package:workoutride/data/repository/auth_repository_impl.dart';
@@ -149,6 +150,11 @@ WorkoutApiClient workoutApiClient(Ref ref) {
 }
 
 @riverpod
+UserFtpApiClient userFtpApiClient(Ref ref) {
+  return UserFtpApiClient(ref.read(dioProvider));
+}
+
+@riverpod
 WorkoutRemoteDataSource workoutRemoteDataSource(Ref ref) {
   return WorkoutRemoteDataSource(ref.read(workoutApiClientProvider));
 }
@@ -175,6 +181,7 @@ PowerMeterDataSource powerMeterDataSource(Ref ref) {
 UserProfileRepository userProfileRepository(Ref ref) {
   return UserProfileRepositoryImpl(
     sharedPreferences: ref.read(sharedPreferencesProvider),
+    userFtpApiClient: ref.read(userFtpApiClientProvider),
   );
 }
 

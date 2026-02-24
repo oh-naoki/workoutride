@@ -203,6 +203,23 @@ final workoutApiClientProvider = AutoDisposeProvider<WorkoutApiClient>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef WorkoutApiClientRef = AutoDisposeProviderRef<WorkoutApiClient>;
+String _$userFtpApiClientHash() => r'5c71de01d3995967008bdd4c1ff55789bb8092ee';
+
+/// See also [userFtpApiClient].
+@ProviderFor(userFtpApiClient)
+final userFtpApiClientProvider = AutoDisposeProvider<UserFtpApiClient>.internal(
+  userFtpApiClient,
+  name: r'userFtpApiClientProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$userFtpApiClientHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef UserFtpApiClientRef = AutoDisposeProviderRef<UserFtpApiClient>;
 String _$workoutRemoteDataSourceHash() =>
     r'898d07cacada98d85391680cccf1c9217a8efc72';
 
@@ -261,7 +278,7 @@ final powerMeterDataSourceProvider =
 // ignore: unused_element
 typedef PowerMeterDataSourceRef = AutoDisposeProviderRef<PowerMeterDataSource>;
 String _$userProfileRepositoryHash() =>
-    r'24a4d0caf811949093d2f168c4a938bf7e19b8ca';
+    r'b383c1910762e45cf6e18fc9fa3a857f39000d56';
 
 /// See also [userProfileRepository].
 @ProviderFor(userProfileRepository)
