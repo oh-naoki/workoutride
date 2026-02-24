@@ -7,5 +7,6 @@ module V1
     mount V1::Auth
     mount V1::Workouts
     mount V1::WorkoutResults
+    mount V1::UserFtps
   end
 end
