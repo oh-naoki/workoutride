@@ -26,6 +26,7 @@ module V1
       end
       post do
         ftp = current_user.user_ftps.create!(ftp_value: params[:ftp_value])
+        status 201
         present ftp, with: Entities::UserFtp
       end
     end

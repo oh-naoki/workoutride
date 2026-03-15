@@ -45,10 +45,21 @@ class UserProfileRepositoryImpl implements UserProfileRepository {
       return response.ftp_value;
     } on DioException catch (e) {
       if (e.response?.statusCode == 404) {
-        return null;
+        return await _migrateLocalFtpToBackend();
       }
       rethrow;
     }
+  }
+
+  Future<int?> _migrateLocalFtpToBackend() async {
+    final profile = await getUserProfile();
+    if (profile == null || profile.ftp == 0) return null;
+    try {
+      await userFtpApiClient.saveFtp({'ftp_value': profile.ftp});
+    } catch (_) {
+      // Migration failed, return local value as fallback
+    }
+    return profile.ftp;
   }
 
   @override

@@ -4,7 +4,7 @@ import 'package:workoutride/data/remote/model/user_ftp_dto.dart';
 
 part 'user_ftp_api_client.g.dart';
 
-@RestApi(baseUrl: "http://192.168.0.168:3000/api/v1")
+@RestApi(baseUrl: "")
 abstract class UserFtpApiClient {
   factory UserFtpApiClient(Dio dio) = _UserFtpApiClient;
 
