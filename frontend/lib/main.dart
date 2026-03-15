@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workoutride/di/providers.dart';
@@ -10,6 +11,7 @@ import 'package:workoutride/ui/workout_detail/workout_detail_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
   final sharedPreferences = await SharedPreferences.getInstance();
   
   runApp(

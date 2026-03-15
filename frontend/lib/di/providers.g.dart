@@ -170,7 +170,7 @@ final getWorkoutBlocksUseCaseProvider =
 // ignore: unused_element
 typedef GetWorkoutBlocksUseCaseRef
     = AutoDisposeProviderRef<GetWorkoutBlocksUseCase>;
-String _$dioHash() => r'eeb262793ac923cd7d19578aedc7bb2e740d5e1b';
+String _$dioHash() => r'8f4065689d827c9e0501349d9ab81d93a5a940b9';
 
 /// See also [dio].
 @ProviderFor(dio)
