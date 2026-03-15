@@ -1,14 +1,18 @@
 require 'rails_helper'
 
 RSpec.describe 'V1::WorkoutResults', type: :request do
+  let(:user) { User.create!(provider: 'google', uid: '12345') }
+  let(:auth_token) { user.auth_tokens.create!(token: SecureRandom.hex(32), expires_at: 30.days.from_now) }
+  let(:headers) { { 'Authorization' => "Bearer #{auth_token.token}" } }
+
   let!(:workout_summary) { create(:workout_summary) }
   let!(:workout_block) { create(:workout_block, workout_summary: workout_summary) }
 
   describe 'GET /api/v1/workout_results' do
-    let!(:workout_result) { create(:workout_result, workout_summary: workout_summary) }
+    let!(:workout_result) { create(:workout_result, workout_summary: workout_summary, user: user) }
 
     it 'returns all workout results' do
-      get '/api/v1/workout_results'
+      get '/api/v1/workout_results', headers: headers
       expect(response).to have_http_status(:ok)
       json = JSON.parse(response.body)
       expect(json.length).to eq(1)
@@ -17,26 +21,36 @@ RSpec.describe 'V1::WorkoutResults', type: :request do
 
     it 'filters by workout_summary_id' do
       other_summary = create(:workout_summary)
-      create(:workout_result, workout_summary: other_summary)
+      create(:workout_result, workout_summary: other_summary, user: user)
 
-      get '/api/v1/workout_results', params: { workout_summary_id: workout_summary.id }
+      get '/api/v1/workout_results', params: { workout_summary_id: workout_summary.id }, headers: headers
       json = JSON.parse(response.body)
       expect(json.length).to eq(1)
       expect(json.first['workout_summary_id']).to eq(workout_summary.id)
     end
+
+    it 'returns 401 without authentication' do
+      get '/api/v1/workout_results'
+      expect(response).to have_http_status(:unauthorized)
+    end
   end
 
   describe 'GET /api/v1/workout_results/:id' do
-    let!(:workout_result) { create(:workout_result, workout_summary: workout_summary) }
+    let!(:workout_result) { create(:workout_result, workout_summary: workout_summary, user: user) }
 
     it 'returns the workout result with block results' do
       create(:workout_block_result, workout_result: workout_result, workout_block: workout_block)
 
-      get "/api/v1/workout_results/#{workout_result.id}"
+      get "/api/v1/workout_results/#{workout_result.id}", headers: headers
       expect(response).to have_http_status(:ok)
       json = JSON.parse(response.body)
       expect(json['id']).to eq(workout_result.id)
       expect(json['workout_block_results'].length).to eq(1)
+    end
+
+    it 'returns 401 without authentication' do
+      get "/api/v1/workout_results/#{workout_result.id}"
+      expect(response).to have_http_status(:unauthorized)
     end
   end
 
@@ -63,7 +77,7 @@ RSpec.describe 'V1::WorkoutResults', type: :request do
       }
 
       expect {
-        post '/api/v1/workout_results', params: params
+        post '/api/v1/workout_results', params: params, headers: headers
       }.to change(WorkoutResult, :count).by(1)
         .and change(WorkoutBlockResult, :count).by(1)
 
@@ -82,12 +96,17 @@ RSpec.describe 'V1::WorkoutResults', type: :request do
       }
 
       expect {
-        post '/api/v1/workout_results', params: params
+        post '/api/v1/workout_results', params: params, headers: headers
       }.to change(WorkoutResult, :count).by(1)
 
       expect(response).to have_http_status(:created)
       json = JSON.parse(response.body)
       expect(json['status']).to eq('abandoned')
+    end
+
+    it 'returns 401 without authentication' do
+      post '/api/v1/workout_results', params: { workout_summary_id: workout_summary.id }
+      expect(response).to have_http_status(:unauthorized)
     end
   end
 end

@@ -1,11 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe 'API::V1::WorkoutSummaries', type: :request do
+  let(:user) { User.create!(provider: 'google', uid: '12345') }
+  let(:auth_token) { user.auth_tokens.create!(token: SecureRandom.hex(32), expires_at: 30.days.from_now) }
+  let(:headers) { { 'Authorization' => "Bearer #{auth_token.token}" } }
+
   describe 'GET /api/v1/workout_summaries' do
     context 'when workout summaries exist' do
       let!(:workout_summaries) { create_list(:workout_summary, 3) }
 
-      before { get '/api/v1/workout_summaries' }
+      before { get '/api/v1/workout_summaries', headers: headers }
 
       it 'returns HTTP status 200' do
         expect(response).to have_http_status(:ok)
@@ -37,7 +41,7 @@ RSpec.describe 'API::V1::WorkoutSummaries', type: :request do
     end
 
     context 'when no workout summaries exist' do
-      before { get '/api/v1/workout_summaries' }
+      before { get '/api/v1/workout_summaries', headers: headers }
 
       it 'returns HTTP status 200' do
         expect(response).to have_http_status(:ok)
@@ -45,6 +49,13 @@ RSpec.describe 'API::V1::WorkoutSummaries', type: :request do
 
       it 'returns an empty array' do
         expect(JSON.parse(response.body)).to eq([])
+      end
+    end
+
+    context 'without authentication' do
+      it 'returns 401' do
+        get '/api/v1/workout_summaries'
+        expect(response).to have_http_status(:unauthorized)
       end
     end
   end
