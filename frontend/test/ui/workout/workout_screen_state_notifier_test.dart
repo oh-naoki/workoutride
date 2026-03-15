@@ -11,6 +11,8 @@ import 'package:workoutride/domain/model/power_meter_data.dart';
 import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart';
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart';
 import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart' as workout_usecase;
+import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart';
+import 'package:workoutride/domain/usecase/workout/save_workout_result_use_case.dart';
 import 'package:workoutride/ui/workout/workout_screen_state_notifier.dart';
 import 'package:workoutride/di/providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,12 +23,16 @@ import 'workout_screen_state_notifier_test.mocks.dart';
   GetWorkoutBlocksUseCase,
   GetCalculatedPowerMeterDataUseCase,
   workout_usecase.ManageWorkoutUseCase,
+  GetUserProfileUseCase,
+  SaveWorkoutResultUseCase,
 ])
 void main() {
   late ProviderContainer container;
   late MockGetWorkoutBlocksUseCase mockGetWorkoutBlocksUseCase;
   late MockGetCalculatedPowerMeterDataUseCase mockGetCalculatedPowerMeterDataUseCase;
   late MockManageWorkoutUseCase mockManageWorkoutUseCase;
+  late MockGetUserProfileUseCase mockGetUserProfileUseCase;
+  late MockSaveWorkoutResultUseCase mockSaveWorkoutResultUseCase;
 
   // テストデータ
   const testWorkoutId = 1;
@@ -62,7 +68,9 @@ void main() {
     mockGetWorkoutBlocksUseCase = MockGetWorkoutBlocksUseCase();
     mockGetCalculatedPowerMeterDataUseCase = MockGetCalculatedPowerMeterDataUseCase();
     mockManageWorkoutUseCase = MockManageWorkoutUseCase();
-    
+    mockGetUserProfileUseCase = MockGetUserProfileUseCase();
+    mockSaveWorkoutResultUseCase = MockSaveWorkoutResultUseCase();
+
     // SharedPreferencesのモックを作成
     SharedPreferences.setMockInitialValues({});
     final sharedPreferences = await SharedPreferences.getInstance();
@@ -72,6 +80,8 @@ void main() {
         getWorkoutBlocksUseCaseProvider.overrideWithValue(mockGetWorkoutBlocksUseCase),
         getCalculatedPowerMeterDataUseCaseProvider.overrideWithValue(mockGetCalculatedPowerMeterDataUseCase),
         manageWorkoutUseCaseProvider.overrideWithValue(mockManageWorkoutUseCase),
+        getUserProfileUseCaseProvider.overrideWithValue(mockGetUserProfileUseCase),
+        saveWorkoutResultUseCaseProvider.overrideWithValue(mockSaveWorkoutResultUseCase),
         sharedPreferencesProvider.overrideWithValue(sharedPreferences),
       ],
     );
