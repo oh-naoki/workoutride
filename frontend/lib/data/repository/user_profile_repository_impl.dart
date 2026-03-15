@@ -1,15 +1,18 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workoutride/data/remote/api/user_ftp_api_client.dart';
 import 'package:workoutride/domain/model/user_profile.dart';
 import 'package:workoutride/domain/repository/user_profile_repository.dart';
 
 class UserProfileRepositoryImpl implements UserProfileRepository {
   final SharedPreferences sharedPreferences;
+  final UserFtpApiClient userFtpApiClient;
   static const String _userProfileKey = 'user_profile';
-  static const String _ftpKey = 'user_ftp';
 
   UserProfileRepositoryImpl({
     required this.sharedPreferences,
+    required this.userFtpApiClient,
   });
 
   @override
@@ -37,11 +40,30 @@ class UserProfileRepositoryImpl implements UserProfileRepository {
 
   @override
   Future<int?> getFtp() async {
-    return sharedPreferences.getInt(_ftpKey);
+    try {
+      final response = await userFtpApiClient.getCurrentFtp();
+      return response.ftp_value;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        return await _migrateLocalFtpToBackend();
+      }
+      rethrow;
+    }
+  }
+
+  Future<int?> _migrateLocalFtpToBackend() async {
+    final profile = await getUserProfile();
+    if (profile == null || profile.ftp == 0) return null;
+    try {
+      await userFtpApiClient.saveFtp({'ftp_value': profile.ftp});
+    } catch (_) {
+      // Migration failed, return local value as fallback
+    }
+    return profile.ftp;
   }
 
   @override
   Future<void> saveFtp(int ftp) async {
-    await sharedPreferences.setInt(_ftpKey, ftp);
+    await userFtpApiClient.saveFtp({'ftp_value': ftp});
   }
 }
