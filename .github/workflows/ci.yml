@@ -121,3 +121,12 @@ jobs:
 
       - name: Build APK (debug)
         run: flutter build apk --debug
+
+      - name: Upload to DeployGate
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.DEPLOYGATE_API_KEY }}" \
+            -F "file=@build/app/outputs/flutter-apk/app-debug.apk" \
+            -F "message=Build ${{ github.sha }}" \
+            https://deploygate.com/api/users/${{ secrets.DEPLOYGATE_APP_OWNER }}/apps
