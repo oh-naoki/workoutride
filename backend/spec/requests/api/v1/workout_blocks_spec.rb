@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe 'API::V1::WorkoutBlocks', type: :request do
+  let(:user) { User.create!(provider: 'google', uid: '12345') }
+  let(:auth_token) { user.auth_tokens.create!(token: SecureRandom.hex(32), expires_at: 30.days.from_now) }
+  let(:headers) { { 'Authorization' => "Bearer #{auth_token.token}" } }
+
   describe 'GET /api/v1/workout_blocks/:id' do
     let(:workout_summary) { create(:workout_summary) }
 
@@ -13,7 +17,7 @@ RSpec.describe 'API::V1::WorkoutBlocks', type: :request do
         ]
       end
 
-      before { get "/api/v1/workout_blocks/#{workout_summary.id}" }
+      before { get "/api/v1/workout_blocks/#{workout_summary.id}", headers: headers }
 
       it 'returns HTTP status 200' do
         expect(response).to have_http_status(:ok)
@@ -55,7 +59,7 @@ RSpec.describe 'API::V1::WorkoutBlocks', type: :request do
     end
 
     context 'when no workout blocks exist for the summary' do
-      before { get "/api/v1/workout_blocks/#{workout_summary.id}" }
+      before { get "/api/v1/workout_blocks/#{workout_summary.id}", headers: headers }
 
       it 'returns HTTP status 200' do
         expect(response).to have_http_status(:ok)
@@ -67,7 +71,7 @@ RSpec.describe 'API::V1::WorkoutBlocks', type: :request do
     end
 
     context 'when workout summary does not exist' do
-      before { get '/api/v1/workout_blocks/99999' }
+      before { get '/api/v1/workout_blocks/99999', headers: headers }
 
       it 'returns HTTP status 200' do
         expect(response).to have_http_status(:ok)
@@ -87,7 +91,7 @@ RSpec.describe 'API::V1::WorkoutBlocks', type: :request do
         create_list(:workout_block, 3, workout_summary: workout_summary)
       end
 
-      before { get "/api/v1/workout_blocks/#{workout_summary.id}" }
+      before { get "/api/v1/workout_blocks/#{workout_summary.id}", headers: headers }
 
       it 'only returns blocks for the specified summary' do
         json_response = JSON.parse(response.body)
@@ -96,6 +100,13 @@ RSpec.describe 'API::V1::WorkoutBlocks', type: :request do
         json_response.each do |block|
           expect(block['workout_summary_id']).to eq(workout_summary.id)
         end
+      end
+    end
+
+    context 'without authentication' do
+      it 'returns 401' do
+        get "/api/v1/workout_blocks/#{workout_summary.id}"
+        expect(response).to have_http_status(:unauthorized)
       end
     end
   end

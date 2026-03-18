@@ -1,0 +1,123 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  # ──────────────────────────────────────────
+  # Backend: RSpec
+  # ──────────────────────────────────────────
+  backend-test:
+    name: Backend (RSpec)
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: backend_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/backend_test
+      GOOGLE_CLIENT_ID: dummy_client_id_for_ci
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4.1"
+          bundler-cache: true
+          working-directory: backend
+
+      - name: Set up database
+        run: bundle exec rails db:schema:load
+
+      - name: Run RSpec
+        run: bundle exec rspec
+
+  # ──────────────────────────────────────────
+  # Frontend: Flutter test & build (並列)
+  # ──────────────────────────────────────────
+  flutter-test:
+    name: Frontend (flutter test)
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.29.3"
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Create .env
+        run: echo "API_BASE_URL=https://example.com" > .env
+
+      - name: Run code generation
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Run tests
+        run: flutter test
+
+  flutter-build-android:
+    name: Frontend (flutter build apk)
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.29.3"
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run code generation
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Create .env for build
+        run: |
+          echo "API_BASE_URL=https://example.com" > .env
+
+      - name: Build APK (debug)
+        run: flutter build apk --debug
