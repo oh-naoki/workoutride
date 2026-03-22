@@ -1,4 +1,4 @@
-package com.example.workoutride
+package com.github.ohnaoki.workoutride
 
 import io.flutter.embedding.android.FlutterActivity
 
