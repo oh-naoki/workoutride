@@ -121,7 +121,7 @@ jobs:
 
       - name: Set up Android signing
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/workoutride.keystore
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode --ignore-garbage > android/app/workoutride.keystore
           cat <<EOF > android/key.properties
           storePassword=${{ secrets.STORE_PASSWORD }}
           keyPassword=${{ secrets.KEY_PASSWORD }}
