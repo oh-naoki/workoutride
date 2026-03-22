@@ -117,9 +117,13 @@ jobs:
 
       - name: Create .env for build
         run: |
-          echo "API_BASE_URL=${{ secrets.API_BASE_URL }}" > .env
+          echo "API_BASE_URL=https://example.com" > .env
+
+      - name: Build APK (debug)
+        run: flutter build apk --debug
 
       - name: Set up Android signing
+        if: contains(github.head_ref || github.ref_name, 'release')
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode --ignore-garbage > android/app/workoutride.keystore
           cat <<EOF > android/key.properties
@@ -130,10 +134,13 @@ jobs:
           EOF
 
       - name: Build APK (release)
-        run: flutter build apk --release
+        if: contains(github.head_ref || github.ref_name, 'release')
+        run: |
+          echo "API_BASE_URL=${{ secrets.API_BASE_URL }}" > .env
+          flutter build apk --release
 
       - name: Upload to Firebase App Distribution
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: contains(github.head_ref || github.ref_name, 'release')
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_APP_ID }}
