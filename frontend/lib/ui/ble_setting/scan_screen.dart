@@ -64,6 +64,26 @@ class ScanScreen extends HookConsumerWidget {
                       ref.read(scanScreenStateNotifierProvider.notifier).onDeviceTap(result);
                     },
                   ),
+                if (uiState.scanResults.isEmpty && !uiState.isScanning)
+                  const Padding(
+                    padding: EdgeInsets.all(32),
+                    child: Column(
+                      children: [
+                        Icon(Icons.bluetooth_searching, size: 48, color: Colors.grey),
+                        SizedBox(height: 16),
+                        Text(
+                          'デバイスが見つかりません',
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          'Bluetoothをオンにして、デバイスを近くに置いてください',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  ),
                 const Padding(padding: EdgeInsets.symmetric(vertical: 16)),
               ],
             ),

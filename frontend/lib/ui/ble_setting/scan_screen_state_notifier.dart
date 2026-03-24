@@ -12,6 +12,7 @@ part 'scan_screen_state_notifier.g.dart';
 class ScanScreenUiState with _$ScanScreenUiState {
   const factory ScanScreenUiState({
     @Default([]) List<DeviceScanResult> scanResults,
+    @Default(false) bool isScanning,
     @Default(false) bool isConnecting,
     @Default(false) bool isConnected,
     String? errorMessage,
@@ -26,6 +27,7 @@ class ScanScreenStateNotifier extends _$ScanScreenStateNotifier {
   }
 
   void scanDevice() {
+    state = state.copyWith(isScanning: true);
     ref.read(scanBleDeviceUseCaseProvider)().listen(
       (results) {
         state = state.copyWith(
@@ -35,10 +37,11 @@ class ScanScreenStateNotifier extends _$ScanScreenStateNotifier {
       onError: (error) {
         state = state.copyWith(
           errorMessage: error.toString(),
+          isScanning: false,
         );
       },
       onDone: () {
-        // Scan completed
+        state = state.copyWith(isScanning: false);
       },
       cancelOnError: true,
     );

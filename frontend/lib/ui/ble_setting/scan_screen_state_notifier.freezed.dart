@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$ScanScreenUiState {
   List<DeviceScanResult> get scanResults => throw _privateConstructorUsedError;
+  bool get isScanning => throw _privateConstructorUsedError;
   bool get isConnecting => throw _privateConstructorUsedError;
   bool get isConnected => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
@@ -36,6 +37,7 @@ abstract class $ScanScreenUiStateCopyWith<$Res> {
   @useResult
   $Res call(
       {List<DeviceScanResult> scanResults,
+      bool isScanning,
       bool isConnecting,
       bool isConnected,
       String? errorMessage});
@@ -57,6 +59,7 @@ class _$ScanScreenUiStateCopyWithImpl<$Res, $Val extends ScanScreenUiState>
   @override
   $Res call({
     Object? scanResults = null,
+    Object? isScanning = null,
     Object? isConnecting = null,
     Object? isConnected = null,
     Object? errorMessage = freezed,
@@ -66,6 +69,10 @@ class _$ScanScreenUiStateCopyWithImpl<$Res, $Val extends ScanScreenUiState>
           ? _value.scanResults
           : scanResults // ignore: cast_nullable_to_non_nullable
               as List<DeviceScanResult>,
+      isScanning: null == isScanning
+          ? _value.isScanning
+          : isScanning // ignore: cast_nullable_to_non_nullable
+              as bool,
       isConnecting: null == isConnecting
           ? _value.isConnecting
           : isConnecting // ignore: cast_nullable_to_non_nullable
@@ -92,6 +99,7 @@ abstract class _$$ScanScreenUiStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {List<DeviceScanResult> scanResults,
+      bool isScanning,
       bool isConnecting,
       bool isConnected,
       String? errorMessage});
@@ -111,6 +119,7 @@ class __$$ScanScreenUiStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? scanResults = null,
+    Object? isScanning = null,
     Object? isConnecting = null,
     Object? isConnected = null,
     Object? errorMessage = freezed,
@@ -120,6 +129,10 @@ class __$$ScanScreenUiStateImplCopyWithImpl<$Res>
           ? _value._scanResults
           : scanResults // ignore: cast_nullable_to_non_nullable
               as List<DeviceScanResult>,
+      isScanning: null == isScanning
+          ? _value.isScanning
+          : isScanning // ignore: cast_nullable_to_non_nullable
+              as bool,
       isConnecting: null == isConnecting
           ? _value.isConnecting
           : isConnecting // ignore: cast_nullable_to_non_nullable
@@ -143,6 +156,7 @@ class _$ScanScreenUiStateImpl
     implements _ScanScreenUiState {
   const _$ScanScreenUiStateImpl(
       {final List<DeviceScanResult> scanResults = const [],
+      this.isScanning = false,
       this.isConnecting = false,
       this.isConnected = false,
       this.errorMessage})
@@ -159,6 +173,9 @@ class _$ScanScreenUiStateImpl
 
   @override
   @JsonKey()
+  final bool isScanning;
+  @override
+  @JsonKey()
   final bool isConnecting;
   @override
   @JsonKey()
@@ -168,7 +185,7 @@ class _$ScanScreenUiStateImpl
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'ScanScreenUiState(scanResults: $scanResults, isConnecting: $isConnecting, isConnected: $isConnected, errorMessage: $errorMessage)';
+    return 'ScanScreenUiState(scanResults: $scanResults, isScanning: $isScanning, isConnecting: $isConnecting, isConnected: $isConnected, errorMessage: $errorMessage)';
   }
 
   @override
@@ -177,6 +194,7 @@ class _$ScanScreenUiStateImpl
     properties
       ..add(DiagnosticsProperty('type', 'ScanScreenUiState'))
       ..add(DiagnosticsProperty('scanResults', scanResults))
+      ..add(DiagnosticsProperty('isScanning', isScanning))
       ..add(DiagnosticsProperty('isConnecting', isConnecting))
       ..add(DiagnosticsProperty('isConnected', isConnected))
       ..add(DiagnosticsProperty('errorMessage', errorMessage));
@@ -189,6 +207,8 @@ class _$ScanScreenUiStateImpl
             other is _$ScanScreenUiStateImpl &&
             const DeepCollectionEquality()
                 .equals(other._scanResults, _scanResults) &&
+            (identical(other.isScanning, isScanning) ||
+                other.isScanning == isScanning) &&
             (identical(other.isConnecting, isConnecting) ||
                 other.isConnecting == isConnecting) &&
             (identical(other.isConnected, isConnected) ||
@@ -201,6 +221,7 @@ class _$ScanScreenUiStateImpl
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_scanResults),
+      isScanning,
       isConnecting,
       isConnected,
       errorMessage);
@@ -218,12 +239,15 @@ class _$ScanScreenUiStateImpl
 abstract class _ScanScreenUiState implements ScanScreenUiState {
   const factory _ScanScreenUiState(
       {final List<DeviceScanResult> scanResults,
+      final bool isScanning,
       final bool isConnecting,
       final bool isConnected,
       final String? errorMessage}) = _$ScanScreenUiStateImpl;
 
   @override
   List<DeviceScanResult> get scanResults;
+  @override
+  bool get isScanning;
   @override
   bool get isConnecting;
   @override
