@@ -8,10 +8,10 @@ servers:
 proxy:
   ssl: true
   host: 34.138.232.78.nip.io
+  deploy_timeout: 120
   healthcheck:
     path: /up
     interval: 5
-    timeout: 120
 
 registry:
   server: us-east1-docker.pkg.dev
