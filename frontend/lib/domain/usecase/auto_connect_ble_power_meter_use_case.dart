@@ -14,4 +14,9 @@ class AutoConnectBlePowerMeterUseCase {
   Future<String?> getSavedDeviceId() async {
     return await _bleConnector.getSavedDeviceId();
   }
+
+  /// 接続中のBLE接続をキャンセル
+  Future<void> cancelConnection() async {
+    await _bleConnector.disconnect();
+  }
 }
