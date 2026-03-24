@@ -81,4 +81,13 @@ class HomeScreenStateNotifier extends _$HomeScreenStateNotifier {
   Future<void> retryBleConnection() async {
     await _autoConnectBleDevice();
   }
+
+  Future<void> cancelBleConnection() async {
+    await _autoConnectBlePowerMeterUseCase.cancelConnection();
+    state = state.copyWith(
+      isConnectingBle: false,
+      isBleConnected: false,
+      bleErrorMessage: null,
+    );
+  }
 }

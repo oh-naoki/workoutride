@@ -295,6 +295,13 @@ class BleConnectionStatus extends ConsumerWidget {
               ],
             ),
           ),
+          if (uiState.isConnectingBle)
+            TextButton(
+              onPressed: () {
+                ref.read(homeScreenStateNotifierProvider.notifier).cancelBleConnection();
+              },
+              child: const Text('キャンセル', style: TextStyle(color: Colors.grey, fontSize: 12)),
+            ),
           if (!uiState.isBleConnected && !uiState.isConnectingBle)
             TextButton(
               onPressed: () {
