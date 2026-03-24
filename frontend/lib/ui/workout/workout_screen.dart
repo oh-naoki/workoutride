@@ -53,6 +53,15 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
       if (previous?.currentBlockIndex != next.currentBlockIndex) {
         _scrollToCurrentBlock(next.currentBlockIndex);
       }
+      // 保存エラーが発生したらSnackBarで通知
+      if (previous?.saveError != next.saveError && next.saveError != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.saveError!),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     });
 
     return PopScope(
