@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -134,10 +135,14 @@ GetWorkoutSummaryUseCase getWorkoutSummaryUseCase(Ref ref) {
   return GetWorkoutSummaryUseCase(ref.read(workoutRepositoryProvider));
 }
 
+const debugApiUrlKey = 'debug_api_url';
+
 // DIプロバイダー
 @riverpod
 Dio dio(Ref ref) {
-  final baseUrl = dotenv.env['API_BASE_URL'];
+  final prefs = ref.watch(sharedPreferencesProvider);
+  final debugUrl = kDebugMode ? prefs.getString(debugApiUrlKey) : null;
+  final baseUrl = debugUrl ?? dotenv.env['API_BASE_URL'];
   if (baseUrl == null || baseUrl.isEmpty) {
     throw Exception('API_BASE_URL is not set in .env file');
   }

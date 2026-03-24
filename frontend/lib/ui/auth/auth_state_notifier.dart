@@ -1,3 +1,6 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:workoutride/domain/model/auth/auth_state.dart';
 import 'package:workoutride/di/providers.dart';
@@ -32,5 +35,26 @@ class AuthStateNotifier extends _$AuthStateNotifier {
   Future<void> signOut() async {
     await ref.read(authRepositoryProvider).signOut();
     state = const AsyncValue.data(AuthState.unauthenticated());
+  }
+
+  Future<void> signInAsDebugUser() async {
+    assert(kDebugMode, 'signInAsDebugUser must only be called in debug mode');
+    state = const AsyncValue.data(AuthState.loading());
+
+    try {
+      final token = dotenv.env['DEBUG_AUTH_TOKEN'];
+      if (token == null || token.isEmpty) {
+        throw Exception('DEBUG_AUTH_TOKEN is not set in .env');
+      }
+      const storage = FlutterSecureStorage();
+      await storage.write(key: 'auth_token', value: token);
+
+      final user = await ref.read(authRepositoryProvider).getCurrentUser();
+      if (user == null) throw Exception('Failed to get user with debug token');
+
+      state = AsyncValue.data(AuthState.authenticated(user: user));
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
   }
 }
