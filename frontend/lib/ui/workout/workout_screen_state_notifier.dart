@@ -36,6 +36,9 @@ class WorkoutScreenUiState with _$WorkoutScreenUiState {
     @Default(false) bool isSavingResult,
     @Default(false) bool isResultSaved,
     String? saveError,
+    @Default(false) bool isCompleted,
+    @Default(3) int completionCountdown,
+    @Default(false) bool shouldNavigateHome,
   }) = _WorkoutScreenUiState;
 }
 
@@ -51,6 +54,7 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
   StreamSubscription? _workoutSubscription;
   StreamSubscription? _powerSubscription;
   Timer? _countdownTimer;
+  Timer? _completionTimer;
 
   // ワークアウト結果の記録用
   DateTime? _workoutStartedAt;
@@ -79,6 +83,7 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
       _powerSubscription?.cancel();
       _workoutSubscription?.cancel();
       _countdownTimer?.cancel();
+      _completionTimer?.cancel();
       _manageWorkoutUseCase.dispose();
     });
 
@@ -148,7 +153,8 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
       );
 
       // ワークアウト完了時に自動保存
-      if (progressState.isCompleted) {
+      if (progressState.isCompleted && !state.isCompleted) {
+        state = state.copyWith(isCompleted: true);
         _saveResult('completed');
       }
     });
@@ -305,6 +311,9 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
 
       await _saveWorkoutResultUseCase.call(request);
       state = state.copyWith(isSavingResult: false, isResultSaved: true);
+      if (status == 'completed') {
+        _startCompletionCountdown();
+      }
     } catch (e) {
       debugPrint('Failed to save workout result: $e');
       state = state.copyWith(
@@ -312,6 +321,19 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
         saveError: 'ワークアウトの保存に失敗しました。通信状況を確認してください。',
       );
     }
+  }
+
+  void _startCompletionCountdown() {
+    state = state.copyWith(completionCountdown: 3);
+    _completionTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      final remaining = state.completionCountdown - 1;
+      if (remaining <= 0) {
+        timer.cancel();
+        state = state.copyWith(completionCountdown: 0, shouldNavigateHome: true);
+      } else {
+        state = state.copyWith(completionCountdown: remaining);
+      }
+    });
   }
 
   Future<void> refreshWorkoutBlocks() async {

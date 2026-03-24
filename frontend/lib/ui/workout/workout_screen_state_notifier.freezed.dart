@@ -35,6 +35,9 @@ mixin _$WorkoutScreenUiState {
   bool get isSavingResult => throw _privateConstructorUsedError;
   bool get isResultSaved => throw _privateConstructorUsedError;
   String? get saveError => throw _privateConstructorUsedError;
+  bool get isCompleted => throw _privateConstructorUsedError;
+  int get completionCountdown => throw _privateConstructorUsedError;
+  bool get shouldNavigateHome => throw _privateConstructorUsedError;
 
   /// Create a copy of WorkoutScreenUiState
   /// with the given fields replaced by the non-null parameter values.
@@ -67,7 +70,10 @@ abstract class $WorkoutScreenUiStateCopyWith<$Res> {
       int countdownSeconds,
       bool isSavingResult,
       bool isResultSaved,
-      String? saveError});
+      String? saveError,
+      bool isCompleted,
+      int completionCountdown,
+      bool shouldNavigateHome});
 }
 
 /// @nodoc
@@ -104,6 +110,9 @@ class _$WorkoutScreenUiStateCopyWithImpl<$Res,
     Object? isSavingResult = null,
     Object? isResultSaved = null,
     Object? saveError = freezed,
+    Object? isCompleted = null,
+    Object? completionCountdown = null,
+    Object? shouldNavigateHome = null,
   }) {
     return _then(_value.copyWith(
       workoutBlocks: null == workoutBlocks
@@ -178,6 +187,18 @@ class _$WorkoutScreenUiStateCopyWithImpl<$Res,
           ? _value.saveError
           : saveError // ignore: cast_nullable_to_non_nullable
               as String?,
+      isCompleted: null == isCompleted
+          ? _value.isCompleted
+          : isCompleted // ignore: cast_nullable_to_non_nullable
+              as bool,
+      completionCountdown: null == completionCountdown
+          ? _value.completionCountdown
+          : completionCountdown // ignore: cast_nullable_to_non_nullable
+              as int,
+      shouldNavigateHome: null == shouldNavigateHome
+          ? _value.shouldNavigateHome
+          : shouldNavigateHome // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -208,7 +229,10 @@ abstract class _$$WorkoutScreenUiStateImplCopyWith<$Res>
       int countdownSeconds,
       bool isSavingResult,
       bool isResultSaved,
-      String? saveError});
+      String? saveError,
+      bool isCompleted,
+      int completionCountdown,
+      bool shouldNavigateHome});
 }
 
 /// @nodoc
@@ -242,6 +266,9 @@ class __$$WorkoutScreenUiStateImplCopyWithImpl<$Res>
     Object? isSavingResult = null,
     Object? isResultSaved = null,
     Object? saveError = freezed,
+    Object? isCompleted = null,
+    Object? completionCountdown = null,
+    Object? shouldNavigateHome = null,
   }) {
     return _then(_$WorkoutScreenUiStateImpl(
       workoutBlocks: null == workoutBlocks
@@ -316,6 +343,18 @@ class __$$WorkoutScreenUiStateImplCopyWithImpl<$Res>
           ? _value.saveError
           : saveError // ignore: cast_nullable_to_non_nullable
               as String?,
+      isCompleted: null == isCompleted
+          ? _value.isCompleted
+          : isCompleted // ignore: cast_nullable_to_non_nullable
+              as bool,
+      completionCountdown: null == completionCountdown
+          ? _value.completionCountdown
+          : completionCountdown // ignore: cast_nullable_to_non_nullable
+              as int,
+      shouldNavigateHome: null == shouldNavigateHome
+          ? _value.shouldNavigateHome
+          : shouldNavigateHome // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -343,7 +382,10 @@ class _$WorkoutScreenUiStateImpl
       this.countdownSeconds = 15,
       this.isSavingResult = false,
       this.isResultSaved = false,
-      this.saveError})
+      this.saveError,
+      this.isCompleted = false,
+      this.completionCountdown = 3,
+      this.shouldNavigateHome = false})
       : _workoutBlocks = workoutBlocks;
 
   final List<WorkoutBlock> _workoutBlocks;
@@ -403,10 +445,19 @@ class _$WorkoutScreenUiStateImpl
   final bool isResultSaved;
   @override
   final String? saveError;
+  @override
+  @JsonKey()
+  final bool isCompleted;
+  @override
+  @JsonKey()
+  final int completionCountdown;
+  @override
+  @JsonKey()
+  final bool shouldNavigateHome;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'WorkoutScreenUiState(workoutBlocks: $workoutBlocks, isLoading: $isLoading, power: $power, cadence: $cadence, maxPower: $maxPower, targetPower: $targetPower, currentBlockIndex: $currentBlockIndex, elapsedSeconds: $elapsedSeconds, isPaused: $isPaused, userWeight: $userWeight, userFtp: $userFtp, errorMessage: $errorMessage, powerAlertMessage: $powerAlertMessage, isCountingDown: $isCountingDown, countdownSeconds: $countdownSeconds, isSavingResult: $isSavingResult, isResultSaved: $isResultSaved, saveError: $saveError)';
+    return 'WorkoutScreenUiState(workoutBlocks: $workoutBlocks, isLoading: $isLoading, power: $power, cadence: $cadence, maxPower: $maxPower, targetPower: $targetPower, currentBlockIndex: $currentBlockIndex, elapsedSeconds: $elapsedSeconds, isPaused: $isPaused, userWeight: $userWeight, userFtp: $userFtp, errorMessage: $errorMessage, powerAlertMessage: $powerAlertMessage, isCountingDown: $isCountingDown, countdownSeconds: $countdownSeconds, isSavingResult: $isSavingResult, isResultSaved: $isResultSaved, saveError: $saveError, isCompleted: $isCompleted, completionCountdown: $completionCountdown, shouldNavigateHome: $shouldNavigateHome)';
   }
 
   @override
@@ -431,7 +482,10 @@ class _$WorkoutScreenUiStateImpl
       ..add(DiagnosticsProperty('countdownSeconds', countdownSeconds))
       ..add(DiagnosticsProperty('isSavingResult', isSavingResult))
       ..add(DiagnosticsProperty('isResultSaved', isResultSaved))
-      ..add(DiagnosticsProperty('saveError', saveError));
+      ..add(DiagnosticsProperty('saveError', saveError))
+      ..add(DiagnosticsProperty('isCompleted', isCompleted))
+      ..add(DiagnosticsProperty('completionCountdown', completionCountdown))
+      ..add(DiagnosticsProperty('shouldNavigateHome', shouldNavigateHome));
   }
 
   @override
@@ -471,30 +525,40 @@ class _$WorkoutScreenUiStateImpl
             (identical(other.isResultSaved, isResultSaved) ||
                 other.isResultSaved == isResultSaved) &&
             (identical(other.saveError, saveError) ||
-                other.saveError == saveError));
+                other.saveError == saveError) &&
+            (identical(other.isCompleted, isCompleted) ||
+                other.isCompleted == isCompleted) &&
+            (identical(other.completionCountdown, completionCountdown) ||
+                other.completionCountdown == completionCountdown) &&
+            (identical(other.shouldNavigateHome, shouldNavigateHome) ||
+                other.shouldNavigateHome == shouldNavigateHome));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_workoutBlocks),
-      isLoading,
-      power,
-      cadence,
-      maxPower,
-      targetPower,
-      currentBlockIndex,
-      elapsedSeconds,
-      isPaused,
-      userWeight,
-      userFtp,
-      errorMessage,
-      powerAlertMessage,
-      isCountingDown,
-      countdownSeconds,
-      isSavingResult,
-      isResultSaved,
-      saveError);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        const DeepCollectionEquality().hash(_workoutBlocks),
+        isLoading,
+        power,
+        cadence,
+        maxPower,
+        targetPower,
+        currentBlockIndex,
+        elapsedSeconds,
+        isPaused,
+        userWeight,
+        userFtp,
+        errorMessage,
+        powerAlertMessage,
+        isCountingDown,
+        countdownSeconds,
+        isSavingResult,
+        isResultSaved,
+        saveError,
+        isCompleted,
+        completionCountdown,
+        shouldNavigateHome
+      ]);
 
   /// Create a copy of WorkoutScreenUiState
   /// with the given fields replaced by the non-null parameter values.
@@ -526,7 +590,10 @@ abstract class _WorkoutScreenUiState implements WorkoutScreenUiState {
       final int countdownSeconds,
       final bool isSavingResult,
       final bool isResultSaved,
-      final String? saveError}) = _$WorkoutScreenUiStateImpl;
+      final String? saveError,
+      final bool isCompleted,
+      final int completionCountdown,
+      final bool shouldNavigateHome}) = _$WorkoutScreenUiStateImpl;
 
   @override
   List<WorkoutBlock> get workoutBlocks;
@@ -564,6 +631,12 @@ abstract class _WorkoutScreenUiState implements WorkoutScreenUiState {
   bool get isResultSaved;
   @override
   String? get saveError;
+  @override
+  bool get isCompleted;
+  @override
+  int get completionCountdown;
+  @override
+  bool get shouldNavigateHome;
 
   /// Create a copy of WorkoutScreenUiState
   /// with the given fields replaced by the non-null parameter values.
