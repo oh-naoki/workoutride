@@ -84,6 +84,7 @@ production:
     database: backend_production
     username: backend
     password: <%= ENV["BACKEND_DATABASE_PASSWORD"] %>
+    host: <%= ENV["DB_HOST"] %>
   cache:
     <<: *primary_production
     database: backend_production_cache

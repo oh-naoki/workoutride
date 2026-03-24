@@ -22,10 +22,11 @@ registry:
 env:
   secret:
     - RAILS_MASTER_KEY
-    - DATABASE_URL
+    - BACKEND_DATABASE_PASSWORD
   clear:
     SOLID_QUEUE_IN_PUMA: true
     GOOGLE_CLIENT_ID: "432477473655-2ovs5abgvf6cu6ke9gli7b5phgi0je4u.apps.googleusercontent.com"
+    DB_HOST: "10.106.144.3"
 
 aliases:
   console: app exec --interactive --reuse "bin/rails console"
