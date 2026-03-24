@@ -2,16 +2,25 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workoutride/di/providers.dart';
 
 void main() {
   group('dioProvider', () {
+    late SharedPreferences prefs;
+
+    setUp(() async {
+      SharedPreferences.setMockInitialValues({});
+      prefs = await SharedPreferences.getInstance();
+    });
+
     test('throws when API_BASE_URL is not set', () {
       dotenv.testLoad(fileInput: '');
 
       final container = ProviderContainer(
         overrides: [
           secureStorageProvider.overrideWithValue(const FlutterSecureStorage()),
+          sharedPreferencesProvider.overrideWithValue(prefs),
         ],
       );
       addTearDown(container.dispose);
@@ -32,6 +41,7 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           secureStorageProvider.overrideWithValue(const FlutterSecureStorage()),
+          sharedPreferencesProvider.overrideWithValue(prefs),
         ],
       );
       addTearDown(container.dispose);
@@ -52,6 +62,7 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           secureStorageProvider.overrideWithValue(const FlutterSecureStorage()),
+          sharedPreferencesProvider.overrideWithValue(prefs),
         ],
       );
       addTearDown(container.dispose);
