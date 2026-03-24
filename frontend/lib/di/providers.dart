@@ -136,7 +136,7 @@ Dio dio(Ref ref) {
 
   // AuthInterceptorを追加
   dio.interceptors.add(
-    AuthInterceptor(ref.read(secureStorageProvider)),
+    AuthInterceptor(ref.read(secureStorageProvider), ref),
   );
 
   // iOSシミュレータでHTTPSを許可する設定
