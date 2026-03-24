@@ -12,6 +12,10 @@ class ScanScreen extends HookConsumerWidget {
     useEffect(() {
       ref.read(bleConnectorProvider).initialize().then((_) {
         ref.read(scanScreenStateNotifierProvider.notifier).scanDevice();
+      }).catchError((e) {
+        ref.read(scanScreenStateNotifierProvider.notifier).setError(
+          'Bluetoothの初期化に失敗しました: $e',
+        );
       });
       return null;
     }, []);
