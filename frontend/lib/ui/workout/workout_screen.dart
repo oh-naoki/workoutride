@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workoutride/component/meter.dart';
@@ -53,6 +54,15 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
       if (previous?.currentBlockIndex != next.currentBlockIndex) {
         _scrollToCurrentBlock(next.currentBlockIndex);
       }
+      // 保存エラーが発生したらSnackBarで通知
+      if (previous?.saveError != next.saveError && next.saveError != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.saveError!),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     });
 
     return PopScope(
@@ -62,10 +72,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           actions: [
-            IconButton(
-              icon: const Icon(Icons.bug_report, color: Colors.white),
-              onPressed: () => _showDeveloperMenu(context),
-            ),
+            if (kDebugMode)
+              IconButton(
+                icon: const Icon(Icons.bug_report, color: Colors.white),
+                onPressed: () => _showDeveloperMenu(context),
+              ),
           ],
         ),
         body: SafeArea(

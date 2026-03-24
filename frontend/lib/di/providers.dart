@@ -131,12 +131,15 @@ GetWorkoutBlocksUseCase getWorkoutBlocksUseCase(Ref ref) {
 // DIプロバイダー
 @riverpod
 Dio dio(Ref ref) {
-  final baseUrl = dotenv.env['API_BASE_URL'] ?? 'http://192.168.0.168:3000/api/v1';
+  final baseUrl = dotenv.env['API_BASE_URL'];
+  if (baseUrl == null || baseUrl.isEmpty) {
+    throw Exception('API_BASE_URL is not set in .env file');
+  }
   final dio = Dio(BaseOptions(baseUrl: baseUrl));
 
   // AuthInterceptorを追加
   dio.interceptors.add(
-    AuthInterceptor(ref.read(secureStorageProvider)),
+    AuthInterceptor(ref.read(secureStorageProvider), ref),
   );
 
   // iOSシミュレータでHTTPSを許可する設定

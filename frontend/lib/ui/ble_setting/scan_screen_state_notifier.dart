@@ -44,6 +44,10 @@ class ScanScreenStateNotifier extends _$ScanScreenStateNotifier {
     );
   }
 
+  void setError(String message) {
+    state = state.copyWith(errorMessage: message);
+  }
+
   Future<void> onDeviceTap(DeviceScanResult result) async {
     if (state.isConnecting) return;
 

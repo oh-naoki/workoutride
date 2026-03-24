@@ -34,6 +34,7 @@ mixin _$WorkoutScreenUiState {
   int get countdownSeconds => throw _privateConstructorUsedError;
   bool get isSavingResult => throw _privateConstructorUsedError;
   bool get isResultSaved => throw _privateConstructorUsedError;
+  String? get saveError => throw _privateConstructorUsedError;
 
   /// Create a copy of WorkoutScreenUiState
   /// with the given fields replaced by the non-null parameter values.
@@ -65,7 +66,8 @@ abstract class $WorkoutScreenUiStateCopyWith<$Res> {
       bool isCountingDown,
       int countdownSeconds,
       bool isSavingResult,
-      bool isResultSaved});
+      bool isResultSaved,
+      String? saveError});
 }
 
 /// @nodoc
@@ -101,6 +103,7 @@ class _$WorkoutScreenUiStateCopyWithImpl<$Res,
     Object? countdownSeconds = null,
     Object? isSavingResult = null,
     Object? isResultSaved = null,
+    Object? saveError = freezed,
   }) {
     return _then(_value.copyWith(
       workoutBlocks: null == workoutBlocks
@@ -171,6 +174,10 @@ class _$WorkoutScreenUiStateCopyWithImpl<$Res,
           ? _value.isResultSaved
           : isResultSaved // ignore: cast_nullable_to_non_nullable
               as bool,
+      saveError: freezed == saveError
+          ? _value.saveError
+          : saveError // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -200,7 +207,8 @@ abstract class _$$WorkoutScreenUiStateImplCopyWith<$Res>
       bool isCountingDown,
       int countdownSeconds,
       bool isSavingResult,
-      bool isResultSaved});
+      bool isResultSaved,
+      String? saveError});
 }
 
 /// @nodoc
@@ -233,6 +241,7 @@ class __$$WorkoutScreenUiStateImplCopyWithImpl<$Res>
     Object? countdownSeconds = null,
     Object? isSavingResult = null,
     Object? isResultSaved = null,
+    Object? saveError = freezed,
   }) {
     return _then(_$WorkoutScreenUiStateImpl(
       workoutBlocks: null == workoutBlocks
@@ -303,6 +312,10 @@ class __$$WorkoutScreenUiStateImplCopyWithImpl<$Res>
           ? _value.isResultSaved
           : isResultSaved // ignore: cast_nullable_to_non_nullable
               as bool,
+      saveError: freezed == saveError
+          ? _value.saveError
+          : saveError // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -329,7 +342,8 @@ class _$WorkoutScreenUiStateImpl
       this.isCountingDown = true,
       this.countdownSeconds = 15,
       this.isSavingResult = false,
-      this.isResultSaved = false})
+      this.isResultSaved = false,
+      this.saveError})
       : _workoutBlocks = workoutBlocks;
 
   final List<WorkoutBlock> _workoutBlocks;
@@ -387,10 +401,12 @@ class _$WorkoutScreenUiStateImpl
   @override
   @JsonKey()
   final bool isResultSaved;
+  @override
+  final String? saveError;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'WorkoutScreenUiState(workoutBlocks: $workoutBlocks, isLoading: $isLoading, power: $power, cadence: $cadence, maxPower: $maxPower, targetPower: $targetPower, currentBlockIndex: $currentBlockIndex, elapsedSeconds: $elapsedSeconds, isPaused: $isPaused, userWeight: $userWeight, userFtp: $userFtp, errorMessage: $errorMessage, powerAlertMessage: $powerAlertMessage, isCountingDown: $isCountingDown, countdownSeconds: $countdownSeconds, isSavingResult: $isSavingResult, isResultSaved: $isResultSaved)';
+    return 'WorkoutScreenUiState(workoutBlocks: $workoutBlocks, isLoading: $isLoading, power: $power, cadence: $cadence, maxPower: $maxPower, targetPower: $targetPower, currentBlockIndex: $currentBlockIndex, elapsedSeconds: $elapsedSeconds, isPaused: $isPaused, userWeight: $userWeight, userFtp: $userFtp, errorMessage: $errorMessage, powerAlertMessage: $powerAlertMessage, isCountingDown: $isCountingDown, countdownSeconds: $countdownSeconds, isSavingResult: $isSavingResult, isResultSaved: $isResultSaved, saveError: $saveError)';
   }
 
   @override
@@ -414,7 +430,8 @@ class _$WorkoutScreenUiStateImpl
       ..add(DiagnosticsProperty('isCountingDown', isCountingDown))
       ..add(DiagnosticsProperty('countdownSeconds', countdownSeconds))
       ..add(DiagnosticsProperty('isSavingResult', isSavingResult))
-      ..add(DiagnosticsProperty('isResultSaved', isResultSaved));
+      ..add(DiagnosticsProperty('isResultSaved', isResultSaved))
+      ..add(DiagnosticsProperty('saveError', saveError));
   }
 
   @override
@@ -452,7 +469,9 @@ class _$WorkoutScreenUiStateImpl
             (identical(other.isSavingResult, isSavingResult) ||
                 other.isSavingResult == isSavingResult) &&
             (identical(other.isResultSaved, isResultSaved) ||
-                other.isResultSaved == isResultSaved));
+                other.isResultSaved == isResultSaved) &&
+            (identical(other.saveError, saveError) ||
+                other.saveError == saveError));
   }
 
   @override
@@ -474,7 +493,8 @@ class _$WorkoutScreenUiStateImpl
       isCountingDown,
       countdownSeconds,
       isSavingResult,
-      isResultSaved);
+      isResultSaved,
+      saveError);
 
   /// Create a copy of WorkoutScreenUiState
   /// with the given fields replaced by the non-null parameter values.
@@ -505,7 +525,8 @@ abstract class _WorkoutScreenUiState implements WorkoutScreenUiState {
       final bool isCountingDown,
       final int countdownSeconds,
       final bool isSavingResult,
-      final bool isResultSaved}) = _$WorkoutScreenUiStateImpl;
+      final bool isResultSaved,
+      final String? saveError}) = _$WorkoutScreenUiStateImpl;
 
   @override
   List<WorkoutBlock> get workoutBlocks;
@@ -541,6 +562,8 @@ abstract class _WorkoutScreenUiState implements WorkoutScreenUiState {
   bool get isSavingResult;
   @override
   bool get isResultSaved;
+  @override
+  String? get saveError;
 
   /// Create a copy of WorkoutScreenUiState
   /// with the given fields replaced by the non-null parameter values.

@@ -35,6 +35,7 @@ class WorkoutScreenUiState with _$WorkoutScreenUiState {
     @Default(15) int countdownSeconds,
     @Default(false) bool isSavingResult,
     @Default(false) bool isResultSaved,
+    String? saveError,
   }) = _WorkoutScreenUiState;
 }
 
@@ -306,7 +307,10 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
       state = state.copyWith(isSavingResult: false, isResultSaved: true);
     } catch (e) {
       debugPrint('Failed to save workout result: $e');
-      state = state.copyWith(isSavingResult: false);
+      state = state.copyWith(
+        isSavingResult: false,
+        saveError: 'ワークアウトの保存に失敗しました。通信状況を確認してください。',
+      );
     }
   }
 
