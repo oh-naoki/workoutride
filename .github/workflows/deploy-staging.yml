@@ -40,7 +40,3 @@ jobs:
 
       - name: Deploy with Kamal
         run: bundle exec kamal deploy
-        env:
-          KAMAL_REGISTRY_PASSWORD: ${{ steps.auth.outputs.access_token }}
-          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
