@@ -168,7 +168,6 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        _buildControlButton(),
                         _buildPauseResumeButton(uiState.isPaused),
                         _buildStopButton(),
                       ],
