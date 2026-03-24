@@ -5,10 +5,11 @@ servers:
   web:
     - 34.138.232.78
 
+deploy_timeout: 120
+
 proxy:
   ssl: true
   host: 34.138.232.78.nip.io
-  deploy_timeout: 120
   healthcheck:
     path: /up
     interval: 5
