@@ -141,14 +141,12 @@ class WorkoutMenu extends ConsumerWidget {
     return FutureBuilder<int?>(
       future: ref.read(getUserFtpUseCaseProvider).call(),
       builder: (context, snapshot) {
-        final ftpOrNull = snapshot.data;
-        final ftpIsDefault = ftpOrNull == null;
-        final ftp = ftpOrNull ?? 200; // デフォルト200W
+        final ftp = snapshot.data ?? 200; // デフォルト200W
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (ftpIsDefault)
+            if (snapshot.data == null)
               Container(
                 color: Colors.orange[100],
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
