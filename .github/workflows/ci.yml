@@ -117,7 +117,7 @@ jobs:
 
       - name: Create .env for build
         run: |
-          echo "API_BASE_URL=https://example.com" > .env
+          echo "API_BASE_URL=${{ secrets.API_BASE_URL }}" > .env
 
       - name: Build APK (debug)
         run: flutter build apk --debug
