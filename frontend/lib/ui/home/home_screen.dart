@@ -66,7 +66,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            'エラーが発生しました: ${uiState.errorMessage}',
+                            'データの読み込みに失敗しました。画面を引っ張って再読み込みしてください。',
                             style: const TextStyle(color: Colors.red),
                           ),
                         ),
