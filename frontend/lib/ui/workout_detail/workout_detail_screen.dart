@@ -76,12 +76,18 @@ class WorkoutDetailBody extends StatelessWidget {
                 ),
               );
             } else if (uiState.workoutBlocks.isEmpty) {
-              return const Center(
+              return Center(
                 child: Padding(
-                  padding: EdgeInsets.only(top: 16.0),
-                  child: Text(
-                    'ワークアウトブロックがありません',
-                    style: TextStyle(color: Colors.white),
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.playlist_remove, size: 64, color: Colors.grey[600]),
+                      const SizedBox(height: 16),
+                      const Text('ワークアウトブロックがありません', style: TextStyle(color: Colors.grey, fontSize: 16)),
+                      const SizedBox(height: 8),
+                      const Text('別のワークアウトを選択してください', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                    ],
                   ),
                 ),
               );
