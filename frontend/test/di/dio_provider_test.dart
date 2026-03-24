@@ -7,10 +7,15 @@ import 'package:workoutride/di/providers.dart';
 
 void main() {
   group('dioProvider', () {
-    test('throws when API_BASE_URL is not set', () async {
+    late SharedPreferences prefs;
+
+    setUp(() async {
+      SharedPreferences.setMockInitialValues({});
+      prefs = await SharedPreferences.getInstance();
+    });
+
+    test('throws when API_BASE_URL is not set', () {
       dotenv.testLoad(fileInput: '');
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
 
       final container = ProviderContainer(
         overrides: [
@@ -30,10 +35,8 @@ void main() {
       );
     });
 
-    test('throws when API_BASE_URL is blank', () async {
+    test('throws when API_BASE_URL is blank', () {
       dotenv.testLoad(fileInput: 'API_BASE_URL=');
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
 
       final container = ProviderContainer(
         overrides: [
@@ -53,10 +56,8 @@ void main() {
       );
     });
 
-    test('succeeds when API_BASE_URL is set', () async {
+    test('succeeds when API_BASE_URL is set', () {
       dotenv.testLoad(fileInput: 'API_BASE_URL=https://example.com');
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
 
       final container = ProviderContainer(
         overrides: [
