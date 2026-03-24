@@ -146,7 +146,6 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
 
       state = state.copyWith(
         elapsedSeconds: timerState.elapsedSeconds,
-        isPaused: !timerState.isRunning,
         currentBlockIndex: progressState.currentBlockIndex,
         targetPower: nextTarget,
         powerAlertMessage: alert,
