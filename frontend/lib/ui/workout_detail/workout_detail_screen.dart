@@ -40,7 +40,8 @@ class WorkoutDetailBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return SingleChildScrollView(
+      child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -130,6 +131,7 @@ class WorkoutDetailBody extends StatelessWidget {
           },
         ),
       ],
+      ),
     );
   }
 }
