@@ -72,12 +72,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                       );
                     } else if (uiState.workoutSummaries.isEmpty) {
-                      return const Center(
+                      return Center(
                         child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Text(
-                            'ワークアウトがありません',
-                            style: TextStyle(color: Colors.white),
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.fitness_center, size: 64, color: Colors.grey[600]),
+                              const SizedBox(height: 16),
+                              const Text('ワークアウトがありません', style: TextStyle(color: Colors.grey, fontSize: 16)),
+                              const SizedBox(height: 8),
+                              const Text('トレーニングメニューを追加してください', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                            ],
                           ),
                         ),
                       );

@@ -45,12 +45,18 @@ class HistoryScreen extends ConsumerWidget {
     }
 
     if (uiState.workoutResults.isEmpty) {
-      return const Center(
+      return Center(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Text(
-            'ワークアウト履歴がありません',
-            style: TextStyle(color: Colors.white),
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.history, size: 64, color: Colors.grey[600]),
+              const SizedBox(height: 16),
+              const Text('まだ履歴がありません', style: TextStyle(color: Colors.grey, fontSize: 16)),
+              const SizedBox(height: 8),
+              const Text('ワークアウトを完了すると履歴が表示されます', style: TextStyle(color: Colors.grey, fontSize: 12)),
+            ],
           ),
         ),
       );
