@@ -1,5 +1,5 @@
 service: backend
-image: workoutride-app/workoutride-staging/backend
+image: workoutride-app/workoutride-production/backend
 
 servers:
   web:
@@ -27,7 +27,7 @@ env:
   clear:
     SOLID_QUEUE_IN_PUMA: true
     GOOGLE_CLIENT_ID: "432477473655-2ovs5abgvf6cu6ke9gli7b5phgi0je4u.apps.googleusercontent.com"
-    DB_HOST: "10.106.144.3"
+    DB_HOST: "10.106.144.5"
 
 aliases:
   console: app exec --interactive --reuse "bin/rails console"
