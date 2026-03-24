@@ -5,6 +5,7 @@ import 'package:workoutride/domain/model/workout/workout_summary.dart';
 
 abstract class WorkoutRepository {
   Future<List<WorkoutSummary>> getWorkoutSummaries();
+  Future<WorkoutSummary> getWorkoutSummary(int id);
   Future<List<WorkoutBlock>> getWorkoutBlocks(int workoutSummaryId);
   Future<List<WorkoutResult>> getWorkoutResults();
   Future<WorkoutResult> getWorkoutResult(int id);

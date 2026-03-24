@@ -18,6 +18,11 @@ class WorkoutRemoteDataSource {
     return summaries.map((e) => e.toDomain()).toList();
   }
 
+  Future<WorkoutSummary> getWorkoutSummary(int id) async {
+    final WorkoutSummaryDto summary = await _apiClient.getWorkoutSummary(id);
+    return summary.toDomain();
+  }
+
   Future<List<WorkoutBlock>> getWorkoutBlocks(int workoutSummaryId) async {
     final List<WorkoutBlockDto> blocks = await _apiClient.getWorkoutBlocks(workoutSummaryId);
     return blocks.map((e) => e.toDomain()).toList();

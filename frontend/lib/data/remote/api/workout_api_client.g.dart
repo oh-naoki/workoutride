@@ -58,6 +58,39 @@ class _WorkoutApiClient implements WorkoutApiClient {
   }
 
   @override
+  Future<WorkoutSummaryDto> getWorkoutSummary(int id) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<WorkoutSummaryDto>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/workout_summaries/${id}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late WorkoutSummaryDto _value;
+    try {
+      _value = WorkoutSummaryDto.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
   Future<List<WorkoutBlockDto>> getWorkoutBlocks(int workoutId) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};

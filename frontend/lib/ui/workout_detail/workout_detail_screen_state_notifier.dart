@@ -5,6 +5,7 @@ import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/domain/model/workout/workout_summary.dart';
 import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart';
+import 'package:workoutride/domain/usecase/workout/get_workout_summary_use_case.dart';
 
 part 'workout_detail_screen_state_notifier.freezed.dart';
 part 'workout_detail_screen_state_notifier.g.dart';
@@ -23,22 +24,28 @@ class WorkoutDetailScreenUiState with _$WorkoutDetailScreenUiState {
 @riverpod
 class WorkoutDetailScreenStateNotifier extends _$WorkoutDetailScreenStateNotifier {
   late final GetWorkoutBlocksUseCase _getWorkoutBlocksUseCase;
-  
+  late final GetWorkoutSummaryUseCase _getWorkoutSummaryUseCase;
+
   @override
   WorkoutDetailScreenUiState build(int workoutId) {
     state = const WorkoutDetailScreenUiState(isLoading: true);
     _getWorkoutBlocksUseCase = ref.read(getWorkoutBlocksUseCaseProvider);
-    _fetchWorkoutBlocks(workoutId);
+    _getWorkoutSummaryUseCase = ref.read(getWorkoutSummaryUseCaseProvider);
+    _fetchWorkoutDetail(workoutId);
     _loadUserWeight();
     return state;
   }
 
-  Future<void> _fetchWorkoutBlocks(int workoutId) async {
+  Future<void> _fetchWorkoutDetail(int workoutId) async {
     try {
       state = state.copyWith(isLoading: true, errorMessage: null);
-      final blocks = await _getWorkoutBlocksUseCase.call(workoutId);
+      final results = await Future.wait([
+        _getWorkoutSummaryUseCase.call(workoutId),
+        _getWorkoutBlocksUseCase.call(workoutId),
+      ]);
       state = state.copyWith(
-        workoutBlocks: blocks,
+        workoutSummary: results[0] as WorkoutSummary,
+        workoutBlocks: results[1] as List<WorkoutBlock>,
         isLoading: false,
       );
     } catch (e) {
@@ -65,7 +72,7 @@ class WorkoutDetailScreenStateNotifier extends _$WorkoutDetailScreenStateNotifie
   }
 
   Future<void> refreshWorkoutBlocks(int workoutId) async {
-    await _fetchWorkoutBlocks(workoutId);
+    await _fetchWorkoutDetail(workoutId);
   }
 
   void reloadUserWeight() {

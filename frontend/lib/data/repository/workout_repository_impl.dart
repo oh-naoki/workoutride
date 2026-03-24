@@ -16,6 +16,11 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
   }
 
   @override
+  Future<WorkoutSummary> getWorkoutSummary(int id) {
+    return _remoteDataSource.getWorkoutSummary(id);
+  }
+
+  @override
   Future<List<WorkoutBlock>> getWorkoutBlocks(int workoutSummaryId) {
     return _remoteDataSource.getWorkoutBlocks(workoutSummaryId);
   }
