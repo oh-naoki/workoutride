@@ -2,20 +2,16 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:workoutride/di/providers.dart';
 
-import 'dio_provider_test.mocks.dart';
-
-@GenerateMocks([FlutterSecureStorage])
 void main() {
   group('dioProvider', () {
-    test('throws when API_BASE_URL is not set', () async {
-      await dotenv.testLoad(fileInput: '');
+    test('throws when API_BASE_URL is not set', () {
+      dotenv.testLoad(fileInput: '');
 
       final container = ProviderContainer(
         overrides: [
-          secureStorageProvider.overrideWithValue(MockFlutterSecureStorage()),
+          secureStorageProvider.overrideWithValue(const FlutterSecureStorage()),
         ],
       );
       addTearDown(container.dispose);
@@ -30,12 +26,12 @@ void main() {
       );
     });
 
-    test('throws when API_BASE_URL is blank', () async {
-      await dotenv.testLoad(fileInput: 'API_BASE_URL=');
+    test('throws when API_BASE_URL is blank', () {
+      dotenv.testLoad(fileInput: 'API_BASE_URL=');
 
       final container = ProviderContainer(
         overrides: [
-          secureStorageProvider.overrideWithValue(MockFlutterSecureStorage()),
+          secureStorageProvider.overrideWithValue(const FlutterSecureStorage()),
         ],
       );
       addTearDown(container.dispose);
@@ -50,12 +46,12 @@ void main() {
       );
     });
 
-    test('succeeds when API_BASE_URL is set', () async {
-      await dotenv.testLoad(fileInput: 'API_BASE_URL=https://example.com');
+    test('succeeds when API_BASE_URL is set', () {
+      dotenv.testLoad(fileInput: 'API_BASE_URL=https://example.com');
 
       final container = ProviderContainer(
         overrides: [
-          secureStorageProvider.overrideWithValue(MockFlutterSecureStorage()),
+          secureStorageProvider.overrideWithValue(const FlutterSecureStorage()),
         ],
       );
       addTearDown(container.dispose);
