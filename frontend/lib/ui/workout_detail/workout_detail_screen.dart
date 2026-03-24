@@ -141,24 +141,48 @@ class WorkoutMenu extends ConsumerWidget {
     return FutureBuilder<int?>(
       future: ref.read(getUserFtpUseCaseProvider).call(),
       builder: (context, snapshot) {
-        final ftp = snapshot.data ?? 200; // デフォルト200W
-        
-        return ListView.separated(
-          itemCount: blocks.length,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            final block = blocks[index];
-            final targetWatts = block.calculateTargetPower(ftp);
-            return WorkoutMenuItem(
-              type: block.blockType,
-              power: targetWatts,
-              duration: block.durationSeconds,
-            );
-          },
-          separatorBuilder: (context, index) {
-            return const SizedBox(height: 8);
-          },
+        final ftpOrNull = snapshot.data;
+        final ftpIsDefault = ftpOrNull == null;
+        final ftp = ftpOrNull ?? 200; // デフォルト200W
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (ftpIsDefault)
+              Container(
+                color: Colors.orange[100],
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: const Row(
+                  children: [
+                    Icon(Icons.warning_amber, color: Colors.orange),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'FTPが未設定のためデフォルト値(200W)を使用しています。設定から変更できます。',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ListView.separated(
+              itemCount: blocks.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                final block = blocks[index];
+                final targetWatts = block.calculateTargetPower(ftp);
+                return WorkoutMenuItem(
+                  type: block.blockType,
+                  power: targetWatts,
+                  duration: block.durationSeconds,
+                );
+              },
+              separatorBuilder: (context, index) {
+                return const SizedBox(height: 8);
+              },
+            ),
+          ],
         );
       },
     );
