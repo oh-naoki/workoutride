@@ -162,7 +162,6 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildControlButton(),
                     _buildPauseResumeButton(uiState.isPaused),
                     _buildStopButton(),
                   ],
@@ -239,18 +238,6 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  // コントロールボタンを作成するメソッド
-  Widget _buildControlButton() {
-    return Container(
-      width: 60,
-      height: 60,
-      decoration: BoxDecoration(
-        color: Colors.grey[400],
-        borderRadius: BorderRadius.circular(12),
       ),
     );
   }
