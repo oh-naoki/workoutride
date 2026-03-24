@@ -63,6 +63,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
           ),
         );
       }
+      // ホームへの自動遷移
+      if (!(previous?.shouldNavigateHome ?? false) && next.shouldNavigateHome) {
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      }
     });
 
     return PopScope(
@@ -79,164 +83,200 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
               ),
           ],
         ),
-        body: SafeArea(
-          child: Column(
-            children: [
-              // メーターを表示するエリア
-              Expanded(
-                flex: 2,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Stack(
-                    children: [
-                      Column(
+        body: Stack(
+          children: [
+            SafeArea(
+              child: Column(
+                children: [
+                  // メーターを表示するエリア
+                  Expanded(
+                    flex: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Stack(
                         children: [
-                          Expanded(
-                            child: Meter(
-                              power: uiState.power,
-                              cadence: uiState.cadence,
-                              maxPower: uiState.maxPower,
-                              targetPower: uiState.targetPower,
-                            ),
-                          ),
-                          // パワーアラートメッセージ表示エリア
-                          if (uiState.powerAlertMessage != null)
-                            Container(
-                              margin: const EdgeInsets.only(top: 8.0),
-                              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                              decoration: BoxDecoration(
-                                color: uiState.powerAlertMessage!.color.withValues(alpha: 0.8),
-                                borderRadius: BorderRadius.circular(8.0),
+                          Column(
+                            children: [
+                              Expanded(
+                                child: Meter(
+                                  power: uiState.power,
+                                  cadence: uiState.cadence,
+                                  maxPower: uiState.maxPower,
+                                  targetPower: uiState.targetPower,
+                                ),
                               ),
-                              child: Text(
-                                uiState.powerAlertMessage!.message,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold,
+                              // パワーアラートメッセージ表示エリア
+                              if (uiState.powerAlertMessage != null)
+                                Container(
+                                  margin: const EdgeInsets.only(top: 8.0),
+                                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                  decoration: BoxDecoration(
+                                    color: uiState.powerAlertMessage!.color.withValues(alpha: 0.8),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Text(
+                                    uiState.powerAlertMessage!.message,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                          // カウントダウン表示（Meterの上に重ねる）
+                          if (uiState.isCountingDown)
+                            Center(
+                              child: Container(
+                                padding: const EdgeInsets.all(32.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withValues(alpha: 0.8),
+                                  borderRadius: BorderRadius.circular(16.0),
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      '${uiState.countdownSeconds}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 72,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    const Text(
+                                      'ワークアウト開始まで',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
                         ],
                       ),
-                      // カウントダウン表示（Meterの上に重ねる）
-                      if (uiState.isCountingDown)
-                        Center(
-                          child: Container(
-                            padding: const EdgeInsets.all(32.0),
-                            decoration: BoxDecoration(
-                              color: Colors.black.withValues(alpha: 0.8),
-                              borderRadius: BorderRadius.circular(16.0),
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  '${uiState.countdownSeconds}',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 72,
-                                    fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  // 3つのボタンを表示するエリア
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _buildPauseResumeButton(uiState.isPaused),
+                        _buildStopButton(),
+                      ],
+                    ),
+                  ),
+
+                  // スクロール可能なカードリストを表示するエリア
+                  Expanded(
+                    flex: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Builder(
+                        builder: (context) {
+                          if (uiState.isLoading) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else if (uiState.errorMessage != null) {
+                            return Center(
+                              child: Text(
+                                'エラーが発生しました: ${uiState.errorMessage}',
+                                style: const TextStyle(color: Colors.red),
+                              ),
+                            );
+                          } else if (uiState.workoutBlocks.isEmpty) {
+                            return const Center(
+                              child: Text(
+                                'ワークアウトブロックがありません',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            );
+                          } else {
+                            return ListView.builder(
+                              controller: _scrollController,
+                              itemCount: uiState.workoutBlocks.length,
+                              itemBuilder: (context, index) {
+                                final block = uiState.workoutBlocks[index];
+                                final isCurrentBlock = index == uiState.currentBlockIndex;
+
+                                // 現在のブロックの経過時間を計算
+                                int blockElapsedSeconds = 0;
+                                if (isCurrentBlock) {
+                                  int previousBlocksTime = 0;
+                                  for (var i = 0; i < index; i++) {
+                                    previousBlocksTime += uiState.workoutBlocks[i].durationSeconds;
+                                  }
+                                  blockElapsedSeconds = uiState.elapsedSeconds - previousBlocksTime;
+                                }
+
+                                return GestureDetector(
+                                  onTap: () {
+                                    // ブロックをタップした時の処理
+                                  },
+                                  child: _buildWorkoutCard(
+                                    name: block.blockType,
+                                    power: block.calculateTargetPower(uiState.userFtp),
+                                    time: _formatDuration(block.durationSeconds),
+                                    isActive: isCurrentBlock,
+                                    progress: isCurrentBlock
+                                      ? blockElapsedSeconds / block.durationSeconds
+                                      : index < uiState.currentBlockIndex ? 1.0 : 0.0,
+                                    elapsedTime: isCurrentBlock
+                                      ? _formatDuration(blockElapsedSeconds)
+                                      : null,
                                   ),
-                                ),
-                                const SizedBox(height: 16),
-                                const Text(
-                                  'ワークアウト開始まで',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                                );
+                              },
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // ワークアウト完了オーバーレイ
+            if (uiState.isCompleted)
+              Container(
+                color: Colors.black87,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.check_circle, color: Colors.green, size: 80),
+                      const SizedBox(height: 24),
+                      const Text(
+                        'ワークアウト完了！',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
                         ),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'お疲れ様でした',
+                        style: TextStyle(color: Colors.white70, fontSize: 18),
+                      ),
+                      const SizedBox(height: 32),
+                      Text(
+                        '${uiState.completionCountdown}秒後にホームへ戻ります...',
+                        style: const TextStyle(color: Colors.white54, fontSize: 14),
+                      ),
                     ],
                   ),
                 ),
               ),
-              
-              // 3つのボタンを表示するエリア
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildPauseResumeButton(uiState.isPaused),
-                    _buildStopButton(),
-                  ],
-                ),
-              ),
-              
-              // スクロール可能なカードリストを表示するエリア
-              Expanded(
-                flex: 2,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Builder(
-                    builder: (context) {
-                      if (uiState.isLoading) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else if (uiState.errorMessage != null) {
-                        return Center(
-                          child: Text(
-                            'エラーが発生しました: ${uiState.errorMessage}',
-                            style: const TextStyle(color: Colors.red),
-                          ),
-                        );
-                      } else if (uiState.workoutBlocks.isEmpty) {
-                        return const Center(
-                          child: Text(
-                            'ワークアウトブロックがありません',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        );
-                      } else {
-                        return ListView.builder(
-                          controller: _scrollController,
-                          itemCount: uiState.workoutBlocks.length,
-                          itemBuilder: (context, index) {
-                            final block = uiState.workoutBlocks[index];
-                            final isCurrentBlock = index == uiState.currentBlockIndex;
-                            
-                            // 現在のブロックの経過時間を計算
-                            int blockElapsedSeconds = 0;
-                            if (isCurrentBlock) {
-                              int previousBlocksTime = 0;
-                              for (var i = 0; i < index; i++) {
-                                previousBlocksTime += uiState.workoutBlocks[i].durationSeconds;
-                              }
-                              blockElapsedSeconds = uiState.elapsedSeconds - previousBlocksTime;
-                            }
-      
-                            return GestureDetector(
-                              onTap: () {
-                                // ブロックをタップした時の処理
-                              },
-                              child: _buildWorkoutCard(
-                                name: block.blockType,
-                                power: block.calculateTargetPower(uiState.userFtp),
-                                time: _formatDuration(block.durationSeconds),
-                                isActive: isCurrentBlock,
-                                progress: isCurrentBlock 
-                                  ? blockElapsedSeconds / block.durationSeconds
-                                  : index < uiState.currentBlockIndex ? 1.0 : 0.0,
-                                elapsedTime: isCurrentBlock 
-                                  ? _formatDuration(blockElapsedSeconds)
-                                  : null,
-                              ),
-                            );
-                          },
-                        );
-                      }
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
+          ],
         ),
       ),
     );
