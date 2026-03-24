@@ -296,16 +296,17 @@ class BleConnectionStatus extends ConsumerWidget {
             ),
           ),
           if (!uiState.isBleConnected && !uiState.isConnectingBle)
-            TextButton(
+            ElevatedButton.icon(
               onPressed: () {
                 ref.read(homeScreenStateNotifierProvider.notifier).retryBleConnection();
               },
-              child: const Text(
-                '再接続',
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 12,
-                ),
+              icon: const Icon(Icons.refresh, size: 16),
+              label: const Text('再接続'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                textStyle: const TextStyle(fontSize: 13),
               ),
             ),
         ],
