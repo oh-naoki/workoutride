@@ -17,6 +17,7 @@ import 'package:workoutride/domain/repository/workout_repository.dart';
 import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart';
 import 'package:workoutride/domain/usecase/workout/get_workout_results_use_case.dart';
 import 'package:workoutride/domain/usecase/workout/get_workout_summaries_use_case.dart';
+import 'package:workoutride/domain/usecase/workout/get_workout_summary_use_case.dart';
 import 'package:workoutride/domain/usecase/workout/save_workout_result_use_case.dart';
 import 'package:workoutride/data/ble_connector.dart';
 import 'package:workoutride/data/power_meter_data_source.dart';
@@ -126,6 +127,11 @@ GetWorkoutSummariesUseCase getWorkoutSummariesUseCase(Ref ref) {
 @riverpod
 GetWorkoutBlocksUseCase getWorkoutBlocksUseCase(Ref ref) {
   return GetWorkoutBlocksUseCase(ref.read(workoutRepositoryProvider));
+}
+
+@riverpod
+GetWorkoutSummaryUseCase getWorkoutSummaryUseCase(Ref ref) {
+  return GetWorkoutSummaryUseCase(ref.read(workoutRepositoryProvider));
 }
 
 // DIプロバイダー

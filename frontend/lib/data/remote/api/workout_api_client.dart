@@ -13,6 +13,9 @@ abstract class WorkoutApiClient {
   @GET("/workout_summaries")
   Future<List<WorkoutSummaryDto>> getWorkoutSummaries();
 
+  @GET("/workout_summaries/{id}")
+  Future<WorkoutSummaryDto> getWorkoutSummary(@Path("id") int id);
+
   @GET("/workout_blocks/{id}")
   Future<List<WorkoutBlockDto>> getWorkoutBlocks(@Path("id") int workoutId);
 

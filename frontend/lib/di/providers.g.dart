@@ -40,7 +40,7 @@ final secureStorageProvider = Provider<FlutterSecureStorage>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SecureStorageRef = ProviderRef<FlutterSecureStorage>;
-String _$googleSignInHash() => r'e04c7e645a541bc2272934b094e3f0c65b834759';
+String _$googleSignInHash() => r'2dec99a8802c975eeec410536ad2f49e337663dd';
 
 /// See also [googleSignIn].
 @ProviderFor(googleSignIn)
@@ -170,7 +170,27 @@ final getWorkoutBlocksUseCaseProvider =
 // ignore: unused_element
 typedef GetWorkoutBlocksUseCaseRef
     = AutoDisposeProviderRef<GetWorkoutBlocksUseCase>;
-String _$dioHash() => r'8f4065689d827c9e0501349d9ab81d93a5a940b9';
+String _$getWorkoutSummaryUseCaseHash() =>
+    r'43ad0a93661d849f219b884e02d8b4f3a3126a03';
+
+/// See also [getWorkoutSummaryUseCase].
+@ProviderFor(getWorkoutSummaryUseCase)
+final getWorkoutSummaryUseCaseProvider =
+    AutoDisposeProvider<GetWorkoutSummaryUseCase>.internal(
+  getWorkoutSummaryUseCase,
+  name: r'getWorkoutSummaryUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getWorkoutSummaryUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef GetWorkoutSummaryUseCaseRef
+    = AutoDisposeProviderRef<GetWorkoutSummaryUseCase>;
+String _$dioHash() => r'c57d4bb388c5cd77f28f71929cded7da59ec3371';
 
 /// See also [dio].
 @ProviderFor(dio)

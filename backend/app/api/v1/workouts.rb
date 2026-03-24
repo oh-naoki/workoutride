@@ -14,6 +14,15 @@ module V1
         workout_summaries = WorkoutSummary.all
         present workout_summaries, with: Entities::WorkoutSummary
       end
+
+      desc 'ワークアウトサマリーの詳細を取得'
+      params do
+        requires :id, type: Integer, desc: 'ワークアウトサマリーID'
+      end
+      get ':id' do
+        workout_summary = WorkoutSummary.find(params[:id])
+        present workout_summary, with: Entities::WorkoutSummary
+      end
     end
 
     resource :workout_blocks do
