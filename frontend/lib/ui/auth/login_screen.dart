@@ -46,6 +46,17 @@ class LoginScreen extends ConsumerWidget {
     );
   }
 
+  String _friendlyErrorMessage(dynamic error) {
+    final msg = error.toString().toLowerCase();
+    if (msg.contains('network') || msg.contains('socket') || msg.contains('connection')) {
+      return 'ネットワークエラーが発生しました。通信状況を確認してください。';
+    }
+    if (msg.contains('cancel') || msg.contains('cancelled')) {
+      return 'ログインがキャンセルされました。';
+    }
+    return 'ログインに失敗しました。しばらくしてから再試行してください。';
+  }
+
   Widget _buildErrorContent(BuildContext context, WidgetRef ref, Object error) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -57,7 +68,7 @@ class LoginScreen extends ConsumerWidget {
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 8),
-        Text(error.toString()),
+        Text(_friendlyErrorMessage(error)),
         const SizedBox(height: 24),
         ElevatedButton(
           onPressed: () {
