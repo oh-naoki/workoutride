@@ -134,6 +134,7 @@ jobs:
           token: ${{ secrets.FIREBASE_TOKEN }}
           file: frontend/build/app/outputs/flutter-apk/app-debug.apk
           releaseNotes: "Debug build ${{ github.sha }}"
+          testers: oh.naoki0819@gmail.com
 
       - name: Set up Android signing
         if: contains(github.head_ref || github.ref_name, 'release')
@@ -160,3 +161,4 @@ jobs:
           token: ${{ secrets.FIREBASE_TOKEN }}
           file: frontend/build/app/outputs/flutter-apk/app-release.apk
           releaseNotes: "Release build ${{ github.sha }}"
+          testers: oh.naoki0819@gmail.com
