@@ -136,6 +136,16 @@ jobs:
           releaseNotes: "Debug build ${{ github.sha }}"
           testers: oh.naoki0819@gmail.com
 
+      - name: Set up Android signing (debug key for testing)
+        if: contains(github.head_ref || github.ref_name, 'release')
+        run: |
+          cat <<EOF > android/key.properties
+          storePassword=android
+          keyPassword=android
+          keyAlias=androiddebugkey
+          storeFile=${HOME}/.android/debug.keystore
+          EOF
+
       - name: Build APK (release)
         if: contains(github.head_ref || github.ref_name, 'release')
         run: |
