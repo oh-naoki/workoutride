@@ -136,17 +136,6 @@ jobs:
           releaseNotes: "Debug build ${{ github.sha }}"
           testers: oh.naoki0819@gmail.com
 
-      - name: Set up Android signing
-        if: contains(github.head_ref || github.ref_name, 'release')
-        run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode --ignore-garbage > android/app/workoutride.keystore
-          cat <<EOF > android/key.properties
-          storePassword=${{ secrets.STORE_PASSWORD }}
-          keyPassword=${{ secrets.KEY_PASSWORD }}
-          keyAlias=workoutride
-          storeFile=workoutride.keystore
-          EOF
-
       - name: Build APK (release)
         if: contains(github.head_ref || github.ref_name, 'release')
         run: |
