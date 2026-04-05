@@ -139,6 +139,8 @@ jobs:
       - name: Set up Android signing (debug key for testing)
         if: contains(github.head_ref || github.ref_name, 'release')
         run: |
+          mkdir -p ${HOME}/.android
+          echo "${{ secrets.DEBUG_KEYSTORE_BASE64 }}" | base64 --decode > ${HOME}/.android/debug.keystore
           cat <<EOF > android/key.properties
           storePassword=android
           keyPassword=android
