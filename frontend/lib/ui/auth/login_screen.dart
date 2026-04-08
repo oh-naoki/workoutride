@@ -75,6 +75,15 @@ class LoginScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 8),
         Text(_friendlyErrorMessage(error)),
+        const SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: SelectableText(
+            error.toString(),
+            style: const TextStyle(fontSize: 11, color: Colors.grey),
+            textAlign: TextAlign.center,
+          ),
+        ),
         const SizedBox(height: 24),
         ElevatedButton(
           onPressed: () {
