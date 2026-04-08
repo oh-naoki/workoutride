@@ -5,4 +5,6 @@ abstract class UserProfileRepository {
   Future<void> saveUserProfile(UserProfile profile);
   Future<int?> getFtp();
   Future<void> saveFtp(int ftp);
+  Future<double?> getWeight();
+  Future<void> saveWeight(double weight);
 }

@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workoutride/data/remote/api/auth_api_client.dart';
 import 'package:workoutride/data/remote/api/workout_api_client.dart';
 import 'package:workoutride/data/remote/api/user_ftp_api_client.dart';
+import 'package:workoutride/data/remote/api/user_profile_api_client.dart';
 import 'package:workoutride/data/remote/interceptor/auth_interceptor.dart';
 import 'package:workoutride/data/remote/workout_remote_data_source.dart';
 import 'package:workoutride/data/repository/auth_repository_impl.dart';
@@ -171,6 +172,11 @@ UserFtpApiClient userFtpApiClient(Ref ref) {
 }
 
 @riverpod
+UserProfileApiClient userProfileApiClient(Ref ref) {
+  return UserProfileApiClient(ref.read(dioProvider));
+}
+
+@riverpod
 WorkoutRemoteDataSource workoutRemoteDataSource(Ref ref) {
   return WorkoutRemoteDataSource(ref.read(workoutApiClientProvider));
 }
@@ -198,6 +204,7 @@ UserProfileRepository userProfileRepository(Ref ref) {
   return UserProfileRepositoryImpl(
     sharedPreferences: ref.read(sharedPreferencesProvider),
     userFtpApiClient: ref.read(userFtpApiClientProvider),
+    userProfileApiClient: ref.read(userProfileApiClientProvider),
   );
 }
 
