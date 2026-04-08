@@ -1,0 +1,55 @@
+name: Build Release APK
+
+on:
+  push:
+    branches: ["release/*"]
+
+jobs:
+  build-release:
+    name: Release APK + Firebase Distribution
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Setup Flutter
+        uses: ./.github/actions/setup-flutter
+        with:
+          api-base-url: ${{ secrets.API_BASE_URL }}
+
+      - name: Place google-services.json
+        run: |
+          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > android/app/google-services.json
+
+      - name: Set up Android signing (debug key for testing)
+        run: |
+          mkdir -p ${HOME}/.android
+          echo "${{ secrets.DEBUG_KEYSTORE_BASE64 }}" | base64 --decode > ${HOME}/.android/debug.keystore
+          cat <<EOF > android/key.properties
+          storePassword=android
+          keyPassword=android
+          keyAlias=androiddebugkey
+          storeFile=${HOME}/.android/debug.keystore
+          EOF
+
+      - name: Build APK (release)
+        run: flutter build apk --release
+
+      - name: Upload release APK to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          token: ${{ secrets.FIREBASE_TOKEN }}
+          file: frontend/build/app/outputs/flutter-apk/app-release.apk
+          releaseNotes: "Release build ${{ github.sha }}"
+          testers: oh.naoki0819@gmail.com
