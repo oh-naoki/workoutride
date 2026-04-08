@@ -1,0 +1,37 @@
+name: Setup Flutter
+description: Flutter SDK setup, dependency install, .env creation, and code generation
+
+inputs:
+  flutter-version:
+    description: Flutter SDK version
+    default: "3.29.3"
+  api-base-url:
+    description: API_BASE_URL for .env file
+    default: "https://example.com"
+  working-directory:
+    description: Working directory
+    default: frontend
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ inputs.flutter-version }}
+        cache: true
+
+    - name: Install dependencies
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: flutter pub get
+
+    - name: Create .env
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: echo "API_BASE_URL=${{ inputs.api-base-url }}" > .env
+
+    - name: Run code generation
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: dart run build_runner build --delete-conflicting-outputs
