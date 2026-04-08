@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:workoutride/data/remote/api/auth_api_client.dart';
@@ -20,20 +21,25 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<User> signInWithGoogle() async {
     // 1. Google Sign-In
+    debugPrint('[Auth] Step 1: Starting Google Sign-In');
     final googleUser = await _googleSignIn.signIn();
     if (googleUser == null) {
       throw Exception('Google sign in cancelled');
     }
+    debugPrint('[Auth] Step 2: Got googleUser: ${googleUser.email}');
 
     final googleAuth = await googleUser.authentication;
+    debugPrint('[Auth] Step 3: idToken=${googleAuth.idToken != null ? "exists" : "NULL"}, accessToken=${googleAuth.accessToken != null ? "exists" : "NULL"}');
     if (googleAuth.idToken == null) {
-      throw Exception('Failed to get ID token');
+      throw Exception('Failed to get ID token (idToken is null)');
     }
 
     // 2. Backend認証
+    debugPrint('[Auth] Step 4: Calling backend');
     final response = await _apiClient.googleSignIn({
       'id_token': googleAuth.idToken!,
     });
+    debugPrint('[Auth] Step 5: Backend response received');
 
     // 3. トークン保存
     await _secureStorage.write(key: _tokenKey, value: response.token);

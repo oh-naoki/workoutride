@@ -28,6 +28,7 @@ class AuthStateNotifier extends _$AuthStateNotifier {
       final user = await ref.read(authRepositoryProvider).signInWithGoogle();
       state = AsyncValue.data(AuthState.authenticated(user: user));
     } catch (e, st) {
+      debugPrint('[Auth] Error: $e\n$st');
       state = AsyncValue.error(e, st);
     }
   }
