@@ -1,7 +1,7 @@
 require 'googleauth/id_tokens/verifier'
 
 class GoogleAuthService
-  GOOGLE_CLIENT_ID = ENV.fetch('GOOGLE_CLIENT_ID', nil)
+  GOOGLE_CLIENT_ID = ENV.fetch('GOOGLE_CLIENT_ID')
 
   def initialize(id_token)
     @id_token = id_token
@@ -19,7 +19,7 @@ class GoogleAuthService
   rescue Google::Auth::IDTokens::VerificationError => e
     raise Grape::Exceptions::Validation.new(
       params: ['id_token'],
-      message: "Invalid Google ID token: #{e.message}"
+      message: 'Invalid Google ID token'
     )
   end
 
