@@ -47,6 +47,16 @@ module V1
         end
       end
       post do
+        if params[:workout_block_results].present? && params[:workout_block_results].size > 100
+          error!('Too many workout_block_results', 422)
+        end
+
+        if params[:workout_block_results].present?
+          valid_block_ids = WorkoutBlock.where(workout_summary_id: params[:workout_summary_id]).pluck(:id).to_set
+          invalid = params[:workout_block_results].map { |br| br[:workout_block_id] }.reject { |id| valid_block_ids.include?(id) }
+          error!("Invalid workout_block_id(s): #{invalid.join(', ')}", 422) if invalid.any?
+        end
+
         result = current_user.workout_results.new(
           workout_summary_id: params[:workout_summary_id],
           started_at: params[:started_at],
