@@ -8,5 +8,6 @@ module V1
     mount V1::Workouts
     mount V1::WorkoutResults
     mount V1::UserFtps
+    mount V1::UserProfile
   end
 end
