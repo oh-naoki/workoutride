@@ -7,23 +7,25 @@ import 'dart:async' as _i5;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:workoutride/data/remote/model/save_workout_result_request.dart'
-    as _i13;
+    as _i14;
 import 'package:workoutride/domain/model/power_meter_data.dart' as _i8;
-import 'package:workoutride/domain/model/user_profile.dart' as _i11;
+import 'package:workoutride/domain/model/user_profile.dart' as _i12;
 import 'package:workoutride/domain/model/workout/workout_block.dart' as _i6;
 import 'package:workoutride/domain/model/workout/workout_result.dart' as _i3;
 import 'package:workoutride/domain/repository/user_profile_repository.dart'
     as _i2;
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart'
     as _i7;
-import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart'
+import 'package:workoutride/domain/usecase/user_profile/get_user_ftp_use_case.dart'
     as _i10;
+import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart'
+    as _i11;
 import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart'
     as _i4;
 import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart'
     as _i9;
 import 'package:workoutride/domain/usecase/workout/save_workout_result_use_case.dart'
-    as _i12;
+    as _i13;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -153,11 +155,29 @@ class MockManageWorkoutUseCase extends _i1.Mock
       );
 }
 
+/// A class which mocks [GetUserFtpUseCase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGetUserFtpUseCase extends _i1.Mock implements _i10.GetUserFtpUseCase {
+  MockGetUserFtpUseCase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i5.Future<int?> call() => (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [],
+        ),
+        returnValue: _i5.Future<int?>.value(),
+      ) as _i5.Future<int?>);
+}
+
 /// A class which mocks [GetUserProfileUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockGetUserProfileUseCase extends _i1.Mock
-    implements _i10.GetUserProfileUseCase {
+    implements _i11.GetUserProfileUseCase {
   MockGetUserProfileUseCase() {
     _i1.throwOnMissingStub(this);
   }
@@ -172,26 +192,26 @@ class MockGetUserProfileUseCase extends _i1.Mock
       ) as _i2.UserProfileRepository);
 
   @override
-  _i5.Future<_i11.UserProfile?> call() => (super.noSuchMethod(
+  _i5.Future<_i12.UserProfile?> call() => (super.noSuchMethod(
         Invocation.method(
           #call,
           [],
         ),
-        returnValue: _i5.Future<_i11.UserProfile?>.value(),
-      ) as _i5.Future<_i11.UserProfile?>);
+        returnValue: _i5.Future<_i12.UserProfile?>.value(),
+      ) as _i5.Future<_i12.UserProfile?>);
 }
 
 /// A class which mocks [SaveWorkoutResultUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockSaveWorkoutResultUseCase extends _i1.Mock
-    implements _i12.SaveWorkoutResultUseCase {
+    implements _i13.SaveWorkoutResultUseCase {
   MockSaveWorkoutResultUseCase() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<_i3.WorkoutResult> call(_i13.SaveWorkoutResultRequest? request) =>
+  _i5.Future<_i3.WorkoutResult> call(_i14.SaveWorkoutResultRequest? request) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,

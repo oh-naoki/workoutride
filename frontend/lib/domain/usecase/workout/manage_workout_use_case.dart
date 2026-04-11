@@ -7,7 +7,7 @@ import 'package:workoutride/domain/model/workout/workout_progress_state.dart';
 import 'package:workoutride/domain/model/workout/workout_timer_state.dart';
 import 'package:workoutride/domain/service/power_zone_analyzer.dart';
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart';
-import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart';
+import 'package:workoutride/domain/usecase/user_profile/get_user_ftp_use_case.dart';
 
 class WorkoutFrame {
   final WorkoutTimerState timer;
@@ -34,21 +34,21 @@ class WorkoutFrame {
 class ManageWorkoutUseCase {
   final GetCalculatedPowerMeterDataUseCase _getCalculatedPowerMeterDataUseCase;
   final PowerZoneAnalyzer _powerZoneAnalyzer;
-  final GetUserProfileUseCase _getUserProfileUseCase;
-  
+  final GetUserFtpUseCase _getUserFtpUseCase;
+
   final BehaviorSubject<bool> _paused$ = BehaviorSubject.seeded(false);
 
   ManageWorkoutUseCase(
     this._getCalculatedPowerMeterDataUseCase,
     this._powerZoneAnalyzer,
-    this._getUserProfileUseCase,
+    this._getUserFtpUseCase,
   );
 
   Stream<WorkoutFrame> call(
     List<WorkoutBlock> blocks,
   ) async* {
-    final userProfile = await _getUserProfileUseCase.call();
-    final userFtp = userProfile?.ftp ?? 200;
+    final ftp = await _getUserFtpUseCase.call();
+    final userFtp = ftp ?? 200;
 
     final totalSeconds = blocks.fold<int>(0, (sum, block) => sum + block.durationSeconds);
 

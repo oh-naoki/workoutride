@@ -8,6 +8,7 @@ import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/domain/model/power_alert_message.dart';
 import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart';
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart';
+import 'package:workoutride/domain/usecase/user_profile/get_user_ftp_use_case.dart';
 import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart';
 import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart';
 import 'package:workoutride/domain/usecase/workout/save_workout_result_use_case.dart';
@@ -46,6 +47,7 @@ class WorkoutScreenUiState with _$WorkoutScreenUiState {
 class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
   late final GetWorkoutBlocksUseCase _getWorkoutBlocksUseCase;
   late final GetCalculatedPowerMeterDataUseCase _getPowerMeterDataUseCase;
+  late final GetUserFtpUseCase _getUserFtpUseCase;
   late final GetUserProfileUseCase _getUserProfileUseCase;
   late final ManageWorkoutUseCase _manageWorkoutUseCase;
   late final SaveWorkoutResultUseCase _saveWorkoutResultUseCase;
@@ -75,6 +77,7 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
 
     _getWorkoutBlocksUseCase = ref.read(getWorkoutBlocksUseCaseProvider);
     _getPowerMeterDataUseCase = ref.read(getCalculatedPowerMeterDataUseCaseProvider);
+    _getUserFtpUseCase = ref.read(getUserFtpUseCaseProvider);
     _getUserProfileUseCase = ref.read(getUserProfileUseCaseProvider);
     _manageWorkoutUseCase = ref.read(manageWorkoutUseCaseProvider);
     _saveWorkoutResultUseCase = ref.read(saveWorkoutResultUseCaseProvider);
@@ -197,15 +200,23 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
 
   Future<void> _initializeWorkout(int workoutId) async {
     try {
-      final userProfile = await _getUserProfileUseCase();
-      _userWeight = userProfile?.weight ?? 60.0;
-      _userFtp = userProfile?.ftp ?? 200;
-      
+      // FTPはGetUserFtpUseCaseで直接取得（ワークアウト前画面と同じ方法）
+      final ftp = await _getUserFtpUseCase();
+      _userFtp = ftp ?? 200;
+
+      // 体重はUserProfileから取得（失敗してもFTP取得には影響しない）
+      try {
+        final userProfile = await _getUserProfileUseCase();
+        _userWeight = userProfile?.weight ?? 60.0;
+      } catch (_) {
+        _userWeight = 60.0;
+      }
+
       final blocks = await _getWorkoutBlocksUseCase.call(workoutId);
-      
+
       final maxTargetPercentage = blocks.fold(0, (max, block) => block.targetFtpPercentage > max ? block.targetFtpPercentage : max);
       final maxTargetWatts = (_userFtp! * maxTargetPercentage / 100).round();
-      
+
       state = WorkoutScreenUiState(
         workoutBlocks: blocks,
         isLoading: false,

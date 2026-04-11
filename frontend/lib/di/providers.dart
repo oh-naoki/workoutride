@@ -268,7 +268,7 @@ ManageWorkoutUseCase manageWorkoutUseCase(Ref ref) {
   return ManageWorkoutUseCase(
     ref.read(getCalculatedPowerMeterDataUseCaseProvider),
     ref.read(powerZoneAnalyzerProvider),
-    ref.read(getUserProfileUseCaseProvider),
+    ref.read(getUserFtpUseCaseProvider),
   );
 }
 
