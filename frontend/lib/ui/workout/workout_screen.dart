@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:workoutride/component/meter.dart';
 import 'package:workoutride/ui/workout/developer_menu.dart';
 import 'package:workoutride/ui/workout/workout_screen_state_notifier.dart';
@@ -18,7 +19,14 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
   final ScrollController _scrollController = ScrollController();
 
   @override
+  void initState() {
+    super.initState();
+    WakelockPlus.enable();
+  }
+
+  @override
   void dispose() {
+    WakelockPlus.disable();
     _scrollController.dispose();
     super.dispose();
   }
