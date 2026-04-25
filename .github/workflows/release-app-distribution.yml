@@ -67,16 +67,17 @@ jobs:
           releaseNotes: "${{ inputs.release_notes || format('Debug build {0} ({1})', github.ref_name, github.sha) }}"
           testers: oh.naoki0819@gmail.com
 
-      # Release build
+      # Release build (debug keyで署名 - Google Sign-In動作確認用)
       - name: Set up Android signing
         if: inputs.build_type == 'release'
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode --ignore-garbage > android/app/workoutride.keystore
+          mkdir -p ${HOME}/.android
+          echo "${{ secrets.DEBUG_KEYSTORE_BASE64 }}" | base64 --decode > ${HOME}/.android/debug.keystore
           cat <<EOF > android/key.properties
-          storePassword=${{ secrets.STORE_PASSWORD }}
-          keyPassword=${{ secrets.KEY_PASSWORD }}
-          keyAlias=workoutride
-          storeFile=workoutride.keystore
+          storePassword=android
+          keyPassword=android
+          keyAlias=androiddebugkey
+          storeFile=${HOME}/.android/debug.keystore
           EOF
 
       - name: Build APK (release)
