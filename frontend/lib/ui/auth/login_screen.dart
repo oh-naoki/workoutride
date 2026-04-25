@@ -64,25 +64,41 @@ class LoginScreen extends ConsumerWidget {
   }
 
   Widget _buildErrorContent(BuildContext context, WidgetRef ref, Object error) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Icon(Icons.error_outline, size: 48, color: Colors.red),
-        const SizedBox(height: 16),
-        Text(
-          'ログインエラー',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        const SizedBox(height: 8),
-        Text(_friendlyErrorMessage(error)),
-        const SizedBox(height: 24),
-        ElevatedButton(
-          onPressed: () {
-            ref.read(authStateNotifierProvider.notifier).signInWithGoogle();
-          },
-          child: const Text('再試行'),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error_outline, size: 48, color: Colors.red),
+          const SizedBox(height: 16),
+          Text(
+            'ログインエラー',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: 8),
+          Text(_friendlyErrorMessage(error)),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(4),
+            ),
+            width: double.infinity,
+            child: SelectableText(
+              error.toString(),
+              style: const TextStyle(fontSize: 11, fontFamily: 'monospace'),
+            ),
+          ),
+          const SizedBox(height: 24),
+          ElevatedButton(
+            onPressed: () {
+              ref.read(authStateNotifierProvider.notifier).signInWithGoogle();
+            },
+            child: const Text('再試行'),
+          ),
+        ],
+      ),
     );
   }
 }
