@@ -47,5 +47,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Google Services (contains OAuth client IDs)
-android/app/google-services.json
+# Google Services (contains OAuth client IDs and API keys)
+**/google-services.json
+**/GoogleService-Info.plist
