@@ -104,6 +104,7 @@ backend/public/assets
 backend/.byebug_history
 backend/config/master.key
 backend/config/credentials/*.key
+backend/config/ssl/*.key
 backend/public/packs
 backend/public/packs-test
 backend/node_modules
@@ -114,6 +115,11 @@ backend/.env.development
 backend/.env.test
 backend/.env.production
 backend/test_auth_manual.md
+
+# Internal planning / infra docs (not for public repo)
+docs/cicd-plan.md
+docs/pre-release-fixes.md
+docs/workoutride-gcp-infra-1.html
 
 # Coverage
 coverage/
