@@ -120,6 +120,7 @@ backend/test_auth_manual.md
 docs/cicd-plan.md
 docs/pre-release-fixes.md
 docs/workoutride-gcp-infra-1.html
+docs/infra-why-explained.md
 
 # Coverage
 coverage/
