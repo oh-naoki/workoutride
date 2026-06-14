@@ -8,7 +8,7 @@ servers:
 deploy_timeout: 120
 
 proxy:
-  host: api.workoutride.ohnaoki.app
+  host: workoutride.ohnaoki.app
   ssl:
     certificate_pem: CLOUDFLARE_ORIGIN_CERT
     private_key_pem: CLOUDFLARE_ORIGIN_KEY
