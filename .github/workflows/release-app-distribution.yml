@@ -49,8 +49,17 @@ jobs:
       - name: Create .env
         run: echo "API_BASE_URL=${{ secrets.API_BASE_URL }}" > .env
 
-      - name: Place google-services.json
-        run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > android/app/google-services.json
+      - name: Place google-services.json (debug)
+        if: inputs.build_type == 'debug'
+        run: |
+          mkdir -p android/app/src/debug
+          echo "${{ secrets.GOOGLE_SERVICES_JSON_DEBUG }}" | base64 --decode > android/app/src/debug/google-services.json
+
+      - name: Place google-services.json (release)
+        if: inputs.build_type == 'release'
+        run: |
+          mkdir -p android/app/src/release
+          echo "${{ secrets.GOOGLE_SERVICES_JSON_RELEASE }}" | base64 --decode > android/app/src/release/google-services.json
 
       # Debug build
       - name: Build APK (debug)
@@ -61,7 +70,7 @@ jobs:
         if: inputs.build_type == 'debug'
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
-          appId: ${{ secrets.FIREBASE_APP_ID }}
+          appId: ${{ secrets.FIREBASE_APP_ID_DEBUG }}
           token: ${{ secrets.FIREBASE_TOKEN }}
           file: frontend/build/app/outputs/flutter-apk/app-debug.apk
           releaseNotes: "${{ inputs.release_notes || format('Debug build {0} ({1})', github.ref_name, github.sha) }}"
