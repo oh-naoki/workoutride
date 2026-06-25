@@ -122,12 +122,12 @@ jobs:
       - name: Place google-services.json (debug)
         run: |
           mkdir -p android/app/src/debug
-          echo "${{ secrets.GOOGLE_SERVICES_JSON_DEBUG }}" | base64 --decode > android/app/src/debug/google-services.json
+          echo "${{ secrets.GOOGLE_SERVICES_JSON_DEBUG }}" | base64 --decode --ignore-garbage > android/app/src/debug/google-services.json
 
       - name: Place google-services.json (release)
         run: |
           mkdir -p android/app/src/release
-          echo "${{ secrets.GOOGLE_SERVICES_JSON_RELEASE }}" | base64 --decode > android/app/src/release/google-services.json
+          echo "${{ secrets.GOOGLE_SERVICES_JSON_RELEASE }}" | base64 --decode --ignore-garbage > android/app/src/release/google-services.json
 
       - name: Build APK (debug)
         run: flutter build apk --debug
@@ -145,7 +145,7 @@ jobs:
       - name: Set up Android signing
         if: contains(github.head_ref || github.ref_name, 'release')
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/workoutride.keystore
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode --ignore-garbage > android/app/workoutride.keystore
           cat <<EOF > android/key.properties
           storePassword=${{ secrets.STORE_PASSWORD }}
           keyPassword=${{ secrets.KEY_PASSWORD }}
