@@ -15,7 +15,7 @@ https://developer.android.com/about/versions/12/features/bluetooth-permissions -
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="30"/>
 
     <application
-        android:label="workoutride"
+        android:label="@string/app_name"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
