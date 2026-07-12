@@ -26,6 +26,7 @@ env:
   secret:
     - RAILS_MASTER_KEY
     - BACKEND_DATABASE_PASSWORD
+    - SENTRY_DSN
   clear:
     GOOGLE_CLIENT_ID: "432477473655-2ovs5abgvf6cu6ke9gli7b5phgi0je4u.apps.googleusercontent.com"
     # Neon (single DB). Direct endpoint (no -pooler) so Rails prepared statements work.

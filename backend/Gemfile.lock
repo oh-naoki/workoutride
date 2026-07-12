@@ -341,6 +341,13 @@ GEM
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     securerandom (0.4.1)
+    sentry-rails (6.6.2)
+      railties (>= 5.2.0)
+      sentry-ruby (~> 6.6.2)
+    sentry-ruby (6.6.2)
+      bigdecimal
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      logger
     shoulda-matchers (6.5.0)
       activesupport (>= 5.2.0)
     signet (0.21.0)
@@ -411,6 +418,8 @@ DEPENDENCIES
   rails (~> 8.0.2)
   rspec-rails (~> 6.1)
   rubocop-rails-omakase
+  sentry-rails (~> 6.6)
+  sentry-ruby (~> 6.6)
   shoulda-matchers (~> 6.0)
   simplecov
   thruster
