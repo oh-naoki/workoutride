@@ -45,7 +45,7 @@ module Backend
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
-    # Rate limiting middleware
-    config.middleware.use Rack::Attack
+    # Rack::Attack は gem の railtie が自動でミドルウェア登録するため、ここでは登録しない
+    # （二重登録するとレート制限のカウントが1リクエストで2進む）
   end
 end
