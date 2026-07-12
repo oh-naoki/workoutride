@@ -15,6 +15,9 @@ abstract class AuthApiClient {
   @DELETE("/auth/logout")
   Future<void> logout();
 
+  @DELETE("/auth/account")
+  Future<void> deleteAccount();
+
   @GET("/auth/me")
   Future<UserDto> getCurrentUser();
 }

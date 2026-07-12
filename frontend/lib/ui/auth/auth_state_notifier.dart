@@ -37,6 +37,12 @@ class AuthStateNotifier extends _$AuthStateNotifier {
     state = const AsyncValue.data(AuthState.unauthenticated());
   }
 
+  /// アカウントと全データを削除する。失敗時は例外を投げ、認証状態は変えない。
+  Future<void> deleteAccount() async {
+    await ref.read(authRepositoryProvider).deleteAccount();
+    state = const AsyncValue.data(AuthState.unauthenticated());
+  }
+
   Future<void> signInAsDebugUser() async {
     assert(kDebugMode, 'signInAsDebugUser must only be called in debug mode');
     state = const AsyncValue.data(AuthState.loading());

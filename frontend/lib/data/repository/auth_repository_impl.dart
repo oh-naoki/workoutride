@@ -53,6 +53,15 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<void> deleteAccount() async {
+    // サーバー側の削除が成功した場合のみローカルの認証情報を破棄する
+    await _apiClient.deleteAccount();
+
+    await _googleSignIn.signOut();
+    await _secureStorage.delete(key: _tokenKey);
+  }
+
+  @override
   Future<User?> getCurrentUser() async {
     final token = await _secureStorage.read(key: _tokenKey);
     if (token == null) return null;

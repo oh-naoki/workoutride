@@ -32,6 +32,13 @@ module V1
         { message: 'Logged out successfully' }
       end
 
+      desc 'Delete account and all associated data'
+      delete :account do
+        authenticate!
+        current_user.destroy!
+        { message: 'Account deleted successfully' }
+      end
+
       desc 'Get current user'
       get :me do
         authenticate!

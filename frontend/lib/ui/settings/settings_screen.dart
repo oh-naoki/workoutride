@@ -82,6 +82,28 @@ class SettingsScreen extends ConsumerWidget {
     }
   }
 
+  Future<void> _showDeleteAccountDialog(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => const _DeleteAccountConfirmDialog(),
+    );
+
+    if (confirmed != true || !context.mounted) return;
+
+    try {
+      await ref.read(authStateNotifierProvider.notifier).deleteAccount();
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('アカウントの削除に失敗しました。通信状況を確認して再度お試しください。'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final uiState = ref.watch(settingsScreenStateNotifierProvider);
@@ -169,6 +191,13 @@ class SettingsScreen extends ConsumerWidget {
                         icon: Icons.logout,
                         onTap: () => _showLogoutDialog(context, ref),
                       ),
+                      const SizedBox(height: 16),
+                      _buildDangerSettingTile(
+                        title: 'アカウント削除',
+                        subtitle: 'アカウントとワークアウト履歴などの全データを完全に削除します',
+                        icon: Icons.delete_forever,
+                        onTap: () => _showDeleteAccountDialog(context, ref),
+                      ),
                     ],
                   ),
                 ),
@@ -250,6 +279,70 @@ class SettingsScreen extends ConsumerWidget {
         trailing: const Icon(Icons.chevron_right, color: Colors.red),
         onTap: onTap,
       ),
+    );
+  }
+}
+
+/// アカウント削除の確認ダイアログ。「削除」と入力しないと実行できない。
+class _DeleteAccountConfirmDialog extends StatefulWidget {
+  const _DeleteAccountConfirmDialog();
+
+  @override
+  State<_DeleteAccountConfirmDialog> createState() =>
+      _DeleteAccountConfirmDialogState();
+}
+
+class _DeleteAccountConfirmDialogState
+    extends State<_DeleteAccountConfirmDialog> {
+  final _controller = TextEditingController();
+  bool _canDelete = false;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('アカウント削除'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'アカウントを削除すると、ワークアウト履歴・FTP・体重などの全データが完全に削除されます。この操作は取り消せません。',
+          ),
+          const SizedBox(height: 16),
+          const Text('続行するには「削除」と入力してください。'),
+          const SizedBox(height: 8),
+          TextField(
+            controller: _controller,
+            decoration: const InputDecoration(
+              hintText: '削除',
+              border: OutlineInputBorder(),
+            ),
+            onChanged: (value) {
+              setState(() {
+                _canDelete = value.trim() == '削除';
+              });
+            },
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: const Text('キャンセル'),
+        ),
+        TextButton(
+          onPressed:
+              _canDelete ? () => Navigator.of(context).pop(true) : null,
+          style: TextButton.styleFrom(foregroundColor: Colors.red),
+          child: const Text('完全に削除する'),
+        ),
+      ],
     );
   }
 }
