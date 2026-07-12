@@ -547,7 +547,7 @@ final powerZoneAnalyzerProvider =
 // ignore: unused_element
 typedef PowerZoneAnalyzerRef = AutoDisposeProviderRef<PowerZoneAnalyzer>;
 String _$manageWorkoutUseCaseHash() =>
-    r'f96f0886246869b6abeadf9f46fd34766da59a15';
+    r'81a64cd8d4d41dbd1b07def68600c9806ce58478';
 
 /// See also [manageWorkoutUseCase].
 @ProviderFor(manageWorkoutUseCase)
