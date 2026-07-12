@@ -14,7 +14,7 @@ module Helpers
       token = extract_token_from_header
       return nil unless token
 
-      auth_token = AuthToken.includes(:user).active.find_by(token: token)
+      auth_token = AuthToken.find_active_by_raw_token(token)
       return nil unless auth_token
 
       auth_token.touch_last_used!
