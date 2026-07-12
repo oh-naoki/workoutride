@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'V1::UserFtps', type: :request do
   let(:user) { User.create!(provider: 'google', uid: '12345') }
-  let(:auth_token) { user.auth_tokens.create!(token: SecureRandom.hex(32), expires_at: 30.days.from_now) }
+  let(:auth_token) { user.auth_tokens.create! }
   let(:headers) { { 'Authorization' => "Bearer #{auth_token.token}" } }
 
   describe 'GET /v1/user_ftps/current' do

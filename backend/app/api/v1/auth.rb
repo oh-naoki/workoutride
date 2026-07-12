@@ -28,7 +28,7 @@ module V1
       delete :logout do
         authenticate!
         token = extract_token_from_header
-        current_user.auth_tokens.find_by(token: token)&.destroy
+        current_user.auth_tokens.find_by(token_digest: AuthToken.digest(token))&.destroy
         { message: 'Logged out successfully' }
       end
 

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'V1::WorkoutResults', type: :request do
   let(:user) { User.create!(provider: 'google', uid: '12345') }
-  let(:auth_token) { user.auth_tokens.create!(token: SecureRandom.hex(32), expires_at: 30.days.from_now) }
+  let(:auth_token) { user.auth_tokens.create! }
   let(:headers) { { 'Authorization' => "Bearer #{auth_token.token}" } }
 
   let!(:workout_summary) { create(:workout_summary) }

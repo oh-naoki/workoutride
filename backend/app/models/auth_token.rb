@@ -1,9 +1,20 @@
 class AuthToken < ApplicationRecord
   belongs_to :user
 
+  # 生トークンは作成直後のレスポンス用にメモリ上でのみ保持し、DBにはダイジェストだけを保存する
+  attr_reader :token
+
   before_create :generate_token, :set_expiration
 
   scope :active, -> { where('expires_at > ?', Time.current) }
+
+  def self.digest(raw_token)
+    Digest::SHA256.hexdigest(raw_token)
+  end
+
+  def self.find_active_by_raw_token(raw_token)
+    includes(:user).active.find_by(token_digest: digest(raw_token))
+  end
 
   def expired?
     expires_at < Time.current
@@ -16,7 +27,8 @@ class AuthToken < ApplicationRecord
   private
 
   def generate_token
-    self.token = SecureRandom.hex(32)
+    @token = SecureRandom.hex(32)
+    self.token_digest = self.class.digest(@token)
   end
 
   def set_expiration
