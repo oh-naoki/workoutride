@@ -1,0 +1,54 @@
+name: Build Play Store AAB
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+jobs:
+  build-aab:
+    name: Build signed AAB
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Setup Flutter
+        uses: ./.github/actions/setup-flutter
+        with:
+          api-base-url: ${{ secrets.API_BASE_URL }}
+
+      - name: Place google-services.json (release)
+        run: |
+          mkdir -p android/app/src/release
+          echo "${{ secrets.GOOGLE_SERVICES_JSON_RELEASE }}" | base64 --decode --ignore-garbage > android/app/src/release/google-services.json
+
+      - name: Set up Android signing
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode --ignore-garbage > android/app/workoutride.keystore
+          cat <<EOF > android/key.properties
+          storePassword=${{ secrets.STORE_PASSWORD }}
+          keyPassword=${{ secrets.KEY_PASSWORD }}
+          keyAlias=workoutride
+          storeFile=workoutride.keystore
+          EOF
+
+      - name: Build AAB (release)
+        run: flutter build appbundle --release
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: workoutride-release-aab
+          path: frontend/build/app/outputs/bundle/release/app-release.aab
+          retention-days: 30
