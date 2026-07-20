@@ -4,6 +4,7 @@ import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/ui/workout_detail/workout_detail_screen_state_notifier.dart';
 import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/ui/workout/workout_screen.dart';
+import 'package:workoutride/ui/theme/app_colors.dart';
 
 class WorkoutDetailScreen extends ConsumerWidget {
   final int workoutId;
@@ -15,13 +16,15 @@ class WorkoutDetailScreen extends ConsumerWidget {
     final uiState = ref.watch(workoutDetailScreenStateNotifierProvider(workoutId));
     
     return Scaffold(
-      backgroundColor: const Color(0xFF1E1E1E),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text(
           'ワークアウト詳細',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: const Color(0xFF2D2D2D),
+        backgroundColor: AppColors.brand,
+        foregroundColor: Colors.white,
+        elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Padding(
@@ -109,7 +112,7 @@ class WorkoutDetailBody extends StatelessWidget {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
+                        backgroundColor: AppColors.brand,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),

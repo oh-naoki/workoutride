@@ -4,6 +4,7 @@ import 'package:workoutride/domain/model/workout/workout_summary.dart';
 import 'package:workoutride/ui/history/history_screen.dart';
 import 'package:workoutride/ui/settings/settings_screen.dart';
 import 'package:workoutride/ui/home/home_screen_state_notifier.dart';
+import 'package:workoutride/ui/theme/app_colors.dart';
 import 'package:workoutride/ui/workout_detail/workout_detail_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -26,7 +27,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           _currentIndex == 0 ? 'Home' : '履歴',
           style: const TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.brand,
+        foregroundColor: Colors.white,
+        elevation: 0,
         centerTitle: true,
         actions: [
           IconButton(
@@ -42,7 +45,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ],
       ),
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.background,
       body: IndexedStack(
         index: _currentIndex,
         children: [
@@ -106,8 +109,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             _currentIndex = index;
           });
         },
-        backgroundColor: const Color(0xFF1C1C1C),
-        selectedItemColor: Colors.white,
+        backgroundColor: AppColors.surface,
+        selectedItemColor: AppColors.brand,
         unselectedItemColor: Colors.white54,
         items: const [
           BottomNavigationBarItem(
@@ -138,14 +141,27 @@ class SectionTitle extends StatelessWidget {
           horizontal: 16,
           vertical: 24,
         ),
-        child: Text(
-          title,
-          textAlign: TextAlign.left,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
+        child: Row(
+          children: [
+            Container(
+              width: 4,
+              height: 24,
+              decoration: BoxDecoration(
+                color: AppColors.brand,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              title,
+              textAlign: TextAlign.left,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -190,6 +206,7 @@ class WorkoutItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      borderRadius: BorderRadius.circular(10),
       onTap: () {
         Navigator.push(
           context,
@@ -200,38 +217,52 @@ class WorkoutItem extends StatelessWidget {
           ),
         );
       },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            summary.name,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(10),
+          border: const Border(
+            left: BorderSide(color: AppColors.brand, width: 4),
+          ),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              summary.name,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              Text(
-                '合計時間: ${_formatDuration(summary.totalDuration)}',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                const Icon(Icons.schedule, size: 15, color: AppColors.brand),
+                const SizedBox(width: 4),
+                Text(
+                  _formatDuration(summary.totalDuration),
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 14,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 16),
-              Text(
-                'カテゴリ: ${summary.category}',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
+                const SizedBox(width: 16),
+                const Icon(Icons.local_fire_department, size: 15, color: AppColors.brand),
+                const SizedBox(width: 4),
+                Text(
+                  summary.category,
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 14,
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -248,7 +279,7 @@ class BleConnectionStatus extends ConsumerWidget {
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFF2C2C2C),
+        color: AppColors.surfaceHigh,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: uiState.isBleConnected ? Colors.green : Colors.orange,
@@ -264,7 +295,7 @@ class BleConnectionStatus extends ConsumerWidget {
                 ? Icons.bluetooth_connected
                 : Icons.bluetooth_disabled,
             color: uiState.isConnectingBle
-              ? Colors.blue
+              ? AppColors.brand
               : uiState.isBleConnected
                 ? Colors.green
                 : Colors.orange,
@@ -316,7 +347,7 @@ class BleConnectionStatus extends ConsumerWidget {
               icon: const Icon(Icons.refresh, size: 16),
               label: const Text('再接続'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
+                backgroundColor: AppColors.brand,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 textStyle: const TextStyle(fontSize: 13),

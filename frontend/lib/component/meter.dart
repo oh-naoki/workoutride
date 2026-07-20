@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:workoutride/ui/theme/app_colors.dart';
 
 class Meter extends StatelessWidget {
   final int power;
@@ -61,7 +62,7 @@ class _MeterPainter extends CustomPainter {
 
     // ドーナツ形状を描画
     final Paint donutPaint = Paint()
-      ..color = const Color(0xFFDB4040)
+      ..color = AppColors.surfaceHigh
       ..style = PaintingStyle.fill;
     canvas.drawPath(finalPath, donutPaint);
 
@@ -143,7 +144,7 @@ class _MeterPainter extends CustomPainter {
 
     // 線を描画
     final Paint linePaint = Paint()
-      ..color = Colors.white
+      ..color = AppColors.brand
       ..strokeWidth = 6.0
       ..style = PaintingStyle.stroke;
 

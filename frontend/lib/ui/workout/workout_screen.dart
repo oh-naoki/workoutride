@@ -5,6 +5,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:workoutride/component/meter.dart';
 import 'package:workoutride/ui/workout/developer_menu.dart';
 import 'package:workoutride/ui/workout/workout_screen_state_notifier.dart';
+import 'package:workoutride/ui/theme/app_colors.dart';
 
 class WorkoutScreen extends ConsumerStatefulWidget {
   final int workoutId;
@@ -80,9 +81,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.background,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
+          elevation: 0,
           actions: [
             if (kDebugMode)
               IconButton(
@@ -139,7 +141,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                               child: Container(
                                 padding: const EdgeInsets.all(32.0),
                                 decoration: BoxDecoration(
-                                  color: Colors.black.withValues(alpha: 0.8),
+                                  color: Colors.black.withValues(alpha: 0.94),
                                   borderRadius: BorderRadius.circular(16.0),
                                 ),
                                 child: Column(
@@ -148,7 +150,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                                     Text(
                                       '${uiState.countdownSeconds}',
                                       style: const TextStyle(
-                                        color: Colors.white,
+                                        color: AppColors.brand,
                                         fontSize: 72,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -300,7 +302,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
         width: 60,
         height: 60,
         decoration: BoxDecoration(
-          color: isPaused ? Colors.green : Colors.orange,
+          color: isPaused ? Colors.green : AppColors.brand,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Icon(
@@ -399,14 +401,21 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       width: double.infinity,
-      color: const Color(0xFF333333),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isActive ? AppColors.brand : Colors.transparent,
+          width: 2,
+        ),
+      ),
+      clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
           // パワー表示部分
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            color: const Color(0xFF333333),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -420,16 +429,16 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                 const SizedBox(width: 8),
                 Text(
                   '$power',
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: isActive ? AppColors.brand : Colors.white,
                     fontSize: 48,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Text(
+                Text(
                   'w',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: isActive ? AppColors.brand : Colors.white,
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
@@ -447,9 +456,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                   LinearProgressIndicator(
                     value: progress,
                     minHeight: 40,
-                    backgroundColor: Colors.grey[800],
+                    backgroundColor: AppColors.surfaceHigh,
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      isActive ? const Color(0xFF51DB40) : const Color(0xFF333333),
+                      isActive
+                        ? AppColors.brand
+                        : AppColors.brand.withValues(alpha: 0.25),
                     ),
                   ),
                   Container(
