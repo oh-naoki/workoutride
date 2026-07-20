@@ -73,6 +73,7 @@ dev_dependencies:
 
   mockito: ^5.0.17
   retrofit_generator: ^9.1.9
+  flutter_launcher_icons: ^0.14.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
