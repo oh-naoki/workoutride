@@ -8,6 +8,7 @@ import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/ui/auth/auth_state_notifier.dart';
 import 'package:workoutride/ui/auth/login_screen.dart';
 import 'package:workoutride/ui/home/home_screen.dart';
+import 'package:workoutride/ui/theme/app_colors.dart';
 import 'package:workoutride/ui/workout/workout_screen.dart';
 import 'package:workoutride/ui/workout_detail/workout_detail_screen.dart';
 
@@ -38,7 +39,24 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
       title: 'WorkoutRide',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: AppColors.brand,
+          primary: AppColors.brand,
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: AppColors.brand,
+          foregroundColor: Colors.white,
+          elevation: 0,
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.brand,
+            foregroundColor: Colors.white,
+          ),
+        ),
+        progressIndicatorTheme: const ProgressIndicatorThemeData(
+          color: AppColors.brand,
+        ),
         useMaterial3: true,
       ),
       home: authState.when(
