@@ -153,5 +153,93 @@ void main() {
         expect(() => useCase.call(), throwsException);
       });
     });
+
+    // ケイデンスが一瞬だけ落ちる不具合の回帰テスト
+    group('Cadence stability', () {
+      // Crank Revolution Data 付きのパケットを生成するヘルパー
+      List<int> crankPacket({
+        required int power,
+        required int revs,
+        required int time,
+      }) =>
+          [
+            0x20, 0x00, // flags: Crank Revolution Data あり
+            power & 0xFF, (power >> 8) & 0xFF,
+            revs & 0xFF, (revs >> 8) & 0xFF,
+            time & 0xFF, (time >> 8) & 0xFF,
+          ];
+
+      test('新しいクランクイベントが無い通知では直前のケイデンスを保持する', () {
+        // Arrange
+        var clock = DateTime(2026, 1, 1);
+        final useCase = GetPowerMeterDataUseCase(
+          mockPowerMeterDataSource,
+          now: () => clock,
+        );
+
+        // Act
+        // 基準パケット（初回は差分を計算できないので0）
+        useCase.processData(crankPacket(power: 200, revs: 0, time: 0));
+        // 3回転 / 2秒 → 90rpm
+        final r1 = useCase.processData(crankPacket(power: 200, revs: 3, time: 2048));
+        // 同じクランクデータ（新イベントなし）が1秒後に届く
+        clock = clock.add(const Duration(seconds: 1));
+        final r2 = useCase.processData(crankPacket(power: 200, revs: 3, time: 2048));
+
+        // Assert
+        expect(r1.cadence, equals(90));
+        // 0 に落とさず 90 を保持する（平均のディップ＝一瞬60rpm等を防ぐ）
+        expect(r2.cadence, equals(90));
+      });
+
+      test('一定時間クランクイベントが無ければケイデンスは0になる', () {
+        // Arrange
+        var clock = DateTime(2026, 1, 1);
+        final useCase = GetPowerMeterDataUseCase(
+          mockPowerMeterDataSource,
+          now: () => clock,
+        );
+
+        // Act
+        useCase.processData(crankPacket(power: 200, revs: 0, time: 0));
+        final r1 = useCase.processData(crankPacket(power: 200, revs: 3, time: 2048));
+        // しきい値(3秒)を超えて新イベントが来ない → 停止とみなす
+        clock = clock.add(const Duration(seconds: 4));
+        final r2 = useCase.processData(crankPacket(power: 200, revs: 3, time: 2048));
+
+        // Assert
+        expect(r1.cadence, equals(90));
+        expect(r2.cadence, equals(0));
+      });
+
+      test('クランクイベント時刻の16bitラップアラウンドを跨いでも正しく計算する', () {
+        // Arrange
+        final useCase = GetPowerMeterDataUseCase(mockPowerMeterDataSource);
+
+        // Act
+        // 基準: time=65000 (残り 536 でラップ)
+        useCase.processData(crankPacket(power: 200, revs: 100, time: 65000));
+        // 65000 + 2048 = 67048 → 65536 で一周し 1512
+        final result = useCase.processData(crankPacket(power: 200, revs: 103, time: 1512));
+
+        // Assert
+        // 3回転 / 2秒 = 90rpm（マスクしないと timeDiff が巨大な負数になり破綻する）
+        expect(result.cadence, equals(90));
+      });
+
+      test('累積回転数の16bitラップアラウンドを跨いでも正しく計算する', () {
+        // Arrange
+        final useCase = GetPowerMeterDataUseCase(mockPowerMeterDataSource);
+
+        // Act
+        // 基準: revs=65535
+        useCase.processData(crankPacket(power: 200, revs: 65535, time: 0));
+        // 65535 + 3 = 65538 → 一周して 2
+        final result = useCase.processData(crankPacket(power: 200, revs: 2, time: 2048));
+
+        // Assert
+        expect(result.cadence, equals(90));
+      });
+    });
   });
 }
