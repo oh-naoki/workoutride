@@ -153,7 +153,10 @@ class WorkoutMenu extends ConsumerWidget {
       future: ref.read(getUserFtpUseCaseProvider).call(),
       builder: (context, snapshot) {
         final ftpOrNull = snapshot.data;
-        final ftpIsDefault = ftpOrNull == null;
+        // FTP取得が完了する前（ロード中）はアラートを出さない。
+        // 取得完了かつ未設定(null)のときだけデフォルト扱いとしてアラートを表示する。
+        final isResolved = snapshot.connectionState == ConnectionState.done;
+        final ftpIsDefault = isResolved && ftpOrNull == null;
         final ftp = ftpOrNull ?? 200; // デフォルト200W
 
         return Column(
@@ -224,6 +227,7 @@ class WorkoutMenuItem extends StatelessWidget {
       color: Colors.white,
       fontSize: 16,
       fontWeight: FontWeight.bold,
+      fontFeatures: [FontFeature.tabularFigures()],
     );
 
     return Container(
@@ -232,13 +236,35 @@ class WorkoutMenuItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(6),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(type, style: textStyle),
-            Text("$power[W]", style: textStyle),
-            Text(_formatDuration(duration), style: textStyle),
+            // タイトルは可変幅。長い場合は省略して右列の位置を固定に保つ
+            Expanded(
+              child: Text(
+                type,
+                style: textStyle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            // W・時間は固定幅＋右寄せで、行ごとに桁が変わっても縦位置を揃える
+            SizedBox(
+              width: 72,
+              child: Text(
+                "$power W",
+                style: textStyle,
+                textAlign: TextAlign.right,
+              ),
+            ),
+            SizedBox(
+              width: 64,
+              child: Text(
+                _formatDuration(duration),
+                style: textStyle,
+                textAlign: TextAlign.right,
+              ),
+            ),
           ],
         ),
       ),
