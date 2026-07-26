@@ -32,7 +32,8 @@ class SaveWorkoutResultRequest {
       if (averageCadence != null) 'average_cadence': averageCadence,
       'status': status,
       if (workoutBlockResults.isNotEmpty)
-        'workout_block_results': workoutBlockResults.map((e) => e.toJson()).toList(),
+        'workout_block_results':
+            workoutBlockResults.map((e) => e.toJson()).toList(),
     };
   }
 }

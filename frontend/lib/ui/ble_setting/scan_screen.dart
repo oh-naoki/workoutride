@@ -14,8 +14,8 @@ class ScanScreen extends HookConsumerWidget {
         ref.read(scanScreenStateNotifierProvider.notifier).scanDevice();
       }).catchError((e) {
         ref.read(scanScreenStateNotifierProvider.notifier).setError(
-          'Bluetoothの初期化に失敗しました: $e',
-        );
+              'Bluetoothの初期化に失敗しました: $e',
+            );
       });
       return null;
     }, []);
@@ -31,7 +31,8 @@ class ScanScreen extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Find Devices", style: TextStyle(color: Colors.white)),
+        title:
+            const Text("Find Devices", style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.black,
         leading: IconButton(
           onPressed: () {
@@ -61,7 +62,9 @@ class ScanScreen extends HookConsumerWidget {
                   DeviceListTile(
                     title: result.deviceName,
                     onTap: () {
-                      ref.read(scanScreenStateNotifierProvider.notifier).onDeviceTap(result);
+                      ref
+                          .read(scanScreenStateNotifierProvider.notifier)
+                          .onDeviceTap(result);
                     },
                   ),
                 if (uiState.scanResults.isEmpty && !uiState.isScanning)
@@ -69,7 +72,8 @@ class ScanScreen extends HookConsumerWidget {
                     padding: EdgeInsets.all(32),
                     child: Column(
                       children: [
-                        Icon(Icons.bluetooth_searching, size: 48, color: Colors.grey),
+                        Icon(Icons.bluetooth_searching,
+                            size: 48, color: Colors.grey),
                         SizedBox(height: 16),
                         Text(
                           'デバイスが見つかりません',

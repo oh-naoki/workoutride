@@ -16,22 +16,15 @@ import 'package:workoutride/data/repository/auth_repository_impl.dart';
 import 'package:workoutride/data/repository/workout_repository_impl.dart';
 import 'package:workoutride/domain/repository/auth_repository.dart';
 import 'package:workoutride/domain/repository/workout_repository.dart';
-import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart';
-import 'package:workoutride/domain/usecase/workout/get_workout_results_use_case.dart';
-import 'package:workoutride/domain/usecase/workout/get_workout_summaries_use_case.dart';
-import 'package:workoutride/domain/usecase/workout/get_workout_summary_use_case.dart';
-import 'package:workoutride/domain/usecase/workout/save_workout_result_use_case.dart';
 import 'package:workoutride/data/ble_connector.dart';
 import 'package:workoutride/data/power_meter_data_source.dart';
+import 'package:workoutride/data/audio/workout_sound_player.dart';
+import 'package:workoutride/domain/model/mock_pattern.dart';
 import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart';
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart';
 import 'package:workoutride/domain/service/power_zone_analyzer.dart';
 import 'package:workoutride/domain/repository/user_profile_repository.dart';
 import 'package:workoutride/data/repository/user_profile_repository_impl.dart';
-import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart';
-import 'package:workoutride/domain/usecase/user_profile/save_user_weight_use_case.dart';
-import 'package:workoutride/domain/usecase/user_profile/get_user_ftp_use_case.dart';
-import 'package:workoutride/domain/usecase/user_profile/save_user_ftp_use_case.dart';
 import 'package:workoutride/domain/usecase/auto_connect_ble_power_meter_use_case.dart';
 import 'package:workoutride/domain/usecase/connect_ble_power_meter_use_case.dart';
 import 'package:workoutride/domain/usecase/scan_ble_device_usecase.dart';
@@ -57,7 +50,8 @@ FlutterSecureStorage secureStorage(Ref ref) {
 GoogleSignIn googleSignIn(Ref ref) {
   return GoogleSignIn(
     scopes: ['email', 'profile'],
-    serverClientId: '432477473655-2ovs5abgvf6cu6ke9gli7b5phgi0je4u.apps.googleusercontent.com',
+    serverClientId:
+        '432477473655-2ovs5abgvf6cu6ke9gli7b5phgi0je4u.apps.googleusercontent.com',
   );
 }
 
@@ -75,65 +69,42 @@ AuthRepository authRepository(Ref ref) {
   );
 }
 
-class MockModeStateNotifier extends StateNotifier<bool> {
-  final SharedPreferences _sharedPreferences;
-  
-  MockModeStateNotifier(this._sharedPreferences) 
-    : super(_sharedPreferences.getBool(_mockModeKey) ?? false);
-
-  bool get value => state;
+/// モックモードの ON/OFF。SharedPreferences に永続化する。
+@riverpod
+class MockMode extends _$MockMode {
+  @override
+  bool build() {
+    return ref.watch(sharedPreferencesProvider).getBool(_mockModeKey) ?? false;
+  }
 
   void toggle() {
-    state = !state;
-    _sharedPreferences.setBool(_mockModeKey, state);
+    final next = !state;
+    ref.read(sharedPreferencesProvider).setBool(_mockModeKey, next);
+    state = next;
   }
 }
 
-class MockPatternStateNotifier extends StateNotifier<MockPattern> {
-  final SharedPreferences _sharedPreferences;
-  
-  MockPatternStateNotifier(this._sharedPreferences) 
-    : super(_getInitialPattern(_sharedPreferences));
-
-  static MockPattern _getInitialPattern(SharedPreferences prefs) {
-    final savedPattern = prefs.getString(_mockPatternKey);
-    return savedPattern != null 
-      ? MockPattern.values.firstWhere((p) => p.name == savedPattern)
-      : MockPattern.warmup;
+/// モックパワーデータのパターン選択。SharedPreferences に永続化する。
+@riverpod
+class MockPatternSelection extends _$MockPatternSelection {
+  @override
+  MockPattern build() {
+    final savedPattern =
+        ref.watch(sharedPreferencesProvider).getString(_mockPatternKey);
+    return savedPattern != null
+        ? MockPattern.values.firstWhere(
+            (p) => p.name == savedPattern,
+            orElse: () => MockPattern.warmup,
+          )
+        : MockPattern.warmup;
   }
-
-  MockPattern get value => state;
 
   void setPattern(MockPattern pattern) {
+    ref
+        .read(sharedPreferencesProvider)
+        .setString(_mockPatternKey, pattern.name);
     state = pattern;
-    _sharedPreferences.setString(_mockPatternKey, pattern.name);
   }
-}
-
-@riverpod
-MockModeStateNotifier mockModeStateNotifier(Ref ref) {
-  return MockModeStateNotifier(ref.read(sharedPreferencesProvider));
-}
-
-@riverpod
-MockPatternStateNotifier mockPatternStateNotifier(Ref ref) {
-  return MockPatternStateNotifier(ref.read(sharedPreferencesProvider));
-}
-
-// UseCaseプロバイダー
-@riverpod
-GetWorkoutSummariesUseCase getWorkoutSummariesUseCase(Ref ref) {
-  return GetWorkoutSummariesUseCase(ref.read(workoutRepositoryProvider));
-}
-
-@riverpod
-GetWorkoutBlocksUseCase getWorkoutBlocksUseCase(Ref ref) {
-  return GetWorkoutBlocksUseCase(ref.read(workoutRepositoryProvider));
-}
-
-@riverpod
-GetWorkoutSummaryUseCase getWorkoutSummaryUseCase(Ref ref) {
-  return GetWorkoutSummaryUseCase(ref.read(workoutRepositoryProvider));
 }
 
 const debugApiUrlKey = 'debug_api_url';
@@ -188,11 +159,11 @@ WorkoutRepository workoutRepository(Ref ref) {
 
 @riverpod
 PowerMeterDataSource powerMeterDataSource(Ref ref) {
-  final mockModeNotifier = ref.watch(mockModeStateNotifierProvider);
-  final mockPatternNotifier = ref.watch(mockPatternStateNotifierProvider);
-  
-  if (mockModeNotifier.value) {
-    return MockPowerMeterDataSource(mockPatternNotifier.value);
+  final isMockMode = ref.watch(mockModeProvider);
+  final mockPattern = ref.watch(mockPatternSelectionProvider);
+
+  if (isMockMode) {
+    return MockPowerMeterDataSource(mockPattern);
   } else {
     return BlePowerMeterDataSource(ref.read(bleConnectorProvider));
   }
@@ -206,26 +177,6 @@ UserProfileRepository userProfileRepository(Ref ref) {
     userFtpApiClient: ref.read(userFtpApiClientProvider),
     userProfileApiClient: ref.read(userProfileApiClientProvider),
   );
-}
-
-@riverpod
-GetUserProfileUseCase getUserProfileUseCase(Ref ref) {
-  return GetUserProfileUseCase(repository: ref.read(userProfileRepositoryProvider));
-}
-
-@riverpod
-SaveUserWeightUseCase saveUserWeightUseCase(Ref ref) {
-  return SaveUserWeightUseCase(repository: ref.read(userProfileRepositoryProvider));
-}
-
-@riverpod
-GetUserFtpUseCase getUserFtpUseCase(Ref ref) {
-  return GetUserFtpUseCase(ref.read(userProfileRepositoryProvider));
-}
-
-@riverpod
-SaveUserFtpUseCase saveUserFtpUseCase(Ref ref) {
-  return SaveUserFtpUseCase(ref.read(userProfileRepositoryProvider));
 }
 
 @riverpod
@@ -255,7 +206,8 @@ GetPowerMeterDataUseCase getPowerMeterDataUseCase(Ref ref) {
 
 @riverpod
 GetCalculatedPowerMeterDataUseCase getCalculatedPowerMeterDataUseCase(Ref ref) {
-  return GetCalculatedPowerMeterDataUseCase(ref.read(getPowerMeterDataUseCaseProvider));
+  return GetCalculatedPowerMeterDataUseCase(
+      ref.read(getPowerMeterDataUseCaseProvider));
 }
 
 @riverpod
@@ -268,18 +220,13 @@ ManageWorkoutUseCase manageWorkoutUseCase(Ref ref) {
   return ManageWorkoutUseCase(
     ref.read(getCalculatedPowerMeterDataUseCaseProvider),
     ref.read(powerZoneAnalyzerProvider),
-    ref.read(getUserFtpUseCaseProvider),
+    ref.read(userProfileRepositoryProvider),
   );
 }
 
 @riverpod
-SaveWorkoutResultUseCase saveWorkoutResultUseCase(Ref ref) {
-  return SaveWorkoutResultUseCase(ref.read(workoutRepositoryProvider));
+WorkoutSoundPlayer workoutSoundPlayer(Ref ref) {
+  final player = WorkoutSoundPlayer();
+  ref.onDispose(player.dispose);
+  return player;
 }
-
-@riverpod
-GetWorkoutResultsUseCase getWorkoutResultsUseCase(Ref ref) {
-  return GetWorkoutResultsUseCase(ref.read(workoutRepositoryProvider));
-}
-
-

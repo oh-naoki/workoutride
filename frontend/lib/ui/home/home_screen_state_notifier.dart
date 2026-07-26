@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/domain/model/workout/workout_summary.dart';
-import 'package:workoutride/domain/usecase/workout/get_workout_summaries_use_case.dart';
+import 'package:workoutride/domain/repository/workout_repository.dart';
 import 'package:workoutride/domain/usecase/auto_connect_ble_power_meter_use_case.dart';
 
 part 'home_screen_state_notifier.freezed.dart';
@@ -23,25 +23,26 @@ class HomeScreenUiState with _$HomeScreenUiState {
 
 @riverpod
 class HomeScreenStateNotifier extends _$HomeScreenStateNotifier {
-  late final GetWorkoutSummariesUseCase _getWorkoutSummariesUseCase;
+  late final WorkoutRepository _workoutRepository;
   late final AutoConnectBlePowerMeterUseCase _autoConnectBlePowerMeterUseCase;
 
   @override
   HomeScreenUiState build() {
     state = const HomeScreenUiState(isLoading: true);
-    _getWorkoutSummariesUseCase = ref.read(getWorkoutSummariesUseCaseProvider);
-    _autoConnectBlePowerMeterUseCase = ref.read(autoConnectBlePowerMeterUseCaseProvider);
-    
+    _workoutRepository = ref.read(workoutRepositoryProvider);
+    _autoConnectBlePowerMeterUseCase =
+        ref.read(autoConnectBlePowerMeterUseCaseProvider);
+
     _fetchWorkoutSummaries();
     _autoConnectBleDevice();
-    
+
     return state;
   }
 
   Future<void> _fetchWorkoutSummaries() async {
     try {
       state = state.copyWith(isLoading: true, errorMessage: null);
-      final summaries = await _getWorkoutSummariesUseCase.call();
+      final summaries = await _workoutRepository.getWorkoutSummaries();
       state = state.copyWith(
         workoutSummaries: summaries,
         isLoading: false,
@@ -57,9 +58,9 @@ class HomeScreenStateNotifier extends _$HomeScreenStateNotifier {
   Future<void> _autoConnectBleDevice() async {
     try {
       state = state.copyWith(isConnectingBle: true, bleErrorMessage: null);
-      
+
       final isConnected = await _autoConnectBlePowerMeterUseCase.call();
-      
+
       state = state.copyWith(
         isConnectingBle: false,
         isBleConnected: isConnected,

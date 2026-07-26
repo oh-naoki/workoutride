@@ -6,7 +6,8 @@ class FtpRegistrationDialog extends ConsumerStatefulWidget {
   const FtpRegistrationDialog({super.key});
 
   @override
-  ConsumerState<FtpRegistrationDialog> createState() => _FtpRegistrationDialogState();
+  ConsumerState<FtpRegistrationDialog> createState() =>
+      _FtpRegistrationDialogState();
 }
 
 class _FtpRegistrationDialogState extends ConsumerState<FtpRegistrationDialog> {
@@ -27,7 +28,7 @@ class _FtpRegistrationDialogState extends ConsumerState<FtpRegistrationDialog> {
   }
 
   Future<void> _loadCurrentFtp() async {
-    final currentFtp = await ref.read(getUserFtpUseCaseProvider).call();
+    final currentFtp = await ref.read(userProfileRepositoryProvider).getFtp();
     if (currentFtp != null) {
       _ftpController.text = currentFtp.toString();
     }
@@ -42,8 +43,8 @@ class _FtpRegistrationDialogState extends ConsumerState<FtpRegistrationDialog> {
 
     try {
       final ftp = int.parse(_ftpController.text);
-      await ref.read(saveUserFtpUseCaseProvider).call(ftp);
-      
+      await ref.read(userProfileRepositoryProvider).saveFtp(ftp);
+
       if (mounted) {
         Navigator.of(context).pop(true);
       }

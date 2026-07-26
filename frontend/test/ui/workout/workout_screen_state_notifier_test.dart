@@ -8,34 +8,36 @@ import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/domain/model/workout/workout_progress_state.dart';
 import 'package:workoutride/domain/model/workout/workout_timer_state.dart';
 import 'package:workoutride/domain/model/power_meter_data.dart';
-import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart';
+import 'package:workoutride/domain/repository/workout_repository.dart';
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart';
-import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart' as workout_usecase;
-import 'package:workoutride/domain/usecase/user_profile/get_user_ftp_use_case.dart';
-import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart';
-import 'package:workoutride/domain/usecase/workout/save_workout_result_use_case.dart';
+import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart'
+    as workout_usecase;
+import 'package:workoutride/domain/repository/user_profile_repository.dart';
+import 'package:workoutride/data/audio/workout_sound_player.dart';
 import 'package:workoutride/ui/workout/workout_screen_state_notifier.dart';
 import 'package:workoutride/di/providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'workout_screen_state_notifier_test.mocks.dart';
 
+// WorkoutSoundPlayer は実体だと AudioPlayer の生成がプラットフォームチャンネルに
+// 依存し、flutter test 環境（Flutterバインディング無し）では非同期に例外を投げる。
+// 効果音再生は本テストの関心事ではないため、他の外部依存と同様にモックへ差し替える。
 @GenerateMocks([
-  GetWorkoutBlocksUseCase,
+  WorkoutRepository,
   GetCalculatedPowerMeterDataUseCase,
   workout_usecase.ManageWorkoutUseCase,
-  GetUserFtpUseCase,
-  GetUserProfileUseCase,
-  SaveWorkoutResultUseCase,
+  UserProfileRepository,
+  WorkoutSoundPlayer,
 ])
 void main() {
   late ProviderContainer container;
-  late MockGetWorkoutBlocksUseCase mockGetWorkoutBlocksUseCase;
-  late MockGetCalculatedPowerMeterDataUseCase mockGetCalculatedPowerMeterDataUseCase;
+  late MockWorkoutRepository mockWorkoutRepository;
+  late MockGetCalculatedPowerMeterDataUseCase
+      mockGetCalculatedPowerMeterDataUseCase;
   late MockManageWorkoutUseCase mockManageWorkoutUseCase;
-  late MockGetUserFtpUseCase mockGetUserFtpUseCase;
-  late MockGetUserProfileUseCase mockGetUserProfileUseCase;
-  late MockSaveWorkoutResultUseCase mockSaveWorkoutResultUseCase;
+  late MockUserProfileRepository mockUserProfileRepository;
+  late MockWorkoutSoundPlayer mockSoundPlayer;
 
   // テストデータ
   const testWorkoutId = 1;
@@ -68,12 +70,15 @@ void main() {
   );
 
   setUp(() async {
-    mockGetWorkoutBlocksUseCase = MockGetWorkoutBlocksUseCase();
-    mockGetCalculatedPowerMeterDataUseCase = MockGetCalculatedPowerMeterDataUseCase();
+    mockWorkoutRepository = MockWorkoutRepository();
+    mockGetCalculatedPowerMeterDataUseCase =
+        MockGetCalculatedPowerMeterDataUseCase();
     mockManageWorkoutUseCase = MockManageWorkoutUseCase();
-    mockGetUserFtpUseCase = MockGetUserFtpUseCase();
-    mockGetUserProfileUseCase = MockGetUserProfileUseCase();
-    mockSaveWorkoutResultUseCase = MockSaveWorkoutResultUseCase();
+    mockUserProfileRepository = MockUserProfileRepository();
+    mockSoundPlayer = MockWorkoutSoundPlayer();
+    when(mockSoundPlayer.startAmbientLoop(volume: anyNamed('volume')))
+        .thenAnswer((_) async {});
+    when(mockSoundPlayer.stopAmbientLoop()).thenAnswer((_) async {});
 
     // SharedPreferencesのモックを作成
     SharedPreferences.setMockInitialValues({});
@@ -81,12 +86,14 @@ void main() {
 
     container = ProviderContainer(
       overrides: [
-        getWorkoutBlocksUseCaseProvider.overrideWithValue(mockGetWorkoutBlocksUseCase),
-        getCalculatedPowerMeterDataUseCaseProvider.overrideWithValue(mockGetCalculatedPowerMeterDataUseCase),
-        manageWorkoutUseCaseProvider.overrideWithValue(mockManageWorkoutUseCase),
-        getUserFtpUseCaseProvider.overrideWithValue(mockGetUserFtpUseCase),
-        getUserProfileUseCaseProvider.overrideWithValue(mockGetUserProfileUseCase),
-        saveWorkoutResultUseCaseProvider.overrideWithValue(mockSaveWorkoutResultUseCase),
+        workoutRepositoryProvider.overrideWithValue(mockWorkoutRepository),
+        getCalculatedPowerMeterDataUseCaseProvider
+            .overrideWithValue(mockGetCalculatedPowerMeterDataUseCase),
+        manageWorkoutUseCaseProvider
+            .overrideWithValue(mockManageWorkoutUseCase),
+        userProfileRepositoryProvider
+            .overrideWithValue(mockUserProfileRepository),
+        workoutSoundPlayerProvider.overrideWithValue(mockSoundPlayer),
         sharedPreferencesProvider.overrideWithValue(sharedPreferences),
       ],
     );
@@ -100,7 +107,8 @@ void main() {
     group('初期化', () {
       test('should initialize with loading state', () {
         // Arrange & Act
-        final notifier = container.read(workoutScreenStateNotifierProvider(testWorkoutId));
+        final notifier =
+            container.read(workoutScreenStateNotifierProvider(testWorkoutId));
 
         // Assert
         expect(notifier.isLoading, true);
@@ -110,30 +118,33 @@ void main() {
 
       test('should load workout blocks and initialize successfully', () async {
         // Arrange
-        when(mockGetWorkoutBlocksUseCase.call(testWorkoutId))
+        when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
             .thenAnswer((_) async => testWorkoutBlocks);
         when(mockGetCalculatedPowerMeterDataUseCase.call())
             .thenAnswer((_) => Stream.fromIterable([testPowerMeterData]));
         when(mockManageWorkoutUseCase.call(testWorkoutBlocks))
             .thenAnswer((_) => Stream.fromIterable([
-              workout_usecase.WorkoutFrame(
-                timer: const WorkoutTimerState(elapsedSeconds: 0, isRunning: true),
-                progress: WorkoutProgressState(
-                  blocks: testWorkoutBlocks,
-                  totalSeconds: 900,
-                  currentBlockIndex: 0,
-                  elapsedSeconds: 0,
-                ),
-                alert: null,
-              )
-            ]));
+                  workout_usecase.WorkoutFrame(
+                    timer: const WorkoutTimerState(
+                        elapsedSeconds: 0, isRunning: true),
+                    progress: WorkoutProgressState(
+                      blocks: testWorkoutBlocks,
+                      totalSeconds: 900,
+                      currentBlockIndex: 0,
+                      elapsedSeconds: 0,
+                    ),
+                    alert: null,
+                  )
+                ]));
 
         // Act
-        container.read(workoutScreenStateNotifierProvider(testWorkoutId).notifier);
-        await Future.delayed(const Duration(milliseconds: 500)); 
+        container
+            .read(workoutScreenStateNotifierProvider(testWorkoutId).notifier);
+        await Future.delayed(const Duration(milliseconds: 500));
 
         // Assert - 非同期処理のため、値が設定されるかを確認
-        final state = container.read(workoutScreenStateNotifierProvider(testWorkoutId));
+        final state =
+            container.read(workoutScreenStateNotifierProvider(testWorkoutId));
         // 非同期処理の完了を待つのが難しいため、初期値のテストに変更
         expect(state.workoutBlocks, isA<List<WorkoutBlock>>());
         expect(state.maxPower, isA<int>()); // 初期値は0でも良い
@@ -144,12 +155,13 @@ void main() {
       test('should handle error during initialization', () {
         // Arrange
         const errorMessage = 'Failed to load workout blocks';
-        when(mockGetWorkoutBlocksUseCase.call(testWorkoutId))
+        when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
             .thenThrow(Exception(errorMessage));
 
         // Act
-        final state = container.read(workoutScreenStateNotifierProvider(testWorkoutId));
-        
+        final state =
+            container.read(workoutScreenStateNotifierProvider(testWorkoutId));
+
         // Assert - 初期状態はローディングであるべき
         expect(state.isLoading, true);
         expect(state.errorMessage, isNull);
@@ -159,31 +171,35 @@ void main() {
     group('パワーメーターデータの更新', () {
       test('should update power meter data from stream', () async {
         // Arrange
-        when(mockGetWorkoutBlocksUseCase.call(testWorkoutId))
+        when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
             .thenAnswer((_) async => testWorkoutBlocks);
         when(mockGetCalculatedPowerMeterDataUseCase.call())
             .thenAnswer((_) => Stream.fromIterable([testPowerMeterData]));
         when(mockManageWorkoutUseCase.call(testWorkoutBlocks))
             .thenAnswer((_) => Stream.fromIterable([
-              workout_usecase.WorkoutFrame(
-                timer: const WorkoutTimerState(elapsedSeconds: 0, isRunning: true),
-                progress: WorkoutProgressState(
-                  blocks: testWorkoutBlocks,
-                  totalSeconds: 900,
-                  currentBlockIndex: 0,
-                  elapsedSeconds: 0,
-                ),
-                alert: null,
-              )
-            ]));
+                  workout_usecase.WorkoutFrame(
+                    timer: const WorkoutTimerState(
+                        elapsedSeconds: 0, isRunning: true),
+                    progress: WorkoutProgressState(
+                      blocks: testWorkoutBlocks,
+                      totalSeconds: 900,
+                      currentBlockIndex: 0,
+                      elapsedSeconds: 0,
+                    ),
+                    alert: null,
+                  )
+                ]));
 
         // Act
-        container.read(workoutScreenStateNotifierProvider(testWorkoutId).notifier);
-        await Future.delayed(const Duration(milliseconds: 200)); // パワーメーターデータの購読のための時間
+        container
+            .read(workoutScreenStateNotifierProvider(testWorkoutId).notifier);
+        await Future.delayed(
+            const Duration(milliseconds: 200)); // パワーメーターデータの購読のための時間
 
         // Assert - パワーメーターデータのストリームから値が反映されるかをテスト
         // テストを簡潔にするため、初期値（0）のテストのみを行う
-        final state = container.read(workoutScreenStateNotifierProvider(testWorkoutId));
+        final state =
+            container.read(workoutScreenStateNotifierProvider(testWorkoutId));
         expect(state.power, isA<int>());
         expect(state.cadence, isA<int>());
       });
@@ -192,26 +208,28 @@ void main() {
     group('ワークアウト進行の更新', () {
       test('should initialize with correct target power', () {
         // Arrange
-        when(mockGetWorkoutBlocksUseCase.call(testWorkoutId))
+        when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
             .thenAnswer((_) async => testWorkoutBlocks);
         when(mockGetCalculatedPowerMeterDataUseCase.call())
             .thenAnswer((_) => Stream.fromIterable([testPowerMeterData]));
         when(mockManageWorkoutUseCase.call(testWorkoutBlocks))
             .thenAnswer((_) => Stream.fromIterable([
-              workout_usecase.WorkoutFrame(
-                timer: const WorkoutTimerState(elapsedSeconds: 0, isRunning: true),
-                progress: WorkoutProgressState(
-                  blocks: testWorkoutBlocks,
-                  totalSeconds: 900,
-                  currentBlockIndex: 0,
-                  elapsedSeconds: 0,
-                ),
-                alert: null,
-              )
-            ]));
+                  workout_usecase.WorkoutFrame(
+                    timer: const WorkoutTimerState(
+                        elapsedSeconds: 0, isRunning: true),
+                    progress: WorkoutProgressState(
+                      blocks: testWorkoutBlocks,
+                      totalSeconds: 900,
+                      currentBlockIndex: 0,
+                      elapsedSeconds: 0,
+                    ),
+                    alert: null,
+                  )
+                ]));
 
         // Act
-        final state = container.read(workoutScreenStateNotifierProvider(testWorkoutId));
+        final state =
+            container.read(workoutScreenStateNotifierProvider(testWorkoutId));
 
         // Assert - 初期状態の確認
         expect(state.isLoading, true); // 初期状態はローディング
@@ -224,39 +242,44 @@ void main() {
     group('一時停止・再開機能', () {
       test('should toggle pause state correctly', () {
         // Arrange
-        when(mockGetWorkoutBlocksUseCase.call(testWorkoutId))
+        when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
             .thenAnswer((_) async => testWorkoutBlocks);
         when(mockGetCalculatedPowerMeterDataUseCase.call())
             .thenAnswer((_) => Stream.fromIterable([testPowerMeterData]));
         when(mockManageWorkoutUseCase.call(testWorkoutBlocks))
             .thenAnswer((_) => Stream.fromIterable([
-              workout_usecase.WorkoutFrame(
-                timer: const WorkoutTimerState(elapsedSeconds: 0, isRunning: true),
-                progress: WorkoutProgressState(
-                  blocks: testWorkoutBlocks,
-                  totalSeconds: 900,
-                  currentBlockIndex: 0,
-                  elapsedSeconds: 0,
-                ),
-                alert: null,
-              )
-            ]));
+                  workout_usecase.WorkoutFrame(
+                    timer: const WorkoutTimerState(
+                        elapsedSeconds: 0, isRunning: true),
+                    progress: WorkoutProgressState(
+                      blocks: testWorkoutBlocks,
+                      totalSeconds: 900,
+                      currentBlockIndex: 0,
+                      elapsedSeconds: 0,
+                    ),
+                    alert: null,
+                  )
+                ]));
 
         // Act & Assert
-        final notifier = container.read(workoutScreenStateNotifierProvider(testWorkoutId).notifier);
-        
+        final notifier = container
+            .read(workoutScreenStateNotifierProvider(testWorkoutId).notifier);
+
         // 初期状態の確認
-        var state = container.read(workoutScreenStateNotifierProvider(testWorkoutId));
+        var state =
+            container.read(workoutScreenStateNotifierProvider(testWorkoutId));
         expect(state.isPaused, false);
-        
+
         // 一時停止を実行
         notifier.togglePauseResume();
-        state = container.read(workoutScreenStateNotifierProvider(testWorkoutId));
+        state =
+            container.read(workoutScreenStateNotifierProvider(testWorkoutId));
         expect(state.isPaused, true);
-        
+
         // 再開を実行
         notifier.togglePauseResume();
-        state = container.read(workoutScreenStateNotifierProvider(testWorkoutId));
+        state =
+            container.read(workoutScreenStateNotifierProvider(testWorkoutId));
         expect(state.isPaused, false);
       });
     });
@@ -264,28 +287,30 @@ void main() {
     group('リソースクリーンアップ', () {
       test('should dispose resources when provider is disposed', () async {
         // Arrange
-        when(mockGetWorkoutBlocksUseCase.call(testWorkoutId))
+        when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
             .thenAnswer((_) async => testWorkoutBlocks);
         when(mockGetCalculatedPowerMeterDataUseCase.call())
             .thenAnswer((_) => Stream.fromIterable([testPowerMeterData]));
         when(mockManageWorkoutUseCase.call(testWorkoutBlocks))
             .thenAnswer((_) => Stream.fromIterable([
-              workout_usecase.WorkoutFrame(
-                timer: const WorkoutTimerState(elapsedSeconds: 0, isRunning: true),
-                progress: WorkoutProgressState(
-                  blocks: testWorkoutBlocks,
-                  totalSeconds: 900,
-                  currentBlockIndex: 0,
-                  elapsedSeconds: 0,
-                ),
-                alert: null,
-              )
-            ]));
+                  workout_usecase.WorkoutFrame(
+                    timer: const WorkoutTimerState(
+                        elapsedSeconds: 0, isRunning: true),
+                    progress: WorkoutProgressState(
+                      blocks: testWorkoutBlocks,
+                      totalSeconds: 900,
+                      currentBlockIndex: 0,
+                      elapsedSeconds: 0,
+                    ),
+                    alert: null,
+                  )
+                ]));
 
         // Act
-        container.read(workoutScreenStateNotifierProvider(testWorkoutId).notifier);
+        container
+            .read(workoutScreenStateNotifierProvider(testWorkoutId).notifier);
         await Future.delayed(const Duration(milliseconds: 300)); // 非同期処理の完了を待つ
-        
+
         // Dispose container
         container.dispose();
 

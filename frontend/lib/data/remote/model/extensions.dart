@@ -49,7 +49,8 @@ extension WorkoutResultDtoExtension on WorkoutResultDto {
       status: status,
       createdAt: DateTime.parse(created_at),
       updatedAt: DateTime.parse(updated_at),
-      workoutBlockResults: workout_block_results.map((e) => e.toDomain()).toList(),
+      workoutBlockResults:
+          workout_block_results.map((e) => e.toDomain()).toList(),
     );
   }
 }

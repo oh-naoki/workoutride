@@ -20,7 +20,9 @@ mixin _$WorkoutDetailScreenUiState {
   WorkoutSummary? get workoutSummary => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
-  double? get userWeight => throw _privateConstructorUsedError;
+  double? get userWeight =>
+      throw _privateConstructorUsedError; // 生の FTP。null は「未設定」を意味し、View 側でデフォルト200W扱い＋警告表示する。
+  int? get userFtp => throw _privateConstructorUsedError;
 
   /// Create a copy of WorkoutDetailScreenUiState
   /// with the given fields replaced by the non-null parameter values.
@@ -41,7 +43,8 @@ abstract class $WorkoutDetailScreenUiStateCopyWith<$Res> {
       WorkoutSummary? workoutSummary,
       bool isLoading,
       String? errorMessage,
-      double? userWeight});
+      double? userWeight,
+      int? userFtp});
 
   $WorkoutSummaryCopyWith<$Res>? get workoutSummary;
 }
@@ -67,6 +70,7 @@ class _$WorkoutDetailScreenUiStateCopyWithImpl<$Res,
     Object? isLoading = null,
     Object? errorMessage = freezed,
     Object? userWeight = freezed,
+    Object? userFtp = freezed,
   }) {
     return _then(_value.copyWith(
       workoutBlocks: null == workoutBlocks
@@ -89,6 +93,10 @@ class _$WorkoutDetailScreenUiStateCopyWithImpl<$Res,
           ? _value.userWeight
           : userWeight // ignore: cast_nullable_to_non_nullable
               as double?,
+      userFtp: freezed == userFtp
+          ? _value.userFtp
+          : userFtp // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 
@@ -121,7 +129,8 @@ abstract class _$$WorkoutDetailScreenUiStateImplCopyWith<$Res>
       WorkoutSummary? workoutSummary,
       bool isLoading,
       String? errorMessage,
-      double? userWeight});
+      double? userWeight,
+      int? userFtp});
 
   @override
   $WorkoutSummaryCopyWith<$Res>? get workoutSummary;
@@ -147,6 +156,7 @@ class __$$WorkoutDetailScreenUiStateImplCopyWithImpl<$Res>
     Object? isLoading = null,
     Object? errorMessage = freezed,
     Object? userWeight = freezed,
+    Object? userFtp = freezed,
   }) {
     return _then(_$WorkoutDetailScreenUiStateImpl(
       workoutBlocks: null == workoutBlocks
@@ -169,6 +179,10 @@ class __$$WorkoutDetailScreenUiStateImplCopyWithImpl<$Res>
           ? _value.userWeight
           : userWeight // ignore: cast_nullable_to_non_nullable
               as double?,
+      userFtp: freezed == userFtp
+          ? _value.userFtp
+          : userFtp // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -183,7 +197,8 @@ class _$WorkoutDetailScreenUiStateImpl
       this.workoutSummary = null,
       this.isLoading = false,
       this.errorMessage = null,
-      this.userWeight = null})
+      this.userWeight = null,
+      this.userFtp = null})
       : _workoutBlocks = workoutBlocks;
 
   final List<WorkoutBlock> _workoutBlocks;
@@ -207,10 +222,14 @@ class _$WorkoutDetailScreenUiStateImpl
   @override
   @JsonKey()
   final double? userWeight;
+// 生の FTP。null は「未設定」を意味し、View 側でデフォルト200W扱い＋警告表示する。
+  @override
+  @JsonKey()
+  final int? userFtp;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'WorkoutDetailScreenUiState(workoutBlocks: $workoutBlocks, workoutSummary: $workoutSummary, isLoading: $isLoading, errorMessage: $errorMessage, userWeight: $userWeight)';
+    return 'WorkoutDetailScreenUiState(workoutBlocks: $workoutBlocks, workoutSummary: $workoutSummary, isLoading: $isLoading, errorMessage: $errorMessage, userWeight: $userWeight, userFtp: $userFtp)';
   }
 
   @override
@@ -222,7 +241,8 @@ class _$WorkoutDetailScreenUiStateImpl
       ..add(DiagnosticsProperty('workoutSummary', workoutSummary))
       ..add(DiagnosticsProperty('isLoading', isLoading))
       ..add(DiagnosticsProperty('errorMessage', errorMessage))
-      ..add(DiagnosticsProperty('userWeight', userWeight));
+      ..add(DiagnosticsProperty('userWeight', userWeight))
+      ..add(DiagnosticsProperty('userFtp', userFtp));
   }
 
   @override
@@ -239,7 +259,8 @@ class _$WorkoutDetailScreenUiStateImpl
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage) &&
             (identical(other.userWeight, userWeight) ||
-                other.userWeight == userWeight));
+                other.userWeight == userWeight) &&
+            (identical(other.userFtp, userFtp) || other.userFtp == userFtp));
   }
 
   @override
@@ -249,7 +270,8 @@ class _$WorkoutDetailScreenUiStateImpl
       workoutSummary,
       isLoading,
       errorMessage,
-      userWeight);
+      userWeight,
+      userFtp);
 
   /// Create a copy of WorkoutDetailScreenUiState
   /// with the given fields replaced by the non-null parameter values.
@@ -268,7 +290,8 @@ abstract class _WorkoutDetailScreenUiState
       final WorkoutSummary? workoutSummary,
       final bool isLoading,
       final String? errorMessage,
-      final double? userWeight}) = _$WorkoutDetailScreenUiStateImpl;
+      final double? userWeight,
+      final int? userFtp}) = _$WorkoutDetailScreenUiStateImpl;
 
   @override
   List<WorkoutBlock> get workoutBlocks;
@@ -279,7 +302,9 @@ abstract class _WorkoutDetailScreenUiState
   @override
   String? get errorMessage;
   @override
-  double? get userWeight;
+  double? get userWeight; // 生の FTP。null は「未設定」を意味し、View 側でデフォルト200W扱い＋警告表示する。
+  @override
+  int? get userFtp;
 
   /// Create a copy of WorkoutDetailScreenUiState
   /// with the given fields replaced by the non-null parameter values.

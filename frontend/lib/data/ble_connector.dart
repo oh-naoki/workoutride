@@ -17,7 +17,8 @@ class BleConnector {
   }
 
   Stream<List<ScanResult>> scan() {
-    final StreamController<List<ScanResult>> controller = StreamController<List<ScanResult>>();
+    final StreamController<List<ScanResult>> controller =
+        StreamController<List<ScanResult>>();
     final Set<String> seenDevices = {}; // デバイスのIDを保持するSet
     final List<ScanResult> scanResults = []; // スキャン結果を保持するList
 
@@ -28,7 +29,8 @@ class BleConnector {
         if (!seenDevices.contains(deviceId)) {
           seenDevices.add(deviceId); // 新しいデバイスを記録
           scanResults.add(result); // スキャン結果をListに追加
-          controller.add(List.unmodifiable(scanResults)); // StreamにListのスナップショットを追加
+          controller
+              .add(List.unmodifiable(scanResults)); // StreamにListのスナップショットを追加
         }
       }
     }, onError: (e) {
@@ -45,7 +47,7 @@ class BleConnector {
   Future<void> connect(String deviceId) async {
     // deviceIdを永続化
     await _sharedPreferences.setString(_deviceIdKey, deviceId);
-    
+
     final device = BluetoothDevice.fromId(deviceId);
     await device.connect();
   }
@@ -64,16 +66,16 @@ class BleConnector {
       }
 
       final device = BluetoothDevice.fromId(savedDeviceId);
-      
+
       // 接続を試行
       await device.connect(timeout: const Duration(seconds: 10));
-      
+
       // 接続状態を確認
       final isConnected = device.isConnected;
       if (!isConnected) {
         return false;
       }
-      
+
       return true;
     } catch (e) {
       return false;
@@ -98,19 +100,19 @@ class BleConnector {
     try {
       // SharedPreferencesからdeviceIdを取得
       final savedDeviceId = _sharedPreferences.getString(_deviceIdKey);
-      
+
       if (savedDeviceId == null) {
         throw Exception('デバイスが接続されていません');
       }
 
       final device = BluetoothDevice.fromId(savedDeviceId);
-      
+
       // 接続を待機
       await device.connect();
-      
+
       // サービスディスカバリーを待機
       final services = await device.discoverServices();
-      
+
       bool characteristicFound = false;
       for (var service in services) {
         for (var characteristic in service.characteristics) {
@@ -123,7 +125,7 @@ class BleConnector {
           }
         }
       }
-      
+
       if (!characteristicFound) {
         throw Exception('指定されたUUIDのキャラクタリスティックが見つかりませんでした');
       }

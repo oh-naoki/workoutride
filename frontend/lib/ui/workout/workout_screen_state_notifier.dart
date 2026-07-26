@@ -2,16 +2,15 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:workoutride/data/remote/model/save_workout_result_request.dart';
+import 'package:workoutride/data/audio/workout_sound_player.dart';
 import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/domain/model/power_alert_message.dart';
-import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart';
+import 'package:workoutride/domain/repository/user_profile_repository.dart';
+import 'package:workoutride/domain/repository/workout_repository.dart';
+import 'package:workoutride/domain/service/workout_result_recorder.dart';
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart';
-import 'package:workoutride/domain/usecase/user_profile/get_user_ftp_use_case.dart';
-import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart';
 import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart';
-import 'package:workoutride/domain/usecase/workout/save_workout_result_use_case.dart';
 
 part 'workout_screen_state_notifier.freezed.dart';
 part 'workout_screen_state_notifier.g.dart';
@@ -45,12 +44,11 @@ class WorkoutScreenUiState with _$WorkoutScreenUiState {
 
 @riverpod
 class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
-  late final GetWorkoutBlocksUseCase _getWorkoutBlocksUseCase;
+  late final WorkoutRepository _workoutRepository;
+  late final UserProfileRepository _userProfileRepository;
   late final GetCalculatedPowerMeterDataUseCase _getPowerMeterDataUseCase;
-  late final GetUserFtpUseCase _getUserFtpUseCase;
-  late final GetUserProfileUseCase _getUserProfileUseCase;
   late final ManageWorkoutUseCase _manageWorkoutUseCase;
-  late final SaveWorkoutResultUseCase _saveWorkoutResultUseCase;
+  late final WorkoutSoundPlayer _soundPlayer;
   double? _userWeight;
   int? _userFtp;
   StreamSubscription? _workoutSubscription;
@@ -58,16 +56,11 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
   Timer? _countdownTimer;
   Timer? _completionTimer;
 
-  // ワークアウト結果の記録用
-  DateTime? _workoutStartedAt;
-  int _overallMaxPower = 0;
-  final List<int> _allPowerReadings = [];
-  final List<int> _allCadenceReadings = [];
-  // ブロックごとの記録
-  final List<List<int>> _blockPowerReadings = [];
-  final List<List<int>> _blockCadenceReadings = [];
-  final List<int> _blockMaxPowers = [];
+  // ワークアウト結果の集計は WorkoutResultRecorder（純粋ドメインサービス）へ委譲。
+  WorkoutResultRecorder? _recorder;
   int _lastBlockIndex = 0;
+  // 同じ警告を毎秒連打しないよう、直近に再生したアラート種別を記録する。
+  PowerAlertMessage? _lastAlertPlayed;
 
   @override
   WorkoutScreenUiState build(int workoutId) {
@@ -75,12 +68,12 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
     _workoutSubscription?.cancel();
     _countdownTimer?.cancel();
 
-    _getWorkoutBlocksUseCase = ref.read(getWorkoutBlocksUseCaseProvider);
-    _getPowerMeterDataUseCase = ref.read(getCalculatedPowerMeterDataUseCaseProvider);
-    _getUserFtpUseCase = ref.read(getUserFtpUseCaseProvider);
-    _getUserProfileUseCase = ref.read(getUserProfileUseCaseProvider);
+    _workoutRepository = ref.read(workoutRepositoryProvider);
+    _userProfileRepository = ref.read(userProfileRepositoryProvider);
+    _getPowerMeterDataUseCase =
+        ref.read(getCalculatedPowerMeterDataUseCaseProvider);
     _manageWorkoutUseCase = ref.read(manageWorkoutUseCaseProvider);
-    _saveWorkoutResultUseCase = ref.read(saveWorkoutResultUseCaseProvider);
+    _soundPlayer = ref.read(workoutSoundPlayerProvider);
 
     ref.onDispose(() {
       _powerSubscription?.cancel();
@@ -96,7 +89,7 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
 
   void startCountdown() {
     if (!state.isCountingDown) return;
-    
+
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (state.countdownSeconds <= 1) {
         timer.cancel();
@@ -104,8 +97,12 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
           isCountingDown: false,
           countdownSeconds: 15,
         );
+        _soundPlayer.playBlockTransition(); // 開始の合図
         _startWorkoutAfterCountdown();
       } else {
+        if (state.countdownSeconds <= 5) {
+          _soundPlayer.playCountdownTick();
+        }
         state = state.copyWith(
           countdownSeconds: state.countdownSeconds - 1,
         );
@@ -116,23 +113,16 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
   void _startWorkoutAfterCountdown() {
     if (state.workoutBlocks.isEmpty) return;
 
-    _workoutStartedAt = DateTime.now();
     _lastBlockIndex = 0;
-    _overallMaxPower = 0;
-    _allPowerReadings.clear();
-    _allCadenceReadings.clear();
-    _blockPowerReadings.clear();
-    _blockCadenceReadings.clear();
-    _blockMaxPowers.clear();
-    // ブロックごとの記録用リストを初期化
-    for (var i = 0; i < state.workoutBlocks.length; i++) {
-      _blockPowerReadings.add([]);
-      _blockCadenceReadings.add([]);
-      _blockMaxPowers.add(0);
-    }
+    _recorder = WorkoutResultRecorder(
+      blocks: state.workoutBlocks,
+      startedAt: DateTime.now(),
+    );
+    _soundPlayer.startAmbientLoop();
 
     // ManageWorkoutUseCaseのストリームを購読し、UiStateへ反映
-    _workoutSubscription = _manageWorkoutUseCase(state.workoutBlocks).listen((frame) {
+    _workoutSubscription =
+        _manageWorkoutUseCase(state.workoutBlocks).listen((frame) {
       final timerState = frame.timer;
       final progressState = frame.progress;
       final alert = frame.alert;
@@ -140,12 +130,25 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
       // ブロック切り替えを検出
       if (progressState.currentBlockIndex != _lastBlockIndex) {
         _lastBlockIndex = progressState.currentBlockIndex;
+        _soundPlayer.playBlockTransition();
       }
 
+      // パワーアラートは種別が変化した瞬間だけ再生する（毎秒連打しない）
+      if (alert != null && alert != _lastAlertPlayed) {
+        if (alert == PowerAlertMessage.powerTooHigh) {
+          _soundPlayer.playPowerTooHigh();
+        } else if (alert == PowerAlertMessage.powerTooLow) {
+          _soundPlayer.playPowerTooLow();
+        }
+      }
+      _lastAlertPlayed = alert;
+
       // 現在ブロックに応じてターゲットパワーを更新
-      final nextTarget = (progressState.currentBlockIndex < state.workoutBlocks.length)
-          ? state.workoutBlocks[progressState.currentBlockIndex].calculateTargetPower(_userFtp!)
-          : state.targetPower;
+      final nextTarget =
+          (progressState.currentBlockIndex < state.workoutBlocks.length)
+              ? state.workoutBlocks[progressState.currentBlockIndex]
+                  .calculateTargetPower(_userFtp!)
+              : state.targetPower;
 
       state = state.copyWith(
         elapsedSeconds: timerState.elapsedSeconds,
@@ -157,6 +160,8 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
       // ワークアウト完了時に自動保存
       if (progressState.isCompleted && !state.isCompleted) {
         state = state.copyWith(isCompleted: true);
+        _soundPlayer.stopAmbientLoop();
+        _soundPlayer.playWorkoutComplete();
         _saveResult('completed');
       }
     });
@@ -166,30 +171,11 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
       final power = powerMeterData.power;
       final cadence = powerMeterData.cadence;
 
-      // 全体の記録
-      if (power > 0) {
-        _allPowerReadings.add(power);
-        if (power > _overallMaxPower) {
-          _overallMaxPower = power;
-        }
-      }
-      if (cadence > 0) {
-        _allCadenceReadings.add(cadence);
-      }
-
-      // 現在ブロックの記録
-      final blockIndex = state.currentBlockIndex;
-      if (blockIndex < _blockPowerReadings.length) {
-        if (power > 0) {
-          _blockPowerReadings[blockIndex].add(power);
-          if (power > _blockMaxPowers[blockIndex]) {
-            _blockMaxPowers[blockIndex] = power;
-          }
-        }
-        if (cadence > 0) {
-          _blockCadenceReadings[blockIndex].add(cadence);
-        }
-      }
+      _recorder?.record(
+        power: power,
+        cadence: cadence,
+        blockIndex: state.currentBlockIndex,
+      );
 
       state = state.copyWith(
         power: power,
@@ -200,28 +186,34 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
 
   Future<void> _initializeWorkout(int workoutId) async {
     try {
-      // FTPはGetUserFtpUseCaseで直接取得（ワークアウト前画面と同じ方法）
-      final ftp = await _getUserFtpUseCase();
+      // FTPは UserProfileRepository から直接取得（ワークアウト前画面と同じ方法）
+      final ftp = await _userProfileRepository.getFtp();
       _userFtp = ftp ?? 200;
 
       // 体重はUserProfileから取得（失敗してもFTP取得には影響しない）
       try {
-        final userProfile = await _getUserProfileUseCase();
+        final userProfile = await _userProfileRepository.getUserProfile();
         _userWeight = userProfile?.weight ?? 60.0;
       } catch (_) {
         _userWeight = 60.0;
       }
 
-      final blocks = await _getWorkoutBlocksUseCase.call(workoutId);
+      final blocks = await _workoutRepository.getWorkoutBlocks(workoutId);
 
-      final maxTargetPercentage = blocks.fold(0, (max, block) => block.targetFtpPercentage > max ? block.targetFtpPercentage : max);
+      final maxTargetPercentage = blocks.fold(
+          0,
+          (max, block) => block.targetFtpPercentage > max
+              ? block.targetFtpPercentage
+              : max);
       final maxTargetWatts = (_userFtp! * maxTargetPercentage / 100).round();
 
       state = WorkoutScreenUiState(
         workoutBlocks: blocks,
         isLoading: false,
         maxPower: (maxTargetWatts * 1.5).toInt(),
-        targetPower: blocks.isNotEmpty ? blocks.first.calculateTargetPower(_userFtp!) : 0,
+        targetPower: blocks.isNotEmpty
+            ? blocks.first.calculateTargetPower(_userFtp!)
+            : 0,
         userWeight: _userWeight!,
         userFtp: _userFtp!,
       );
@@ -243,8 +235,10 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
     final shouldPause = !state.isPaused;
     if (shouldPause) {
       _manageWorkoutUseCase.pauseWorkout();
+      _soundPlayer.playPause();
     } else {
       _manageWorkoutUseCase.resumeWorkout();
+      _soundPlayer.playResume();
     }
     state = state.copyWith(isPaused: shouldPause);
   }
@@ -253,73 +247,25 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
     _workoutSubscription?.cancel();
     _powerSubscription?.cancel();
     _manageWorkoutUseCase.dispose();
+    _soundPlayer.stopAmbientLoop();
     await _saveResult('abandoned');
   }
 
   Future<void> _saveResult(String status) async {
-    if (_workoutStartedAt == null || state.workoutBlocks.isEmpty) return;
+    if (_recorder == null || state.workoutBlocks.isEmpty) return;
     if (state.isSavingResult || state.isResultSaved) return;
 
     state = state.copyWith(isSavingResult: true);
 
     try {
-      final now = DateTime.now();
-      final averagePower = _allPowerReadings.isNotEmpty
-          ? (_allPowerReadings.reduce((a, b) => a + b) / _allPowerReadings.length).round()
-          : null;
-      final averageCadence = _allCadenceReadings.isNotEmpty
-          ? (_allCadenceReadings.reduce((a, b) => a + b) / _allCadenceReadings.length).round()
-          : null;
-
-      final blockResults = <SaveWorkoutBlockResultRequest>[];
-      for (var i = 0; i < state.workoutBlocks.length; i++) {
-        if (i > state.currentBlockIndex && status == 'abandoned') break;
-
-        final blockPowers = _blockPowerReadings.length > i ? _blockPowerReadings[i] : <int>[];
-        final blockCadences = _blockCadenceReadings.length > i ? _blockCadenceReadings[i] : <int>[];
-        final blockMaxPower = _blockMaxPowers.length > i ? _blockMaxPowers[i] : null;
-
-        // 実際に経過したブロック時間を計算
-        int blockDuration;
-        if (i < state.currentBlockIndex) {
-          blockDuration = state.workoutBlocks[i].durationSeconds;
-        } else if (i == state.currentBlockIndex) {
-          int previousBlocksTime = 0;
-          for (var j = 0; j < i; j++) {
-            previousBlocksTime += state.workoutBlocks[j].durationSeconds;
-          }
-          blockDuration = state.elapsedSeconds - previousBlocksTime;
-          if (blockDuration < 0) blockDuration = 0;
-        } else {
-          blockDuration = 0;
-        }
-
-        blockResults.add(SaveWorkoutBlockResultRequest(
-          workoutBlockId: state.workoutBlocks[i].id,
-          averagePower: blockPowers.isNotEmpty
-              ? (blockPowers.reduce((a, b) => a + b) / blockPowers.length).round()
-              : null,
-          maxPower: blockMaxPower != null && blockMaxPower > 0 ? blockMaxPower : null,
-          averageCadence: blockCadences.isNotEmpty
-              ? (blockCadences.reduce((a, b) => a + b) / blockCadences.length).round()
-              : null,
-          durationSeconds: blockDuration,
-        ));
-      }
-
-      final request = SaveWorkoutResultRequest(
-        workoutSummaryId: state.workoutBlocks.first.workoutId,
-        startedAt: _workoutStartedAt!.toUtc().toIso8601String(),
-        finishedAt: now.toUtc().toIso8601String(),
-        totalDurationSeconds: state.elapsedSeconds,
-        averagePower: averagePower,
-        maxPower: _overallMaxPower > 0 ? _overallMaxPower : null,
-        averageCadence: averageCadence,
+      final draft = _recorder!.buildDraft(
         status: status,
-        workoutBlockResults: blockResults,
+        currentBlockIndex: state.currentBlockIndex,
+        elapsedSeconds: state.elapsedSeconds,
+        finishedAt: DateTime.now(),
       );
 
-      await _saveWorkoutResultUseCase.call(request);
+      await _workoutRepository.saveWorkoutResult(draft);
       state = state.copyWith(isSavingResult: false, isResultSaved: true);
       if (status == 'completed') {
         _startCompletionCountdown();
@@ -339,8 +285,10 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
       final remaining = state.completionCountdown - 1;
       if (remaining <= 0) {
         timer.cancel();
-        state = state.copyWith(completionCountdown: 0, shouldNavigateHome: true);
+        state =
+            state.copyWith(completionCountdown: 0, shouldNavigateHome: true);
       } else {
+        _soundPlayer.playCountdownTick();
         state = state.copyWith(completionCountdown: remaining);
       }
     });

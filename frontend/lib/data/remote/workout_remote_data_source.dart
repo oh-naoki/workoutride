@@ -14,7 +14,8 @@ class WorkoutRemoteDataSource {
   WorkoutRemoteDataSource(this._apiClient);
 
   Future<List<WorkoutSummary>> getWorkoutSummaries() async {
-    final List<WorkoutSummaryDto> summaries = await _apiClient.getWorkoutSummaries();
+    final List<WorkoutSummaryDto> summaries =
+        await _apiClient.getWorkoutSummaries();
     return summaries.map((e) => e.toDomain()).toList();
   }
 
@@ -24,7 +25,8 @@ class WorkoutRemoteDataSource {
   }
 
   Future<List<WorkoutBlock>> getWorkoutBlocks(int workoutSummaryId) async {
-    final List<WorkoutBlockDto> blocks = await _apiClient.getWorkoutBlocks(workoutSummaryId);
+    final List<WorkoutBlockDto> blocks =
+        await _apiClient.getWorkoutBlocks(workoutSummaryId);
     return blocks.map((e) => e.toDomain()).toList();
   }
 
@@ -38,8 +40,10 @@ class WorkoutRemoteDataSource {
     return result.toDomain();
   }
 
-  Future<WorkoutResult> saveWorkoutResult(SaveWorkoutResultRequest request) async {
-    final WorkoutResultDto result = await _apiClient.saveWorkoutResult(request.toJson());
+  Future<WorkoutResult> saveWorkoutResult(
+      SaveWorkoutResultRequest request) async {
+    final WorkoutResultDto result =
+        await _apiClient.saveWorkoutResult(request.toJson());
     return result.toDomain();
   }
 }

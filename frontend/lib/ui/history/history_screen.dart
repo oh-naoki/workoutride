@@ -34,7 +34,9 @@ class HistoryScreen extends ConsumerWidget {
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () {
-                  ref.read(historyScreenStateNotifierProvider.notifier).refreshWorkoutResults();
+                  ref
+                      .read(historyScreenStateNotifierProvider.notifier)
+                      .refreshWorkoutResults();
                 },
                 child: const Text('再読み込み'),
               ),
@@ -53,9 +55,11 @@ class HistoryScreen extends ConsumerWidget {
             children: [
               Icon(Icons.history, size: 64, color: Colors.grey[600]),
               const SizedBox(height: 16),
-              const Text('まだ履歴がありません', style: TextStyle(color: Colors.grey, fontSize: 16)),
+              const Text('まだ履歴がありません',
+                  style: TextStyle(color: Colors.grey, fontSize: 16)),
               const SizedBox(height: 8),
-              const Text('ワークアウトを完了すると履歴が表示されます', style: TextStyle(color: Colors.grey, fontSize: 12)),
+              const Text('ワークアウトを完了すると履歴が表示されます',
+                  style: TextStyle(color: Colors.grey, fontSize: 12)),
             ],
           ),
         ),
@@ -64,7 +68,9 @@ class HistoryScreen extends ConsumerWidget {
 
     return RefreshIndicator(
       onRefresh: () async {
-        ref.read(historyScreenStateNotifierProvider.notifier).refreshWorkoutResults();
+        ref
+            .read(historyScreenStateNotifierProvider.notifier)
+            .refreshWorkoutResults();
       },
       child: ListView.builder(
         itemCount: uiState.workoutResults.length,
@@ -120,7 +126,9 @@ class WorkoutResultItem extends StatelessWidget {
           color: const Color(0xFF2C2C2C),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: isCompleted ? Colors.green.withValues(alpha: 0.5) : Colors.orange.withValues(alpha: 0.5),
+            color: isCompleted
+                ? Colors.green.withValues(alpha: 0.5)
+                : Colors.orange.withValues(alpha: 0.5),
             width: 1,
           ),
         ),
@@ -138,9 +146,12 @@ class WorkoutResultItem extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: isCompleted ? Colors.green.withValues(alpha: 0.2) : Colors.orange.withValues(alpha: 0.2),
+                    color: isCompleted
+                        ? Colors.green.withValues(alpha: 0.2)
+                        : Colors.orange.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
