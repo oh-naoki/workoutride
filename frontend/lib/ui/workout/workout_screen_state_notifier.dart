@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:workoutride/data/audio/workout_sound_player.dart';
 import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/domain/model/power_alert_message.dart';
@@ -47,6 +48,7 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
   late final UserProfileRepository _userProfileRepository;
   late final GetCalculatedPowerMeterDataUseCase _getPowerMeterDataUseCase;
   late final ManageWorkoutUseCase _manageWorkoutUseCase;
+  late final WorkoutSoundPlayer _soundPlayer;
   double? _userWeight;
   int? _userFtp;
   StreamSubscription? _workoutSubscription;
@@ -57,6 +59,8 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
   // ワークアウト結果の集計は WorkoutResultRecorder（純粋ドメインサービス）へ委譲。
   WorkoutResultRecorder? _recorder;
   int _lastBlockIndex = 0;
+  // 同じ警告を毎秒連打しないよう、直近に再生したアラート種別を記録する。
+  PowerAlertMessage? _lastAlertPlayed;
 
   @override
   WorkoutScreenUiState build(int workoutId) {
@@ -69,6 +73,7 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
     _getPowerMeterDataUseCase =
         ref.read(getCalculatedPowerMeterDataUseCaseProvider);
     _manageWorkoutUseCase = ref.read(manageWorkoutUseCaseProvider);
+    _soundPlayer = ref.read(workoutSoundPlayerProvider);
 
     ref.onDispose(() {
       _powerSubscription?.cancel();
@@ -92,8 +97,12 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
           isCountingDown: false,
           countdownSeconds: 15,
         );
+        _soundPlayer.playBlockTransition(); // 開始の合図
         _startWorkoutAfterCountdown();
       } else {
+        if (state.countdownSeconds <= 5) {
+          _soundPlayer.playCountdownTick();
+        }
         state = state.copyWith(
           countdownSeconds: state.countdownSeconds - 1,
         );
@@ -109,6 +118,7 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
       blocks: state.workoutBlocks,
       startedAt: DateTime.now(),
     );
+    _soundPlayer.startAmbientLoop();
 
     // ManageWorkoutUseCaseのストリームを購読し、UiStateへ反映
     _workoutSubscription =
@@ -120,7 +130,18 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
       // ブロック切り替えを検出
       if (progressState.currentBlockIndex != _lastBlockIndex) {
         _lastBlockIndex = progressState.currentBlockIndex;
+        _soundPlayer.playBlockTransition();
       }
+
+      // パワーアラートは種別が変化した瞬間だけ再生する（毎秒連打しない）
+      if (alert != null && alert != _lastAlertPlayed) {
+        if (alert == PowerAlertMessage.powerTooHigh) {
+          _soundPlayer.playPowerTooHigh();
+        } else if (alert == PowerAlertMessage.powerTooLow) {
+          _soundPlayer.playPowerTooLow();
+        }
+      }
+      _lastAlertPlayed = alert;
 
       // 現在ブロックに応じてターゲットパワーを更新
       final nextTarget =
@@ -139,6 +160,8 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
       // ワークアウト完了時に自動保存
       if (progressState.isCompleted && !state.isCompleted) {
         state = state.copyWith(isCompleted: true);
+        _soundPlayer.stopAmbientLoop();
+        _soundPlayer.playWorkoutComplete();
         _saveResult('completed');
       }
     });
@@ -212,8 +235,10 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
     final shouldPause = !state.isPaused;
     if (shouldPause) {
       _manageWorkoutUseCase.pauseWorkout();
+      _soundPlayer.playPause();
     } else {
       _manageWorkoutUseCase.resumeWorkout();
+      _soundPlayer.playResume();
     }
     state = state.copyWith(isPaused: shouldPause);
   }
@@ -222,6 +247,7 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
     _workoutSubscription?.cancel();
     _powerSubscription?.cancel();
     _manageWorkoutUseCase.dispose();
+    _soundPlayer.stopAmbientLoop();
     await _saveResult('abandoned');
   }
 
@@ -262,6 +288,7 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
         state =
             state.copyWith(completionCountdown: 0, shouldNavigateHome: true);
       } else {
+        _soundPlayer.playCountdownTick();
         state = state.copyWith(completionCountdown: remaining);
       }
     });

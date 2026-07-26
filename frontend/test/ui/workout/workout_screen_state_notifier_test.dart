@@ -13,17 +13,22 @@ import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_useca
 import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart'
     as workout_usecase;
 import 'package:workoutride/domain/repository/user_profile_repository.dart';
+import 'package:workoutride/data/audio/workout_sound_player.dart';
 import 'package:workoutride/ui/workout/workout_screen_state_notifier.dart';
 import 'package:workoutride/di/providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'workout_screen_state_notifier_test.mocks.dart';
 
+// WorkoutSoundPlayer は実体だと AudioPlayer の生成がプラットフォームチャンネルに
+// 依存し、flutter test 環境（Flutterバインディング無し）では非同期に例外を投げる。
+// 効果音再生は本テストの関心事ではないため、他の外部依存と同様にモックへ差し替える。
 @GenerateMocks([
   WorkoutRepository,
   GetCalculatedPowerMeterDataUseCase,
   workout_usecase.ManageWorkoutUseCase,
   UserProfileRepository,
+  WorkoutSoundPlayer,
 ])
 void main() {
   late ProviderContainer container;
@@ -32,6 +37,7 @@ void main() {
       mockGetCalculatedPowerMeterDataUseCase;
   late MockManageWorkoutUseCase mockManageWorkoutUseCase;
   late MockUserProfileRepository mockUserProfileRepository;
+  late MockWorkoutSoundPlayer mockSoundPlayer;
 
   // テストデータ
   const testWorkoutId = 1;
@@ -69,6 +75,10 @@ void main() {
         MockGetCalculatedPowerMeterDataUseCase();
     mockManageWorkoutUseCase = MockManageWorkoutUseCase();
     mockUserProfileRepository = MockUserProfileRepository();
+    mockSoundPlayer = MockWorkoutSoundPlayer();
+    when(mockSoundPlayer.startAmbientLoop(volume: anyNamed('volume')))
+        .thenAnswer((_) async {});
+    when(mockSoundPlayer.stopAmbientLoop()).thenAnswer((_) async {});
 
     // SharedPreferencesのモックを作成
     SharedPreferences.setMockInitialValues({});
@@ -83,6 +93,7 @@ void main() {
             .overrideWithValue(mockManageWorkoutUseCase),
         userProfileRepositoryProvider
             .overrideWithValue(mockUserProfileRepository),
+        workoutSoundPlayerProvider.overrideWithValue(mockSoundPlayer),
         sharedPreferencesProvider.overrideWithValue(sharedPreferences),
       ],
     );

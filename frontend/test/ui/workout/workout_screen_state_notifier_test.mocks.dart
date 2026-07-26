@@ -6,6 +6,7 @@
 import 'dart:async' as _i5;
 
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:workoutride/data/audio/workout_sound_player.dart' as _i13;
 import 'package:workoutride/domain/model/power_meter_data.dart' as _i9;
 import 'package:workoutride/domain/model/user_profile.dart' as _i12;
 import 'package:workoutride/domain/model/workout/workout_block.dart' as _i6;
@@ -285,4 +286,108 @@ class MockUserProfileRepository extends _i1.Mock
         returnValue: _i5.Future<void>.value(),
         returnValueForMissingStub: _i5.Future<void>.value(),
       ) as _i5.Future<void>);
+}
+
+/// A class which mocks [WorkoutSoundPlayer].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockWorkoutSoundPlayer extends _i1.Mock
+    implements _i13.WorkoutSoundPlayer {
+  MockWorkoutSoundPlayer() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  void playCountdownTick() => super.noSuchMethod(
+        Invocation.method(
+          #playCountdownTick,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void playBlockTransition() => super.noSuchMethod(
+        Invocation.method(
+          #playBlockTransition,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void playPowerTooHigh() => super.noSuchMethod(
+        Invocation.method(
+          #playPowerTooHigh,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void playPowerTooLow() => super.noSuchMethod(
+        Invocation.method(
+          #playPowerTooLow,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void playPause() => super.noSuchMethod(
+        Invocation.method(
+          #playPause,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void playResume() => super.noSuchMethod(
+        Invocation.method(
+          #playResume,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void playWorkoutComplete() => super.noSuchMethod(
+        Invocation.method(
+          #playWorkoutComplete,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i5.Future<void> startAmbientLoop({double? volume = 0.4}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #startAmbientLoop,
+          [],
+          {#volume: volume},
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
+
+  @override
+  _i5.Future<void> stopAmbientLoop() => (super.noSuchMethod(
+        Invocation.method(
+          #stopAmbientLoop,
+          [],
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
+
+  @override
+  void dispose() => super.noSuchMethod(
+        Invocation.method(
+          #dispose,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
 }
