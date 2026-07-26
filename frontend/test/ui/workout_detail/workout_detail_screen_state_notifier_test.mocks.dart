@@ -15,6 +15,8 @@ import 'package:workoutride/domain/model/workout/workout_summary.dart' as _i2;
 import 'package:workoutride/domain/repository/user_profile_repository.dart'
     as _i4;
 import 'package:workoutride/domain/repository/workout_repository.dart' as _i5;
+import 'package:workoutride/domain/usecase/user_profile/get_user_ftp_use_case.dart'
+    as _i11;
 import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart'
     as _i9;
 
@@ -181,4 +183,22 @@ class MockGetUserProfileUseCase extends _i1.Mock
         ),
         returnValue: _i6.Future<_i10.UserProfile?>.value(),
       ) as _i6.Future<_i10.UserProfile?>);
+}
+
+/// A class which mocks [GetUserFtpUseCase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGetUserFtpUseCase extends _i1.Mock implements _i11.GetUserFtpUseCase {
+  MockGetUserFtpUseCase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.Future<int?> call() => (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [],
+        ),
+        returnValue: _i6.Future<int?>.value(),
+      ) as _i6.Future<int?>);
 }

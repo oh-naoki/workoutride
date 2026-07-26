@@ -17,11 +17,14 @@ class WorkoutDetailScreenUiState with _$WorkoutDetailScreenUiState {
     @Default(false) bool isLoading,
     @Default(null) String? errorMessage,
     @Default(null) double? userWeight,
+    // 生の FTP。null は「未設定」を意味し、View 側でデフォルト200W扱い＋警告表示する。
+    @Default(null) int? userFtp,
   }) = _WorkoutDetailScreenUiState;
 }
 
 @riverpod
-class WorkoutDetailScreenStateNotifier extends _$WorkoutDetailScreenStateNotifier {
+class WorkoutDetailScreenStateNotifier
+    extends _$WorkoutDetailScreenStateNotifier {
   late final WorkoutRepository _workoutRepository;
 
   @override
@@ -30,7 +33,20 @@ class WorkoutDetailScreenStateNotifier extends _$WorkoutDetailScreenStateNotifie
     _workoutRepository = ref.read(workoutRepositoryProvider);
     _fetchWorkoutDetail(workoutId);
     _loadUserWeight();
+    _loadUserFtp();
     return state;
+  }
+
+  Future<void> _loadUserFtp() async {
+    try {
+      final ftp = await ref.read(getUserFtpUseCaseProvider).call();
+      // ftp が null（未設定）のときは state.userFtp を null のまま残す。
+      if (ftp != null) {
+        state = state.copyWith(userFtp: ftp);
+      }
+    } catch (_) {
+      // 取得失敗時は未設定扱い（View がデフォルト200W＋警告を表示）。
+    }
   }
 
   Future<void> _fetchWorkoutDetail(int workoutId) async {
@@ -57,7 +73,7 @@ class WorkoutDetailScreenStateNotifier extends _$WorkoutDetailScreenStateNotifie
     try {
       final useCase = ref.read(getUserProfileUseCaseProvider);
       final profile = await useCase();
-      
+
       state = state.copyWith(
         userWeight: profile?.weight ?? 60.0,
       );

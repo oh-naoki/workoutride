@@ -7,6 +7,7 @@ import 'package:workoutride/domain/model/user_profile.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/domain/model/workout/workout_summary.dart';
 import 'package:workoutride/domain/repository/workout_repository.dart';
+import 'package:workoutride/domain/usecase/user_profile/get_user_ftp_use_case.dart';
 import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart';
 import 'package:workoutride/ui/workout_detail/workout_detail_screen_state_notifier.dart';
 
@@ -19,11 +20,13 @@ import 'workout_detail_screen_state_notifier_test.mocks.dart';
 @GenerateMocks([
   WorkoutRepository,
   GetUserProfileUseCase,
+  GetUserFtpUseCase,
 ])
 void main() {
   late ProviderContainer container;
   late MockWorkoutRepository mockWorkoutRepository;
   late MockGetUserProfileUseCase mockGetUserProfileUseCase;
+  late MockGetUserFtpUseCase mockGetUserFtpUseCase;
 
   const testWorkoutId = 1;
 
@@ -64,6 +67,7 @@ void main() {
           workoutRepositoryProvider.overrideWithValue(mockWorkoutRepository),
           getUserProfileUseCaseProvider
               .overrideWithValue(mockGetUserProfileUseCase),
+          getUserFtpUseCaseProvider.overrideWithValue(mockGetUserFtpUseCase),
         ],
       );
 
@@ -76,6 +80,9 @@ void main() {
   setUp(() {
     mockWorkoutRepository = MockWorkoutRepository();
     mockGetUserProfileUseCase = MockGetUserProfileUseCase();
+    mockGetUserFtpUseCase = MockGetUserFtpUseCase();
+    // 既定では FTP=250 を返す（未設定ケースのテストで個別に上書き）。
+    when(mockGetUserFtpUseCase.call()).thenAnswer((_) async => 250);
     container = buildContainer();
   });
 
@@ -89,8 +96,8 @@ void main() {
           .thenAnswer((_) async => testSummary);
       when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
           .thenAnswer((_) async => testBlocks);
-      when(mockGetUserProfileUseCase.call()).thenAnswer(
-          (_) async => UserProfile(weight: 70, ftp: 250, updatedAt: DateTime(2023)));
+      when(mockGetUserProfileUseCase.call()).thenAnswer((_) async =>
+          UserProfile(weight: 70, ftp: 250, updatedAt: DateTime(2023)));
 
       final state = container
           .read(workoutDetailScreenStateNotifierProvider(testWorkoutId));
@@ -105,12 +112,12 @@ void main() {
           .thenAnswer((_) async => testSummary);
       when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
           .thenAnswer((_) async => testBlocks);
-      when(mockGetUserProfileUseCase.call()).thenAnswer(
-          (_) async => UserProfile(weight: 70, ftp: 250, updatedAt: DateTime(2023)));
+      when(mockGetUserProfileUseCase.call()).thenAnswer((_) async =>
+          UserProfile(weight: 70, ftp: 250, updatedAt: DateTime(2023)));
 
       keepAlive();
-      container
-          .read(workoutDetailScreenStateNotifierProvider(testWorkoutId).notifier);
+      container.read(
+          workoutDetailScreenStateNotifierProvider(testWorkoutId).notifier);
       await Future.delayed(const Duration(milliseconds: 50));
 
       final state = container
@@ -120,6 +127,26 @@ void main() {
       expect(state.workoutSummary, testSummary);
       expect(state.workoutBlocks, testBlocks);
       expect(state.userWeight, 70);
+      expect(state.userFtp, 250);
+    });
+
+    test('FTP が未設定(null)のときは userFtp を null のままにする', () async {
+      when(mockWorkoutRepository.getWorkoutSummary(testWorkoutId))
+          .thenAnswer((_) async => testSummary);
+      when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
+          .thenAnswer((_) async => testBlocks);
+      when(mockGetUserProfileUseCase.call()).thenAnswer((_) async =>
+          UserProfile(weight: 70, ftp: 250, updatedAt: DateTime(2023)));
+      when(mockGetUserFtpUseCase.call()).thenAnswer((_) async => null);
+
+      keepAlive();
+      container.read(
+          workoutDetailScreenStateNotifierProvider(testWorkoutId).notifier);
+      await Future.delayed(const Duration(milliseconds: 50));
+
+      final state = container
+          .read(workoutDetailScreenStateNotifierProvider(testWorkoutId));
+      expect(state.userFtp, isNull);
     });
 
     test('プロフィールが null のときは体重 60.0 にフォールバックする', () async {
@@ -130,8 +157,8 @@ void main() {
       when(mockGetUserProfileUseCase.call()).thenAnswer((_) async => null);
 
       keepAlive();
-      container
-          .read(workoutDetailScreenStateNotifierProvider(testWorkoutId).notifier);
+      container.read(
+          workoutDetailScreenStateNotifierProvider(testWorkoutId).notifier);
       await Future.delayed(const Duration(milliseconds: 50));
 
       final state = container
@@ -148,8 +175,8 @@ void main() {
           .thenThrow(Exception('profile error'));
 
       keepAlive();
-      container
-          .read(workoutDetailScreenStateNotifierProvider(testWorkoutId).notifier);
+      container.read(
+          workoutDetailScreenStateNotifierProvider(testWorkoutId).notifier);
       await Future.delayed(const Duration(milliseconds: 50));
 
       final state = container
@@ -162,12 +189,12 @@ void main() {
           .thenThrow(Exception('load error'));
       when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
           .thenAnswer((_) async => testBlocks);
-      when(mockGetUserProfileUseCase.call()).thenAnswer(
-          (_) async => UserProfile(weight: 70, ftp: 250, updatedAt: DateTime(2023)));
+      when(mockGetUserProfileUseCase.call()).thenAnswer((_) async =>
+          UserProfile(weight: 70, ftp: 250, updatedAt: DateTime(2023)));
 
       keepAlive();
-      container
-          .read(workoutDetailScreenStateNotifierProvider(testWorkoutId).notifier);
+      container.read(
+          workoutDetailScreenStateNotifierProvider(testWorkoutId).notifier);
       await Future.delayed(const Duration(milliseconds: 50));
 
       final state = container
@@ -181,12 +208,12 @@ void main() {
           .thenAnswer((_) async => testSummary);
       when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
           .thenAnswer((_) async => testBlocks);
-      when(mockGetUserProfileUseCase.call()).thenAnswer(
-          (_) async => UserProfile(weight: 70, ftp: 250, updatedAt: DateTime(2023)));
+      when(mockGetUserProfileUseCase.call()).thenAnswer((_) async =>
+          UserProfile(weight: 70, ftp: 250, updatedAt: DateTime(2023)));
 
       keepAlive();
-      final notifier = container
-          .read(workoutDetailScreenStateNotifierProvider(testWorkoutId).notifier);
+      final notifier = container.read(
+          workoutDetailScreenStateNotifierProvider(testWorkoutId).notifier);
       await Future.delayed(const Duration(milliseconds: 50));
 
       await notifier.refreshWorkoutBlocks(testWorkoutId);

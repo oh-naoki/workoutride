@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/ui/workout_detail/workout_detail_screen_state_notifier.dart';
-import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/ui/workout/workout_screen.dart';
 import 'package:workoutride/ui/theme/app_colors.dart';
 
 class WorkoutDetailScreen extends ConsumerWidget {
   final int workoutId;
-  
+
   const WorkoutDetailScreen({super.key, required this.workoutId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final uiState = ref.watch(workoutDetailScreenStateNotifierProvider(workoutId));
-    
+    final uiState =
+        ref.watch(workoutDetailScreenStateNotifierProvider(workoutId));
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -38,164 +38,165 @@ class WorkoutDetailScreen extends ConsumerWidget {
 class WorkoutDetailBody extends StatelessWidget {
   final WorkoutDetailScreenUiState uiState;
   final int workoutId;
-  
-  const WorkoutDetailBody({super.key, required this.uiState, required this.workoutId});
+
+  const WorkoutDetailBody(
+      {super.key, required this.uiState, required this.workoutId});
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          uiState.workoutSummary?.name ?? 'No name available',
-          style: const TextStyle(color: Colors.white, fontSize: 20),
-          maxLines: 3,
-          overflow: TextOverflow.ellipsis,
-        ),
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: Text(
-            "ワークアウト内容",
-            style: TextStyle(color: Colors.white, fontSize: 20),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            uiState.workoutSummary?.name ?? 'No name available',
+            style: const TextStyle(color: Colors.white, fontSize: 20),
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
           ),
-        ),
-        Builder(
-          builder: (context) {
-            if (uiState.isLoading) {
-              return const Center(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 16.0),
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            } else if (uiState.errorMessage != null) {
-              return Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: Text(
-                    'エラーが発生しました: ${uiState.errorMessage}',
-                    style: const TextStyle(color: Colors.red),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: Text(
+              "ワークアウト内容",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          ),
+          Builder(
+            builder: (context) {
+              if (uiState.isLoading) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 16.0),
+                    child: CircularProgressIndicator(),
                   ),
-                ),
-              );
-            } else if (uiState.workoutBlocks.isEmpty) {
-              return Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.playlist_remove, size: 64, color: Colors.grey[600]),
-                      const SizedBox(height: 16),
-                      const Text('ワークアウトブロックがありません', style: TextStyle(color: Colors.grey, fontSize: 16)),
-                      const SizedBox(height: 8),
-                      const Text('別のワークアウトを選択してください', style: TextStyle(color: Colors.grey, fontSize: 12)),
-                    ],
+                );
+              } else if (uiState.errorMessage != null) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: Text(
+                      'エラーが発生しました: ${uiState.errorMessage}',
+                      style: const TextStyle(color: Colors.red),
+                    ),
                   ),
-                ),
-              );
-            } else {
-              return Column(
-                children: [
-                  WorkoutMenu(blocks: uiState.workoutBlocks, workoutId: workoutId),
-                  const SizedBox(height: 32),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => WorkoutScreen(workoutId: workoutId),
+                );
+              } else if (uiState.workoutBlocks.isEmpty) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.playlist_remove,
+                            size: 64, color: Colors.grey[600]),
+                        const SizedBox(height: 16),
+                        const Text('ワークアウトブロックがありません',
+                            style: TextStyle(color: Colors.grey, fontSize: 16)),
+                        const SizedBox(height: 8),
+                        const Text('別のワークアウトを選択してください',
+                            style: TextStyle(color: Colors.grey, fontSize: 12)),
+                      ],
+                    ),
+                  ),
+                );
+              } else {
+                return Column(
+                  children: [
+                    WorkoutMenu(
+                      blocks: uiState.workoutBlocks,
+                      userFtp: uiState.userFtp,
+                    ),
+                    const SizedBox(height: 32),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  WorkoutScreen(workoutId: workoutId),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.brand,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.brand,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
                         ),
-                      ),
-                      child: const Text(
-                        'ワークアウト開始',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                        child: const Text(
+                          'ワークアウト開始',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              );
-            }
-          },
-        ),
-      ],
+                  ],
+                );
+              }
+            },
+          ),
+        ],
       ),
     );
   }
 }
 
-class WorkoutMenu extends ConsumerWidget {
+class WorkoutMenu extends StatelessWidget {
   final List<WorkoutBlock> blocks;
-  final int workoutId;
-  
-  const WorkoutMenu({super.key, required this.blocks, required this.workoutId});
+  // 生の FTP。null は未設定を意味し、デフォルト200W＋警告を表示する。
+  final int? userFtp;
+
+  const WorkoutMenu({super.key, required this.blocks, required this.userFtp});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // FTPを取得（デフォルト値200W）
-    
-    return FutureBuilder<int?>(
-      future: ref.read(getUserFtpUseCaseProvider).call(),
-      builder: (context, snapshot) {
-        final ftpOrNull = snapshot.data;
-        final ftpIsDefault = ftpOrNull == null;
-        final ftp = ftpOrNull ?? 200; // デフォルト200W
+  Widget build(BuildContext context) {
+    final ftpIsDefault = userFtp == null;
+    final ftp = userFtp ?? 200; // デフォルト200W
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (ftpIsDefault)
-              Container(
-                color: Colors.orange[100],
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: const Row(
-                  children: [
-                    Icon(Icons.warning_amber, color: Colors.orange),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'FTPが未設定のためデフォルト値(200W)を使用しています。設定から変更できます。',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ),
-                  ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (ftpIsDefault)
+          Container(
+            color: Colors.orange[100],
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: const Row(
+              children: [
+                Icon(Icons.warning_amber, color: Colors.orange),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'FTPが未設定のためデフォルト値(200W)を使用しています。設定から変更できます。',
+                    style: TextStyle(fontSize: 12),
+                  ),
                 ),
-              ),
-            ListView.separated(
-              itemCount: blocks.length,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                final block = blocks[index];
-                final targetWatts = block.calculateTargetPower(ftp);
-                return WorkoutMenuItem(
-                  type: block.blockType,
-                  power: targetWatts,
-                  duration: block.durationSeconds,
-                );
-              },
-              separatorBuilder: (context, index) {
-                return const SizedBox(height: 8);
-              },
+              ],
             ),
-          ],
-        );
-      },
+          ),
+        ListView.separated(
+          itemCount: blocks.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            final block = blocks[index];
+            final targetWatts = block.calculateTargetPower(ftp);
+            return WorkoutMenuItem(
+              type: block.blockType,
+              power: targetWatts,
+              duration: block.durationSeconds,
+            );
+          },
+          separatorBuilder: (context, index) {
+            return const SizedBox(height: 8);
+          },
+        ),
+      ],
     );
   }
 }
@@ -204,14 +205,14 @@ class WorkoutMenuItem extends StatelessWidget {
   final String type;
   final int power;
   final int duration;
-  
+
   const WorkoutMenuItem({
     super.key,
     required this.type,
     required this.power,
     required this.duration,
   });
-  
+
   String _formatDuration(int seconds) {
     final minutes = seconds ~/ 60;
     final remainingSeconds = seconds % 60;
