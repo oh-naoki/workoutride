@@ -90,46 +90,6 @@ final authRepositoryProvider = AutoDisposeProvider<AuthRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AuthRepositoryRef = AutoDisposeProviderRef<AuthRepository>;
-String _$mockModeStateNotifierHash() =>
-    r'b4014b1335839b7cd8940d18d2911adbc19de57b';
-
-/// See also [mockModeStateNotifier].
-@ProviderFor(mockModeStateNotifier)
-final mockModeStateNotifierProvider =
-    AutoDisposeProvider<MockModeStateNotifier>.internal(
-  mockModeStateNotifier,
-  name: r'mockModeStateNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$mockModeStateNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef MockModeStateNotifierRef
-    = AutoDisposeProviderRef<MockModeStateNotifier>;
-String _$mockPatternStateNotifierHash() =>
-    r'ff4f1aa8b4c0bb06a18ca637a345a38e1fcbb535';
-
-/// See also [mockPatternStateNotifier].
-@ProviderFor(mockPatternStateNotifier)
-final mockPatternStateNotifierProvider =
-    AutoDisposeProvider<MockPatternStateNotifier>.internal(
-  mockPatternStateNotifier,
-  name: r'mockPatternStateNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$mockPatternStateNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef MockPatternStateNotifierRef
-    = AutoDisposeProviderRef<MockPatternStateNotifier>;
 String _$getWorkoutSummariesUseCaseHash() =>
     r'8d8b235dfcadc3ceaf1ca3977c7d77944ac44bad';
 
@@ -298,7 +258,7 @@ final workoutRepositoryProvider =
 // ignore: unused_element
 typedef WorkoutRepositoryRef = AutoDisposeProviderRef<WorkoutRepository>;
 String _$powerMeterDataSourceHash() =>
-    r'dab7543e53197bf24ca9473bd9aa86dc97b3b5b2';
+    r'8882d07ab98e3b2cff2d918f0399c3493fe6b93c';
 
 /// See also [powerMeterDataSource].
 @ProviderFor(powerMeterDataSource)
@@ -605,5 +565,40 @@ final getWorkoutResultsUseCaseProvider =
 // ignore: unused_element
 typedef GetWorkoutResultsUseCaseRef
     = AutoDisposeProviderRef<GetWorkoutResultsUseCase>;
+String _$mockModeHash() => r'4318c20e2959d772a2fa645299853f362d97412f';
+
+/// モックモードの ON/OFF。SharedPreferences に永続化する。
+///
+/// Copied from [MockMode].
+@ProviderFor(MockMode)
+final mockModeProvider = AutoDisposeNotifierProvider<MockMode, bool>.internal(
+  MockMode.new,
+  name: r'mockModeProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$mockModeHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$MockMode = AutoDisposeNotifier<bool>;
+String _$mockPatternSelectionHash() =>
+    r'8acdfc8ef3488da3130279d84c602543e2192277';
+
+/// モックパワーデータのパターン選択。SharedPreferences に永続化する。
+///
+/// Copied from [MockPatternSelection].
+@ProviderFor(MockPatternSelection)
+final mockPatternSelectionProvider =
+    AutoDisposeNotifierProvider<MockPatternSelection, MockPattern>.internal(
+  MockPatternSelection.new,
+  name: r'mockPatternSelectionProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$mockPatternSelectionHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$MockPatternSelection = AutoDisposeNotifier<MockPattern>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

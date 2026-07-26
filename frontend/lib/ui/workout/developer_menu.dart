@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:workoutride/data/power_meter_data_source.dart';
+import 'package:workoutride/domain/model/mock_pattern.dart';
 import 'package:workoutride/di/providers.dart';
 
 class DeveloperMenu extends ConsumerWidget {
@@ -8,10 +8,8 @@ class DeveloperMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mockModeNotifier = ref.watch(mockModeStateNotifierProvider);
-    final mockPatternNotifier = ref.watch(mockPatternStateNotifierProvider);
-    final isMock = mockModeNotifier.value;
-    final currentPattern = mockPatternNotifier.value;
+    final isMock = ref.watch(mockModeProvider);
+    final currentPattern = ref.watch(mockPatternSelectionProvider);
 
     return Container(
       color: Colors.black,
@@ -38,7 +36,7 @@ class DeveloperMenu extends ConsumerWidget {
                   style: TextStyle(color: Colors.white),
                 ),
                 value: isMock,
-                onChanged: (_) => ref.read(mockModeStateNotifierProvider).toggle(),
+                onChanged: (_) => ref.read(mockModeProvider.notifier).toggle(),
               ),
               // パターン選択（モックモード時のみ表示）
               if (isMock) ...[
@@ -65,7 +63,9 @@ class DeveloperMenu extends ConsumerWidget {
                   }).toList(),
                   onChanged: (pattern) {
                     if (pattern != null) {
-                      ref.read(mockPatternStateNotifierProvider).setPattern(pattern);
+                      ref
+                          .read(mockPatternSelectionProvider.notifier)
+                          .setPattern(pattern);
                     }
                   },
                 ),
@@ -76,4 +76,4 @@ class DeveloperMenu extends ConsumerWidget {
       ),
     );
   }
-} 
+}
