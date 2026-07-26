@@ -16,10 +16,6 @@ import 'package:workoutride/data/repository/auth_repository_impl.dart';
 import 'package:workoutride/data/repository/workout_repository_impl.dart';
 import 'package:workoutride/domain/repository/auth_repository.dart';
 import 'package:workoutride/domain/repository/workout_repository.dart';
-import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart';
-import 'package:workoutride/domain/usecase/workout/get_workout_results_use_case.dart';
-import 'package:workoutride/domain/usecase/workout/get_workout_summaries_use_case.dart';
-import 'package:workoutride/domain/usecase/workout/get_workout_summary_use_case.dart';
 import 'package:workoutride/domain/usecase/workout/save_workout_result_use_case.dart';
 import 'package:workoutride/data/ble_connector.dart';
 import 'package:workoutride/data/power_meter_data_source.dart';
@@ -113,22 +109,6 @@ class MockPatternSelection extends _$MockPatternSelection {
         .setString(_mockPatternKey, pattern.name);
     state = pattern;
   }
-}
-
-// UseCaseプロバイダー
-@riverpod
-GetWorkoutSummariesUseCase getWorkoutSummariesUseCase(Ref ref) {
-  return GetWorkoutSummariesUseCase(ref.read(workoutRepositoryProvider));
-}
-
-@riverpod
-GetWorkoutBlocksUseCase getWorkoutBlocksUseCase(Ref ref) {
-  return GetWorkoutBlocksUseCase(ref.read(workoutRepositoryProvider));
-}
-
-@riverpod
-GetWorkoutSummaryUseCase getWorkoutSummaryUseCase(Ref ref) {
-  return GetWorkoutSummaryUseCase(ref.read(workoutRepositoryProvider));
 }
 
 const debugApiUrlKey = 'debug_api_url';
@@ -273,9 +253,4 @@ ManageWorkoutUseCase manageWorkoutUseCase(Ref ref) {
 @riverpod
 SaveWorkoutResultUseCase saveWorkoutResultUseCase(Ref ref) {
   return SaveWorkoutResultUseCase(ref.read(workoutRepositoryProvider));
-}
-
-@riverpod
-GetWorkoutResultsUseCase getWorkoutResultsUseCase(Ref ref) {
-  return GetWorkoutResultsUseCase(ref.read(workoutRepositoryProvider));
 }

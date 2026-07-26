@@ -3,20 +3,20 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i5;
+import 'dart:async' as _i6;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:workoutride/domain/model/user_profile.dart' as _i9;
-import 'package:workoutride/domain/model/workout/workout_block.dart' as _i6;
+import 'package:workoutride/data/remote/model/save_workout_result_request.dart'
+    as _i8;
+import 'package:workoutride/domain/model/user_profile.dart' as _i10;
+import 'package:workoutride/domain/model/workout/workout_block.dart' as _i7;
+import 'package:workoutride/domain/model/workout/workout_result.dart' as _i3;
 import 'package:workoutride/domain/model/workout/workout_summary.dart' as _i2;
 import 'package:workoutride/domain/repository/user_profile_repository.dart'
-    as _i3;
-import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart'
-    as _i8;
-import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart'
     as _i4;
-import 'package:workoutride/domain/usecase/workout/get_workout_summary_use_case.dart'
-    as _i7;
+import 'package:workoutride/domain/repository/workout_repository.dart' as _i5;
+import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart'
+    as _i9;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -43,9 +43,8 @@ class _FakeWorkoutSummary_0 extends _i1.SmartFake
         );
 }
 
-class _FakeUserProfileRepository_1 extends _i1.SmartFake
-    implements _i3.UserProfileRepository {
-  _FakeUserProfileRepository_1(
+class _FakeWorkoutResult_1 extends _i1.SmartFake implements _i3.WorkoutResult {
+  _FakeWorkoutResult_1(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -54,76 +53,132 @@ class _FakeUserProfileRepository_1 extends _i1.SmartFake
         );
 }
 
-/// A class which mocks [GetWorkoutBlocksUseCase].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockGetWorkoutBlocksUseCase extends _i1.Mock
-    implements _i4.GetWorkoutBlocksUseCase {
-  MockGetWorkoutBlocksUseCase() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  _i5.Future<List<_i6.WorkoutBlock>> call(int? workoutId) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #call,
-          [workoutId],
-        ),
-        returnValue:
-            _i5.Future<List<_i6.WorkoutBlock>>.value(<_i6.WorkoutBlock>[]),
-      ) as _i5.Future<List<_i6.WorkoutBlock>>);
+class _FakeUserProfileRepository_2 extends _i1.SmartFake
+    implements _i4.UserProfileRepository {
+  _FakeUserProfileRepository_2(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
 }
 
-/// A class which mocks [GetWorkoutSummaryUseCase].
+/// A class which mocks [WorkoutRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockGetWorkoutSummaryUseCase extends _i1.Mock
-    implements _i7.GetWorkoutSummaryUseCase {
-  MockGetWorkoutSummaryUseCase() {
+class MockWorkoutRepository extends _i1.Mock implements _i5.WorkoutRepository {
+  MockWorkoutRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<_i2.WorkoutSummary> call(int? id) => (super.noSuchMethod(
+  _i6.Future<List<_i2.WorkoutSummary>> getWorkoutSummaries() =>
+      (super.noSuchMethod(
         Invocation.method(
-          #call,
+          #getWorkoutSummaries,
+          [],
+        ),
+        returnValue:
+            _i6.Future<List<_i2.WorkoutSummary>>.value(<_i2.WorkoutSummary>[]),
+      ) as _i6.Future<List<_i2.WorkoutSummary>>);
+
+  @override
+  _i6.Future<_i2.WorkoutSummary> getWorkoutSummary(int? id) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getWorkoutSummary,
           [id],
         ),
-        returnValue: _i5.Future<_i2.WorkoutSummary>.value(_FakeWorkoutSummary_0(
+        returnValue: _i6.Future<_i2.WorkoutSummary>.value(_FakeWorkoutSummary_0(
           this,
           Invocation.method(
-            #call,
+            #getWorkoutSummary,
             [id],
           ),
         )),
-      ) as _i5.Future<_i2.WorkoutSummary>);
+      ) as _i6.Future<_i2.WorkoutSummary>);
+
+  @override
+  _i6.Future<List<_i7.WorkoutBlock>> getWorkoutBlocks(int? workoutSummaryId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getWorkoutBlocks,
+          [workoutSummaryId],
+        ),
+        returnValue:
+            _i6.Future<List<_i7.WorkoutBlock>>.value(<_i7.WorkoutBlock>[]),
+      ) as _i6.Future<List<_i7.WorkoutBlock>>);
+
+  @override
+  _i6.Future<List<_i3.WorkoutResult>> getWorkoutResults() =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getWorkoutResults,
+          [],
+        ),
+        returnValue:
+            _i6.Future<List<_i3.WorkoutResult>>.value(<_i3.WorkoutResult>[]),
+      ) as _i6.Future<List<_i3.WorkoutResult>>);
+
+  @override
+  _i6.Future<_i3.WorkoutResult> getWorkoutResult(int? id) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getWorkoutResult,
+          [id],
+        ),
+        returnValue: _i6.Future<_i3.WorkoutResult>.value(_FakeWorkoutResult_1(
+          this,
+          Invocation.method(
+            #getWorkoutResult,
+            [id],
+          ),
+        )),
+      ) as _i6.Future<_i3.WorkoutResult>);
+
+  @override
+  _i6.Future<_i3.WorkoutResult> saveWorkoutResult(
+          _i8.SaveWorkoutResultRequest? request) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #saveWorkoutResult,
+          [request],
+        ),
+        returnValue: _i6.Future<_i3.WorkoutResult>.value(_FakeWorkoutResult_1(
+          this,
+          Invocation.method(
+            #saveWorkoutResult,
+            [request],
+          ),
+        )),
+      ) as _i6.Future<_i3.WorkoutResult>);
 }
 
 /// A class which mocks [GetUserProfileUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockGetUserProfileUseCase extends _i1.Mock
-    implements _i8.GetUserProfileUseCase {
+    implements _i9.GetUserProfileUseCase {
   MockGetUserProfileUseCase() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.UserProfileRepository get repository => (super.noSuchMethod(
+  _i4.UserProfileRepository get repository => (super.noSuchMethod(
         Invocation.getter(#repository),
-        returnValue: _FakeUserProfileRepository_1(
+        returnValue: _FakeUserProfileRepository_2(
           this,
           Invocation.getter(#repository),
         ),
-      ) as _i3.UserProfileRepository);
+      ) as _i4.UserProfileRepository);
 
   @override
-  _i5.Future<_i9.UserProfile?> call() => (super.noSuchMethod(
+  _i6.Future<_i10.UserProfile?> call() => (super.noSuchMethod(
         Invocation.method(
           #call,
           [],
         ),
-        returnValue: _i5.Future<_i9.UserProfile?>.value(),
-      ) as _i5.Future<_i9.UserProfile?>);
+        returnValue: _i6.Future<_i10.UserProfile?>.value(),
+      ) as _i6.Future<_i10.UserProfile?>);
 }

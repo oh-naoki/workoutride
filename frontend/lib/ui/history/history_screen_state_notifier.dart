@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/domain/model/workout/workout_result.dart';
-import 'package:workoutride/domain/usecase/workout/get_workout_results_use_case.dart';
+import 'package:workoutride/domain/repository/workout_repository.dart';
 
 part 'history_screen_state_notifier.freezed.dart';
 part 'history_screen_state_notifier.g.dart';
@@ -19,12 +19,12 @@ class HistoryScreenUiState with _$HistoryScreenUiState {
 
 @riverpod
 class HistoryScreenStateNotifier extends _$HistoryScreenStateNotifier {
-  late final GetWorkoutResultsUseCase _getWorkoutResultsUseCase;
+  late final WorkoutRepository _workoutRepository;
 
   @override
   HistoryScreenUiState build() {
     state = const HistoryScreenUiState(isLoading: true);
-    _getWorkoutResultsUseCase = ref.read(getWorkoutResultsUseCaseProvider);
+    _workoutRepository = ref.read(workoutRepositoryProvider);
     _fetchWorkoutResults();
     return state;
   }
@@ -32,7 +32,7 @@ class HistoryScreenStateNotifier extends _$HistoryScreenStateNotifier {
   Future<void> _fetchWorkoutResults() async {
     try {
       state = state.copyWith(isLoading: true, errorMessage: null);
-      final results = await _getWorkoutResultsUseCase.call();
+      final results = await _workoutRepository.getWorkoutResults();
       state = state.copyWith(
         workoutResults: results,
         isLoading: false,

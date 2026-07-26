@@ -90,66 +90,6 @@ final authRepositoryProvider = AutoDisposeProvider<AuthRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AuthRepositoryRef = AutoDisposeProviderRef<AuthRepository>;
-String _$getWorkoutSummariesUseCaseHash() =>
-    r'8d8b235dfcadc3ceaf1ca3977c7d77944ac44bad';
-
-/// See also [getWorkoutSummariesUseCase].
-@ProviderFor(getWorkoutSummariesUseCase)
-final getWorkoutSummariesUseCaseProvider =
-    AutoDisposeProvider<GetWorkoutSummariesUseCase>.internal(
-  getWorkoutSummariesUseCase,
-  name: r'getWorkoutSummariesUseCaseProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$getWorkoutSummariesUseCaseHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef GetWorkoutSummariesUseCaseRef
-    = AutoDisposeProviderRef<GetWorkoutSummariesUseCase>;
-String _$getWorkoutBlocksUseCaseHash() =>
-    r'874219015b7c0a911f5add030fb3734b820c6640';
-
-/// See also [getWorkoutBlocksUseCase].
-@ProviderFor(getWorkoutBlocksUseCase)
-final getWorkoutBlocksUseCaseProvider =
-    AutoDisposeProvider<GetWorkoutBlocksUseCase>.internal(
-  getWorkoutBlocksUseCase,
-  name: r'getWorkoutBlocksUseCaseProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$getWorkoutBlocksUseCaseHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef GetWorkoutBlocksUseCaseRef
-    = AutoDisposeProviderRef<GetWorkoutBlocksUseCase>;
-String _$getWorkoutSummaryUseCaseHash() =>
-    r'43ad0a93661d849f219b884e02d8b4f3a3126a03';
-
-/// See also [getWorkoutSummaryUseCase].
-@ProviderFor(getWorkoutSummaryUseCase)
-final getWorkoutSummaryUseCaseProvider =
-    AutoDisposeProvider<GetWorkoutSummaryUseCase>.internal(
-  getWorkoutSummaryUseCase,
-  name: r'getWorkoutSummaryUseCaseProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$getWorkoutSummaryUseCaseHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef GetWorkoutSummaryUseCaseRef
-    = AutoDisposeProviderRef<GetWorkoutSummaryUseCase>;
 String _$dioHash() => r'e8380f95946b318ec1d3ee7a6efc8eaa6837a2e3';
 
 /// See also [dio].
@@ -545,26 +485,6 @@ final saveWorkoutResultUseCaseProvider =
 // ignore: unused_element
 typedef SaveWorkoutResultUseCaseRef
     = AutoDisposeProviderRef<SaveWorkoutResultUseCase>;
-String _$getWorkoutResultsUseCaseHash() =>
-    r'32b84e1928a92b4e7b97ff253200bd7b1cb2c20e';
-
-/// See also [getWorkoutResultsUseCase].
-@ProviderFor(getWorkoutResultsUseCase)
-final getWorkoutResultsUseCaseProvider =
-    AutoDisposeProvider<GetWorkoutResultsUseCase>.internal(
-  getWorkoutResultsUseCase,
-  name: r'getWorkoutResultsUseCaseProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$getWorkoutResultsUseCaseHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef GetWorkoutResultsUseCaseRef
-    = AutoDisposeProviderRef<GetWorkoutResultsUseCase>;
 String _$mockModeHash() => r'4318c20e2959d772a2fa645299853f362d97412f';
 
 /// モックモードの ON/OFF。SharedPreferences に永続化する。
