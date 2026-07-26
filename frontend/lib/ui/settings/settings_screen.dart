@@ -10,7 +10,8 @@ import 'package:workoutride/di/providers.dart';
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
-  Future<void> _showWeightRegistrationDialog(BuildContext context, WidgetRef ref, double? currentWeight) async {
+  Future<void> _showWeightRegistrationDialog(
+      BuildContext context, WidgetRef ref, double? currentWeight) async {
     final result = await showDialog<double>(
       context: context,
       builder: (context) => WeightRegistrationDialog(
@@ -19,8 +20,10 @@ class SettingsScreen extends ConsumerWidget {
     );
 
     if (result != null) {
-      await ref.read(settingsScreenStateNotifierProvider.notifier).updateWeight(result);
-      
+      await ref
+          .read(settingsScreenStateNotifierProvider.notifier)
+          .updateWeight(result);
+
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -32,7 +35,8 @@ class SettingsScreen extends ConsumerWidget {
     }
   }
 
-  Future<void> _showFtpRegistrationDialog(BuildContext context, WidgetRef ref) async {
+  Future<void> _showFtpRegistrationDialog(
+      BuildContext context, WidgetRef ref) async {
     final result = await showDialog<bool>(
       context: context,
       builder: (context) => const FtpRegistrationDialog(),
@@ -82,7 +86,8 @@ class SettingsScreen extends ConsumerWidget {
     }
   }
 
-  Future<void> _showDeleteAccountDialog(BuildContext context, WidgetRef ref) async {
+  Future<void> _showDeleteAccountDialog(
+      BuildContext context, WidgetRef ref) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => const _DeleteAccountConfirmDialog(),
@@ -107,7 +112,7 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final uiState = ref.watch(settingsScreenStateNotifierProvider);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("設定", style: TextStyle(color: Colors.white)),
@@ -141,7 +146,10 @@ class SettingsScreen extends ConsumerWidget {
                           ),
                         ),
                         IconButton(
-                          onPressed: () => ref.read(settingsScreenStateNotifierProvider.notifier).clearError(),
+                          onPressed: () => ref
+                              .read(
+                                  settingsScreenStateNotifierProvider.notifier)
+                              .clearError(),
                           icon: const Icon(Icons.close, color: Colors.red),
                         ),
                       ],
@@ -154,24 +162,27 @@ class SettingsScreen extends ConsumerWidget {
                       _buildSectionTitle('ユーザー設定'),
                       _buildSettingTile(
                         title: '体重設定',
-                        subtitle: uiState.currentWeight != null 
+                        subtitle: uiState.currentWeight != null
                             ? '現在の体重: ${uiState.currentWeight!.toStringAsFixed(1)}kg'
                             : '体重が設定されていません',
                         icon: Icons.person,
-                        onTap: () => _showWeightRegistrationDialog(context, ref, uiState.currentWeight),
+                        onTap: () => _showWeightRegistrationDialog(
+                            context, ref, uiState.currentWeight),
                       ),
                       const SizedBox(height: 16),
                       FutureBuilder<int?>(
-                        future: ref.read(getUserFtpUseCaseProvider).call(),
+                        future:
+                            ref.read(userProfileRepositoryProvider).getFtp(),
                         builder: (context, snapshot) {
                           final currentFtp = snapshot.data;
                           return _buildSettingTile(
                             title: 'FTP設定',
-                            subtitle: currentFtp != null 
+                            subtitle: currentFtp != null
                                 ? '現在のFTP: ${currentFtp}W'
                                 : 'FTPが設定されていません',
                             icon: Icons.speed,
-                            onTap: () => _showFtpRegistrationDialog(context, ref),
+                            onTap: () =>
+                                _showFtpRegistrationDialog(context, ref),
                           );
                         },
                       ),
@@ -337,8 +348,7 @@ class _DeleteAccountConfirmDialogState
           child: const Text('キャンセル'),
         ),
         TextButton(
-          onPressed:
-              _canDelete ? () => Navigator.of(context).pop(true) : null,
+          onPressed: _canDelete ? () => Navigator.of(context).pop(true) : null,
           style: TextButton.styleFrom(foregroundColor: Colors.red),
           child: const Text('完全に削除する'),
         ),

@@ -6,10 +6,9 @@ import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/domain/model/workout/workout_result_draft.dart';
 import 'package:workoutride/domain/model/power_alert_message.dart';
+import 'package:workoutride/domain/repository/user_profile_repository.dart';
 import 'package:workoutride/domain/repository/workout_repository.dart';
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart';
-import 'package:workoutride/domain/usecase/user_profile/get_user_ftp_use_case.dart';
-import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart';
 import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart';
 
 part 'workout_screen_state_notifier.freezed.dart';
@@ -45,9 +44,8 @@ class WorkoutScreenUiState with _$WorkoutScreenUiState {
 @riverpod
 class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
   late final WorkoutRepository _workoutRepository;
+  late final UserProfileRepository _userProfileRepository;
   late final GetCalculatedPowerMeterDataUseCase _getPowerMeterDataUseCase;
-  late final GetUserFtpUseCase _getUserFtpUseCase;
-  late final GetUserProfileUseCase _getUserProfileUseCase;
   late final ManageWorkoutUseCase _manageWorkoutUseCase;
   double? _userWeight;
   int? _userFtp;
@@ -74,10 +72,9 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
     _countdownTimer?.cancel();
 
     _workoutRepository = ref.read(workoutRepositoryProvider);
+    _userProfileRepository = ref.read(userProfileRepositoryProvider);
     _getPowerMeterDataUseCase =
         ref.read(getCalculatedPowerMeterDataUseCaseProvider);
-    _getUserFtpUseCase = ref.read(getUserFtpUseCaseProvider);
-    _getUserProfileUseCase = ref.read(getUserProfileUseCaseProvider);
     _manageWorkoutUseCase = ref.read(manageWorkoutUseCaseProvider);
 
     ref.onDispose(() {
@@ -201,13 +198,13 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
 
   Future<void> _initializeWorkout(int workoutId) async {
     try {
-      // FTPはGetUserFtpUseCaseで直接取得（ワークアウト前画面と同じ方法）
-      final ftp = await _getUserFtpUseCase();
+      // FTPは UserProfileRepository から直接取得（ワークアウト前画面と同じ方法）
+      final ftp = await _userProfileRepository.getFtp();
       _userFtp = ftp ?? 200;
 
       // 体重はUserProfileから取得（失敗してもFTP取得には影響しない）
       try {
-        final userProfile = await _getUserProfileUseCase();
+        final userProfile = await _userProfileRepository.getUserProfile();
         _userWeight = userProfile?.weight ?? 60.0;
       } catch (_) {
         _userWeight = 60.0;

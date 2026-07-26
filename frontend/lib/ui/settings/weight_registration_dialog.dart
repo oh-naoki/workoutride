@@ -4,17 +4,19 @@ import 'package:workoutride/di/providers.dart';
 
 class WeightRegistrationDialog extends ConsumerStatefulWidget {
   final double? currentWeight;
-  
+
   const WeightRegistrationDialog({
     super.key,
     this.currentWeight,
   });
 
   @override
-  ConsumerState<WeightRegistrationDialog> createState() => _WeightRegistrationDialogState();
+  ConsumerState<WeightRegistrationDialog> createState() =>
+      _WeightRegistrationDialogState();
 }
 
-class _WeightRegistrationDialogState extends ConsumerState<WeightRegistrationDialog> {
+class _WeightRegistrationDialogState
+    extends ConsumerState<WeightRegistrationDialog> {
   final _textController = TextEditingController();
   bool _isLoading = false;
 
@@ -47,9 +49,8 @@ class _WeightRegistrationDialogState extends ConsumerState<WeightRegistrationDia
     });
 
     try {
-      final useCase = ref.read(saveUserWeightUseCaseProvider);
-      await useCase(weight);
-      
+      await ref.read(userProfileRepositoryProvider).saveWeight(weight);
+
       if (mounted) {
         Navigator.of(context).pop(weight);
       }
