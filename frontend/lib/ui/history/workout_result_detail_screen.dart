@@ -46,7 +46,9 @@ class WorkoutResultDetailScreen extends StatelessWidget {
                 color: const Color(0xFF2C2C2C),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isCompleted ? Colors.green.withValues(alpha: 0.5) : Colors.orange.withValues(alpha: 0.5),
+                  color: isCompleted
+                      ? Colors.green.withValues(alpha: 0.5)
+                      : Colors.orange.withValues(alpha: 0.5),
                   width: 1,
                 ),
               ),
@@ -64,9 +66,12 @@ class WorkoutResultDetailScreen extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: isCompleted ? Colors.green.withValues(alpha: 0.2) : Colors.orange.withValues(alpha: 0.2),
+                          color: isCompleted
+                              ? Colors.green.withValues(alpha: 0.2)
+                              : Colors.orange.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
@@ -152,7 +157,8 @@ class WorkoutResultDetailScreen extends StatelessWidget {
                             children: [
                               const Text(
                                 '平均',
-                                style: TextStyle(color: Colors.white54, fontSize: 10),
+                                style: TextStyle(
+                                    color: Colors.white54, fontSize: 10),
                               ),
                               Text(
                                 '${blockResult.averagePower}w',
@@ -172,7 +178,8 @@ class WorkoutResultDetailScreen extends StatelessWidget {
                             children: [
                               const Text(
                                 '最大',
-                                style: TextStyle(color: Colors.white54, fontSize: 10),
+                                style: TextStyle(
+                                    color: Colors.white54, fontSize: 10),
                               ),
                               Text(
                                 '${blockResult.maxPower}w',
@@ -192,7 +199,8 @@ class WorkoutResultDetailScreen extends StatelessWidget {
                             children: [
                               const Text(
                                 'rpm',
-                                style: TextStyle(color: Colors.white54, fontSize: 10),
+                                style: TextStyle(
+                                    color: Colors.white54, fontSize: 10),
                               ),
                               Text(
                                 '${blockResult.averageCadence}',

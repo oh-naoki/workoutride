@@ -30,11 +30,12 @@ class HomeScreenStateNotifier extends _$HomeScreenStateNotifier {
   HomeScreenUiState build() {
     state = const HomeScreenUiState(isLoading: true);
     _workoutRepository = ref.read(workoutRepositoryProvider);
-    _autoConnectBlePowerMeterUseCase = ref.read(autoConnectBlePowerMeterUseCaseProvider);
-    
+    _autoConnectBlePowerMeterUseCase =
+        ref.read(autoConnectBlePowerMeterUseCaseProvider);
+
     _fetchWorkoutSummaries();
     _autoConnectBleDevice();
-    
+
     return state;
   }
 
@@ -57,9 +58,9 @@ class HomeScreenStateNotifier extends _$HomeScreenStateNotifier {
   Future<void> _autoConnectBleDevice() async {
     try {
       state = state.copyWith(isConnectingBle: true, bleErrorMessage: null);
-      
+
       final isConnected = await _autoConnectBlePowerMeterUseCase.call();
-      
+
       state = state.copyWith(
         isConnectingBle: false,
         isBleConnected: isConnected,

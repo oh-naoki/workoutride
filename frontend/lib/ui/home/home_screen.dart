@@ -81,11 +81,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.fitness_center, size: 64, color: Colors.grey[600]),
+                              Icon(Icons.fitness_center,
+                                  size: 64, color: Colors.grey[600]),
                               const SizedBox(height: 16),
-                              const Text('ワークアウトがありません', style: TextStyle(color: Colors.grey, fontSize: 16)),
+                              const Text('ワークアウトがありません',
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 16)),
                               const SizedBox(height: 8),
-                              const Text('トレーニングメニューを追加してください', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                              const Text('トレーニングメニューを追加してください',
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 12)),
                             ],
                           ),
                         ),
@@ -250,7 +255,8 @@ class WorkoutItem extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 16),
-                const Icon(Icons.local_fire_department, size: 15, color: AppColors.brand),
+                const Icon(Icons.local_fire_department,
+                    size: 15, color: AppColors.brand),
                 const SizedBox(width: 4),
                 Text(
                   summary.category,
@@ -290,15 +296,15 @@ class BleConnectionStatus extends ConsumerWidget {
         children: [
           Icon(
             uiState.isConnectingBle
-              ? Icons.bluetooth_searching
-              : uiState.isBleConnected
-                ? Icons.bluetooth_connected
-                : Icons.bluetooth_disabled,
+                ? Icons.bluetooth_searching
+                : uiState.isBleConnected
+                    ? Icons.bluetooth_connected
+                    : Icons.bluetooth_disabled,
             color: uiState.isConnectingBle
-              ? AppColors.brand
-              : uiState.isBleConnected
-                ? Colors.green
-                : Colors.orange,
+                ? AppColors.brand
+                : uiState.isBleConnected
+                    ? Colors.green
+                    : Colors.orange,
             size: 20,
           ),
           const SizedBox(width: 8),
@@ -308,10 +314,10 @@ class BleConnectionStatus extends ConsumerWidget {
               children: [
                 Text(
                   uiState.isConnectingBle
-                    ? 'パワーメーターに接続中...'
-                    : uiState.isBleConnected
-                      ? 'パワーメーターに接続済み'
-                      : 'パワーメーターが未接続',
+                      ? 'パワーメーターに接続中...'
+                      : uiState.isBleConnected
+                          ? 'パワーメーターに接続済み'
+                          : 'パワーメーターが未接続',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 14,
@@ -335,21 +341,27 @@ class BleConnectionStatus extends ConsumerWidget {
           if (uiState.isConnectingBle)
             TextButton(
               onPressed: () {
-                ref.read(homeScreenStateNotifierProvider.notifier).cancelBleConnection();
+                ref
+                    .read(homeScreenStateNotifierProvider.notifier)
+                    .cancelBleConnection();
               },
-              child: const Text('キャンセル', style: TextStyle(color: Colors.grey, fontSize: 12)),
+              child: const Text('キャンセル',
+                  style: TextStyle(color: Colors.grey, fontSize: 12)),
             ),
           if (!uiState.isBleConnected && !uiState.isConnectingBle)
             ElevatedButton.icon(
               onPressed: () {
-                ref.read(homeScreenStateNotifierProvider.notifier).retryBleConnection();
+                ref
+                    .read(homeScreenStateNotifierProvider.notifier)
+                    .retryBleConnection();
               },
               icon: const Icon(Icons.refresh, size: 16),
               label: const Text('再接続'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.brand,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 textStyle: const TextStyle(fontSize: 13),
               ),
             ),

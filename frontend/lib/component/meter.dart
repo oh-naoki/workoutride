@@ -67,11 +67,14 @@ class _MeterPainter extends CustomPainter {
     canvas.drawPath(finalPath, donutPaint);
 
     // 角度の計算と線の描画
-    final double powerPosition = maxPower > 0 ? power / maxPower : 0; // 現在のパワー位置
-    final double targetPosition = maxPower > 0 ? targetPower / maxPower : 0; // ターゲットパワー位置
+    final double powerPosition =
+        maxPower > 0 ? power / maxPower : 0; // 現在のパワー位置
+    final double targetPosition =
+        maxPower > 0 ? targetPower / maxPower : 0; // ターゲットパワー位置
 
     // 弧を描画（ターゲットパワーの位置に）
-    _drawArcAtPosition(canvas, center, innerRadius, outerRadius, targetPosition);
+    _drawArcAtPosition(
+        canvas, center, innerRadius, outerRadius, targetPosition);
 
     // 線を描画（現在のパワーの位置に）
     _drawIndicatorLine(canvas, center, innerRadius, outerRadius, powerPosition);
@@ -80,9 +83,11 @@ class _MeterPainter extends CustomPainter {
   }
 
   Path _createDonutPath(Offset center, double outerRadius, double innerRadius) {
-    final Path outerCircle = Path()..addOval(Rect.fromCircle(center: center, radius: outerRadius));
+    final Path outerCircle = Path()
+      ..addOval(Rect.fromCircle(center: center, radius: outerRadius));
 
-    final Path innerCircle = Path()..addOval(Rect.fromCircle(center: center, radius: innerRadius));
+    final Path innerCircle = Path()
+      ..addOval(Rect.fromCircle(center: center, radius: innerRadius));
 
     return Path.combine(PathOperation.difference, outerCircle, innerCircle);
   }
@@ -102,7 +107,8 @@ class _MeterPainter extends CustomPainter {
     return Path.combine(PathOperation.difference, donutPath, haShape);
   }
 
-  void _drawIndicatorLine(Canvas canvas, Offset center, double innerRadius, double outerRadius, double position) {
+  void _drawIndicatorLine(Canvas canvas, Offset center, double innerRadius,
+      double outerRadius, double position) {
     // 左下と右下の座標
     final double leftX = center.dx - outerRadius;
     final double rightX = center.dx + outerRadius;
@@ -112,8 +118,10 @@ class _MeterPainter extends CustomPainter {
     final Offset rightBottom = Offset(rightX, bottomY);
 
     // 左端と右端の角度を計算
-    final double startAngle = atan2(leftBottom.dy - center.dy, leftBottom.dx - center.dx);
-    final double endAngle = atan2(rightBottom.dy - center.dy, rightBottom.dx - center.dx);
+    final double startAngle =
+        atan2(leftBottom.dy - center.dy, leftBottom.dx - center.dx);
+    final double endAngle =
+        atan2(rightBottom.dy - center.dy, rightBottom.dx - center.dx);
 
     // 角度の差を計算
     double angleDifference;
@@ -151,7 +159,8 @@ class _MeterPainter extends CustomPainter {
     canvas.drawLine(lineStart, lineEnd, linePaint);
   }
 
-  void _drawArcAtPosition(Canvas canvas, Offset center, double innerRadius, double outerRadius, double position) {
+  void _drawArcAtPosition(Canvas canvas, Offset center, double innerRadius,
+      double outerRadius, double position) {
     // 角度幅（±0.05）を設定
     const double angleWidthFraction = 0.05;
 
@@ -164,8 +173,10 @@ class _MeterPainter extends CustomPainter {
     final Offset rightBottom = Offset(rightX, bottomY);
 
     // 左端と右端の角度を計算
-    final double startAngleFull = atan2(leftBottom.dy - center.dy, leftBottom.dx - center.dx);
-    final double endAngleFull = atan2(rightBottom.dy - center.dy, rightBottom.dx - center.dx);
+    final double startAngleFull =
+        atan2(leftBottom.dy - center.dy, leftBottom.dx - center.dx);
+    final double endAngleFull =
+        atan2(rightBottom.dy - center.dy, rightBottom.dx - center.dx);
 
     // 全体の角度差を計算
     double angleDifferenceFull;
@@ -176,7 +187,8 @@ class _MeterPainter extends CustomPainter {
     }
 
     // 指定した位置の角度を計算
-    final double angleAtPosition = startAngleFull + angleDifferenceFull * position;
+    final double angleAtPosition =
+        startAngleFull + angleDifferenceFull * position;
 
     // 角度幅を計算
     final double angleWidth = angleDifferenceFull * angleWidthFraction;
@@ -190,7 +202,8 @@ class _MeterPainter extends CustomPainter {
     endAngleArc = (endAngleArc + 2 * pi) % (2 * pi);
 
     // 弧を描画するための矩形と太さを定義
-    final Rect arcRect = Rect.fromCircle(center: center, radius: (innerRadius + outerRadius) / 2);
+    final Rect arcRect = Rect.fromCircle(
+        center: center, radius: (innerRadius + outerRadius) / 2);
     final double arcThickness = (outerRadius - innerRadius);
 
     // 弧を描画
@@ -246,7 +259,8 @@ class _MeterPainter extends CustomPainter {
     bottomTextPainter.layout();
 
     // テキストの合計高さを計算
-    final double totalTextHeight = topTextPainter.height + bottomTextPainter.height;
+    final double totalTextHeight =
+        topTextPainter.height + bottomTextPainter.height;
 
     // 上のテキストの位置を計算
     final Offset topTextOffset = Offset(
@@ -266,9 +280,9 @@ class _MeterPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _MeterPainter oldDelegate) => 
-    oldDelegate.power != power || 
-    oldDelegate.cadence != cadence ||
-    oldDelegate.maxPower != maxPower ||
-    oldDelegate.targetPower != targetPower;
+  bool shouldRepaint(covariant _MeterPainter oldDelegate) =>
+      oldDelegate.power != power ||
+      oldDelegate.cadence != cadence ||
+      oldDelegate.maxPower != maxPower ||
+      oldDelegate.targetPower != targetPower;
 }

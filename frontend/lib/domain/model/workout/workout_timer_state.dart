@@ -8,4 +8,4 @@ class WorkoutTimerState with _$WorkoutTimerState {
     @Default(0) int elapsedSeconds,
     @Default(false) bool isRunning,
   }) = _WorkoutTimerState;
-} 
+}

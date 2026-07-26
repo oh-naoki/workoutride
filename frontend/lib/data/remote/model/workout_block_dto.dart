@@ -1,4 +1,3 @@
-
 class WorkoutBlockDto {
   final int id;
   final int workout_summary_id;
@@ -22,13 +21,21 @@ class WorkoutBlockDto {
 
   factory WorkoutBlockDto.fromJson(Map<String, dynamic> json) {
     return WorkoutBlockDto(
-      id: json['id'] is String ? int.parse(json['id']) : (json['id'] as num).toInt(),
-      workout_summary_id: json['workout_summary_id'] is String ? int.parse(json['workout_summary_id']) : (json['workout_summary_id'] as num).toInt(),
-      order_index: json['order_index'] is String ? int.parse(json['order_index']) : (json['order_index'] as num).toInt(),
-      target_ftp_percentage: json['target_ftp_percentage'] is String 
+      id: json['id'] is String
+          ? int.parse(json['id'])
+          : (json['id'] as num).toInt(),
+      workout_summary_id: json['workout_summary_id'] is String
+          ? int.parse(json['workout_summary_id'])
+          : (json['workout_summary_id'] as num).toInt(),
+      order_index: json['order_index'] is String
+          ? int.parse(json['order_index'])
+          : (json['order_index'] as num).toInt(),
+      target_ftp_percentage: json['target_ftp_percentage'] is String
           ? double.parse(json['target_ftp_percentage']).round()
           : (json['target_ftp_percentage'] as num).toInt(),
-      duration: json['duration'] is String ? int.parse(json['duration']) : (json['duration'] as num).toInt(),
+      duration: json['duration'] is String
+          ? int.parse(json['duration'])
+          : (json['duration'] as num).toInt(),
       block_type: json['block_type'] as String,
       created_at: json['created_at'] as String,
       updated_at: json['updated_at'] as String,

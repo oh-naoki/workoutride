@@ -26,9 +26,14 @@ class WorkoutBlockResultDto {
       id: (json['id'] as num).toInt(),
       workout_result_id: (json['workout_result_id'] as num).toInt(),
       workout_block_id: (json['workout_block_id'] as num).toInt(),
-      average_power: json['average_power'] != null ? (json['average_power'] as num).toInt() : null,
-      max_power: json['max_power'] != null ? (json['max_power'] as num).toInt() : null,
-      average_cadence: json['average_cadence'] != null ? (json['average_cadence'] as num).toInt() : null,
+      average_power: json['average_power'] != null
+          ? (json['average_power'] as num).toInt()
+          : null,
+      max_power:
+          json['max_power'] != null ? (json['max_power'] as num).toInt() : null,
+      average_cadence: json['average_cadence'] != null
+          ? (json['average_cadence'] as num).toInt()
+          : null,
       duration_seconds: (json['duration_seconds'] as num).toInt(),
       created_at: json['created_at'] as String,
       updated_at: json['updated_at'] as String,
