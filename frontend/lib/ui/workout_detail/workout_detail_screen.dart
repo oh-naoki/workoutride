@@ -225,6 +225,7 @@ class WorkoutMenuItem extends StatelessWidget {
       color: Colors.white,
       fontSize: 16,
       fontWeight: FontWeight.bold,
+      fontFeatures: [FontFeature.tabularFigures()],
     );
 
     return Container(
@@ -233,13 +234,35 @@ class WorkoutMenuItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(6),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(type, style: textStyle),
-            Text("$power[W]", style: textStyle),
-            Text(_formatDuration(duration), style: textStyle),
+            // タイトルは可変幅。長い場合は省略して右列の位置を固定に保つ
+            Expanded(
+              child: Text(
+                type,
+                style: textStyle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            // W・時間は固定幅＋右寄せで、行ごとに桁が変わっても縦位置を揃える
+            SizedBox(
+              width: 72,
+              child: Text(
+                "$power W",
+                style: textStyle,
+                textAlign: TextAlign.right,
+              ),
+            ),
+            SizedBox(
+              width: 64,
+              child: Text(
+                _formatDuration(duration),
+                style: textStyle,
+                textAlign: TextAlign.right,
+              ),
+            ),
           ],
         ),
       ),
