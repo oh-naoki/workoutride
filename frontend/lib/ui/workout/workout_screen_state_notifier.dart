@@ -4,10 +4,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
-import 'package:workoutride/domain/model/workout/workout_result_draft.dart';
 import 'package:workoutride/domain/model/power_alert_message.dart';
 import 'package:workoutride/domain/repository/user_profile_repository.dart';
 import 'package:workoutride/domain/repository/workout_repository.dart';
+import 'package:workoutride/domain/service/workout_result_recorder.dart';
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart';
 import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart';
 
@@ -54,15 +54,8 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
   Timer? _countdownTimer;
   Timer? _completionTimer;
 
-  // ワークアウト結果の記録用
-  DateTime? _workoutStartedAt;
-  int _overallMaxPower = 0;
-  final List<int> _allPowerReadings = [];
-  final List<int> _allCadenceReadings = [];
-  // ブロックごとの記録
-  final List<List<int>> _blockPowerReadings = [];
-  final List<List<int>> _blockCadenceReadings = [];
-  final List<int> _blockMaxPowers = [];
+  // ワークアウト結果の集計は WorkoutResultRecorder（純粋ドメインサービス）へ委譲。
+  WorkoutResultRecorder? _recorder;
   int _lastBlockIndex = 0;
 
   @override
@@ -111,20 +104,11 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
   void _startWorkoutAfterCountdown() {
     if (state.workoutBlocks.isEmpty) return;
 
-    _workoutStartedAt = DateTime.now();
     _lastBlockIndex = 0;
-    _overallMaxPower = 0;
-    _allPowerReadings.clear();
-    _allCadenceReadings.clear();
-    _blockPowerReadings.clear();
-    _blockCadenceReadings.clear();
-    _blockMaxPowers.clear();
-    // ブロックごとの記録用リストを初期化
-    for (var i = 0; i < state.workoutBlocks.length; i++) {
-      _blockPowerReadings.add([]);
-      _blockCadenceReadings.add([]);
-      _blockMaxPowers.add(0);
-    }
+    _recorder = WorkoutResultRecorder(
+      blocks: state.workoutBlocks,
+      startedAt: DateTime.now(),
+    );
 
     // ManageWorkoutUseCaseのストリームを購読し、UiStateへ反映
     _workoutSubscription =
@@ -164,30 +148,11 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
       final power = powerMeterData.power;
       final cadence = powerMeterData.cadence;
 
-      // 全体の記録
-      if (power > 0) {
-        _allPowerReadings.add(power);
-        if (power > _overallMaxPower) {
-          _overallMaxPower = power;
-        }
-      }
-      if (cadence > 0) {
-        _allCadenceReadings.add(cadence);
-      }
-
-      // 現在ブロックの記録
-      final blockIndex = state.currentBlockIndex;
-      if (blockIndex < _blockPowerReadings.length) {
-        if (power > 0) {
-          _blockPowerReadings[blockIndex].add(power);
-          if (power > _blockMaxPowers[blockIndex]) {
-            _blockMaxPowers[blockIndex] = power;
-          }
-        }
-        if (cadence > 0) {
-          _blockCadenceReadings[blockIndex].add(cadence);
-        }
-      }
+      _recorder?.record(
+        power: power,
+        cadence: cadence,
+        blockIndex: state.currentBlockIndex,
+      );
 
       state = state.copyWith(
         power: power,
@@ -261,77 +226,17 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
   }
 
   Future<void> _saveResult(String status) async {
-    if (_workoutStartedAt == null || state.workoutBlocks.isEmpty) return;
+    if (_recorder == null || state.workoutBlocks.isEmpty) return;
     if (state.isSavingResult || state.isResultSaved) return;
 
     state = state.copyWith(isSavingResult: true);
 
     try {
-      final now = DateTime.now();
-      final averagePower = _allPowerReadings.isNotEmpty
-          ? (_allPowerReadings.reduce((a, b) => a + b) /
-                  _allPowerReadings.length)
-              .round()
-          : null;
-      final averageCadence = _allCadenceReadings.isNotEmpty
-          ? (_allCadenceReadings.reduce((a, b) => a + b) /
-                  _allCadenceReadings.length)
-              .round()
-          : null;
-
-      final blockResults = <WorkoutBlockResultDraft>[];
-      for (var i = 0; i < state.workoutBlocks.length; i++) {
-        if (i > state.currentBlockIndex && status == 'abandoned') break;
-
-        final blockPowers =
-            _blockPowerReadings.length > i ? _blockPowerReadings[i] : <int>[];
-        final blockCadences = _blockCadenceReadings.length > i
-            ? _blockCadenceReadings[i]
-            : <int>[];
-        final blockMaxPower =
-            _blockMaxPowers.length > i ? _blockMaxPowers[i] : null;
-
-        // 実際に経過したブロック時間を計算
-        int blockDuration;
-        if (i < state.currentBlockIndex) {
-          blockDuration = state.workoutBlocks[i].durationSeconds;
-        } else if (i == state.currentBlockIndex) {
-          int previousBlocksTime = 0;
-          for (var j = 0; j < i; j++) {
-            previousBlocksTime += state.workoutBlocks[j].durationSeconds;
-          }
-          blockDuration = state.elapsedSeconds - previousBlocksTime;
-          if (blockDuration < 0) blockDuration = 0;
-        } else {
-          blockDuration = 0;
-        }
-
-        blockResults.add(WorkoutBlockResultDraft(
-          workoutBlockId: state.workoutBlocks[i].id,
-          averagePower: blockPowers.isNotEmpty
-              ? (blockPowers.reduce((a, b) => a + b) / blockPowers.length)
-                  .round()
-              : null,
-          maxPower:
-              blockMaxPower != null && blockMaxPower > 0 ? blockMaxPower : null,
-          averageCadence: blockCadences.isNotEmpty
-              ? (blockCadences.reduce((a, b) => a + b) / blockCadences.length)
-                  .round()
-              : null,
-          durationSeconds: blockDuration,
-        ));
-      }
-
-      final draft = WorkoutResultDraft(
-        workoutSummaryId: state.workoutBlocks.first.workoutId,
-        startedAt: _workoutStartedAt!,
-        finishedAt: now,
-        totalDurationSeconds: state.elapsedSeconds,
-        averagePower: averagePower,
-        maxPower: _overallMaxPower > 0 ? _overallMaxPower : null,
-        averageCadence: averageCadence,
+      final draft = _recorder!.buildDraft(
         status: status,
-        blockResults: blockResults,
+        currentBlockIndex: state.currentBlockIndex,
+        elapsedSeconds: state.elapsedSeconds,
+        finishedAt: DateTime.now(),
       );
 
       await _workoutRepository.saveWorkoutResult(draft);
