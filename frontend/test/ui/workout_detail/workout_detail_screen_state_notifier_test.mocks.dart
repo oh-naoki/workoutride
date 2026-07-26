@@ -6,11 +6,11 @@
 import 'dart:async' as _i6;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:workoutride/data/remote/model/save_workout_result_request.dart'
-    as _i8;
 import 'package:workoutride/domain/model/user_profile.dart' as _i10;
 import 'package:workoutride/domain/model/workout/workout_block.dart' as _i7;
 import 'package:workoutride/domain/model/workout/workout_result.dart' as _i3;
+import 'package:workoutride/domain/model/workout/workout_result_draft.dart'
+    as _i8;
 import 'package:workoutride/domain/model/workout/workout_summary.dart' as _i2;
 import 'package:workoutride/domain/repository/user_profile_repository.dart'
     as _i4;
@@ -139,17 +139,17 @@ class MockWorkoutRepository extends _i1.Mock implements _i5.WorkoutRepository {
 
   @override
   _i6.Future<_i3.WorkoutResult> saveWorkoutResult(
-          _i8.SaveWorkoutResultRequest? request) =>
+          _i8.WorkoutResultDraft? draft) =>
       (super.noSuchMethod(
         Invocation.method(
           #saveWorkoutResult,
-          [request],
+          [draft],
         ),
         returnValue: _i6.Future<_i3.WorkoutResult>.value(_FakeWorkoutResult_1(
           this,
           Invocation.method(
             #saveWorkoutResult,
-            [request],
+            [draft],
           ),
         )),
       ) as _i6.Future<_i3.WorkoutResult>);

@@ -13,7 +13,6 @@ import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_useca
 import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart' as workout_usecase;
 import 'package:workoutride/domain/usecase/user_profile/get_user_ftp_use_case.dart';
 import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart';
-import 'package:workoutride/domain/usecase/workout/save_workout_result_use_case.dart';
 import 'package:workoutride/ui/workout/workout_screen_state_notifier.dart';
 import 'package:workoutride/di/providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,7 +25,6 @@ import 'workout_screen_state_notifier_test.mocks.dart';
   workout_usecase.ManageWorkoutUseCase,
   GetUserFtpUseCase,
   GetUserProfileUseCase,
-  SaveWorkoutResultUseCase,
 ])
 void main() {
   late ProviderContainer container;
@@ -35,7 +33,6 @@ void main() {
   late MockManageWorkoutUseCase mockManageWorkoutUseCase;
   late MockGetUserFtpUseCase mockGetUserFtpUseCase;
   late MockGetUserProfileUseCase mockGetUserProfileUseCase;
-  late MockSaveWorkoutResultUseCase mockSaveWorkoutResultUseCase;
 
   // テストデータ
   const testWorkoutId = 1;
@@ -73,7 +70,6 @@ void main() {
     mockManageWorkoutUseCase = MockManageWorkoutUseCase();
     mockGetUserFtpUseCase = MockGetUserFtpUseCase();
     mockGetUserProfileUseCase = MockGetUserProfileUseCase();
-    mockSaveWorkoutResultUseCase = MockSaveWorkoutResultUseCase();
 
     // SharedPreferencesのモックを作成
     SharedPreferences.setMockInitialValues({});
@@ -86,7 +82,6 @@ void main() {
         manageWorkoutUseCaseProvider.overrideWithValue(mockManageWorkoutUseCase),
         getUserFtpUseCaseProvider.overrideWithValue(mockGetUserFtpUseCase),
         getUserProfileUseCaseProvider.overrideWithValue(mockGetUserProfileUseCase),
-        saveWorkoutResultUseCaseProvider.overrideWithValue(mockSaveWorkoutResultUseCase),
         sharedPreferencesProvider.overrideWithValue(sharedPreferences),
       ],
     );
