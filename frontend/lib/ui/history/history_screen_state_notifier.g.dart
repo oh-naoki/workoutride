@@ -7,7 +7,7 @@ part of 'history_screen_state_notifier.dart';
 // **************************************************************************
 
 String _$historyScreenStateNotifierHash() =>
-    r'c18d0043ace783b3e698421c42c62d32279f0e7a';
+    r'435b066956ce64b50ae2e968bd4342b540456b45';
 
 /// See also [HistoryScreenStateNotifier].
 @ProviderFor(HistoryScreenStateNotifier)

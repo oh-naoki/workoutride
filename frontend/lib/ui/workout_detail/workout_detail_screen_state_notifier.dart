@@ -4,8 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/domain/model/workout/workout_summary.dart';
-import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart';
-import 'package:workoutride/domain/usecase/workout/get_workout_summary_use_case.dart';
+import 'package:workoutride/domain/repository/workout_repository.dart';
 
 part 'workout_detail_screen_state_notifier.freezed.dart';
 part 'workout_detail_screen_state_notifier.g.dart';
@@ -23,14 +22,12 @@ class WorkoutDetailScreenUiState with _$WorkoutDetailScreenUiState {
 
 @riverpod
 class WorkoutDetailScreenStateNotifier extends _$WorkoutDetailScreenStateNotifier {
-  late final GetWorkoutBlocksUseCase _getWorkoutBlocksUseCase;
-  late final GetWorkoutSummaryUseCase _getWorkoutSummaryUseCase;
+  late final WorkoutRepository _workoutRepository;
 
   @override
   WorkoutDetailScreenUiState build(int workoutId) {
     state = const WorkoutDetailScreenUiState(isLoading: true);
-    _getWorkoutBlocksUseCase = ref.read(getWorkoutBlocksUseCaseProvider);
-    _getWorkoutSummaryUseCase = ref.read(getWorkoutSummaryUseCaseProvider);
+    _workoutRepository = ref.read(workoutRepositoryProvider);
     _fetchWorkoutDetail(workoutId);
     _loadUserWeight();
     return state;
@@ -40,8 +37,8 @@ class WorkoutDetailScreenStateNotifier extends _$WorkoutDetailScreenStateNotifie
     try {
       state = state.copyWith(isLoading: true, errorMessage: null);
       final results = await Future.wait([
-        _getWorkoutSummaryUseCase.call(workoutId),
-        _getWorkoutBlocksUseCase.call(workoutId),
+        _workoutRepository.getWorkoutSummary(workoutId),
+        _workoutRepository.getWorkoutBlocks(workoutId),
       ]);
       state = state.copyWith(
         workoutSummary: results[0] as WorkoutSummary,

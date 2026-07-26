@@ -6,7 +6,7 @@ import 'package:workoutride/data/remote/model/save_workout_result_request.dart';
 import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/domain/model/power_alert_message.dart';
-import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart';
+import 'package:workoutride/domain/repository/workout_repository.dart';
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart';
 import 'package:workoutride/domain/usecase/user_profile/get_user_ftp_use_case.dart';
 import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart';
@@ -45,7 +45,7 @@ class WorkoutScreenUiState with _$WorkoutScreenUiState {
 
 @riverpod
 class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
-  late final GetWorkoutBlocksUseCase _getWorkoutBlocksUseCase;
+  late final WorkoutRepository _workoutRepository;
   late final GetCalculatedPowerMeterDataUseCase _getPowerMeterDataUseCase;
   late final GetUserFtpUseCase _getUserFtpUseCase;
   late final GetUserProfileUseCase _getUserProfileUseCase;
@@ -75,7 +75,7 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
     _workoutSubscription?.cancel();
     _countdownTimer?.cancel();
 
-    _getWorkoutBlocksUseCase = ref.read(getWorkoutBlocksUseCaseProvider);
+    _workoutRepository = ref.read(workoutRepositoryProvider);
     _getPowerMeterDataUseCase = ref.read(getCalculatedPowerMeterDataUseCaseProvider);
     _getUserFtpUseCase = ref.read(getUserFtpUseCaseProvider);
     _getUserProfileUseCase = ref.read(getUserProfileUseCaseProvider);
@@ -212,7 +212,7 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
         _userWeight = 60.0;
       }
 
-      final blocks = await _getWorkoutBlocksUseCase.call(workoutId);
+      final blocks = await _workoutRepository.getWorkoutBlocks(workoutId);
 
       final maxTargetPercentage = blocks.fold(0, (max, block) => block.targetFtpPercentage > max ? block.targetFtpPercentage : max);
       final maxTargetWatts = (_userFtp! * maxTargetPercentage / 100).round();

@@ -6,24 +6,23 @@ import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/domain/model/user_profile.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/domain/model/workout/workout_summary.dart';
-import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart';
-import 'package:workoutride/domain/usecase/workout/get_workout_summary_use_case.dart';
+import 'package:workoutride/domain/repository/workout_repository.dart';
 import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart';
 import 'package:workoutride/ui/workout_detail/workout_detail_screen_state_notifier.dart';
 
 import 'workout_detail_screen_state_notifier_test.mocks.dart';
 
 // このテストはリファクタ前の「現状の振る舞い」を固定する characterization test。
-// PR⑤（View薄化）や PR③（薄UseCase削除）で挙動が変わったら赤くなる安全網。
+// PR⑤（View薄化）で挙動が変わったら赤くなる安全網。
+// PR③で notifier が UseCase → WorkoutRepository 直呼びに変わったため、
+// mock の配線を Repository に付け替えたが、検証する UiState 挙動は不変。
 @GenerateMocks([
-  GetWorkoutBlocksUseCase,
-  GetWorkoutSummaryUseCase,
+  WorkoutRepository,
   GetUserProfileUseCase,
 ])
 void main() {
   late ProviderContainer container;
-  late MockGetWorkoutBlocksUseCase mockGetWorkoutBlocksUseCase;
-  late MockGetWorkoutSummaryUseCase mockGetWorkoutSummaryUseCase;
+  late MockWorkoutRepository mockWorkoutRepository;
   late MockGetUserProfileUseCase mockGetUserProfileUseCase;
 
   const testWorkoutId = 1;
@@ -62,10 +61,7 @@ void main() {
 
   ProviderContainer buildContainer() => ProviderContainer(
         overrides: [
-          getWorkoutBlocksUseCaseProvider
-              .overrideWithValue(mockGetWorkoutBlocksUseCase),
-          getWorkoutSummaryUseCaseProvider
-              .overrideWithValue(mockGetWorkoutSummaryUseCase),
+          workoutRepositoryProvider.overrideWithValue(mockWorkoutRepository),
           getUserProfileUseCaseProvider
               .overrideWithValue(mockGetUserProfileUseCase),
         ],
@@ -78,8 +74,7 @@ void main() {
       );
 
   setUp(() {
-    mockGetWorkoutBlocksUseCase = MockGetWorkoutBlocksUseCase();
-    mockGetWorkoutSummaryUseCase = MockGetWorkoutSummaryUseCase();
+    mockWorkoutRepository = MockWorkoutRepository();
     mockGetUserProfileUseCase = MockGetUserProfileUseCase();
     container = buildContainer();
   });
@@ -90,9 +85,9 @@ void main() {
 
   group('WorkoutDetailScreenStateNotifier', () {
     test('初期状態は isLoading=true', () {
-      when(mockGetWorkoutSummaryUseCase.call(testWorkoutId))
+      when(mockWorkoutRepository.getWorkoutSummary(testWorkoutId))
           .thenAnswer((_) async => testSummary);
-      when(mockGetWorkoutBlocksUseCase.call(testWorkoutId))
+      when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
           .thenAnswer((_) async => testBlocks);
       when(mockGetUserProfileUseCase.call()).thenAnswer(
           (_) async => UserProfile(weight: 70, ftp: 250, updatedAt: DateTime(2023)));
@@ -106,9 +101,9 @@ void main() {
     });
 
     test('サマリ・ブロックを取得して UiState に反映する', () async {
-      when(mockGetWorkoutSummaryUseCase.call(testWorkoutId))
+      when(mockWorkoutRepository.getWorkoutSummary(testWorkoutId))
           .thenAnswer((_) async => testSummary);
-      when(mockGetWorkoutBlocksUseCase.call(testWorkoutId))
+      when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
           .thenAnswer((_) async => testBlocks);
       when(mockGetUserProfileUseCase.call()).thenAnswer(
           (_) async => UserProfile(weight: 70, ftp: 250, updatedAt: DateTime(2023)));
@@ -128,9 +123,9 @@ void main() {
     });
 
     test('プロフィールが null のときは体重 60.0 にフォールバックする', () async {
-      when(mockGetWorkoutSummaryUseCase.call(testWorkoutId))
+      when(mockWorkoutRepository.getWorkoutSummary(testWorkoutId))
           .thenAnswer((_) async => testSummary);
-      when(mockGetWorkoutBlocksUseCase.call(testWorkoutId))
+      when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
           .thenAnswer((_) async => testBlocks);
       when(mockGetUserProfileUseCase.call()).thenAnswer((_) async => null);
 
@@ -145,9 +140,9 @@ void main() {
     });
 
     test('プロフィール取得が失敗しても体重 60.0 にフォールバックする', () async {
-      when(mockGetWorkoutSummaryUseCase.call(testWorkoutId))
+      when(mockWorkoutRepository.getWorkoutSummary(testWorkoutId))
           .thenAnswer((_) async => testSummary);
-      when(mockGetWorkoutBlocksUseCase.call(testWorkoutId))
+      when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
           .thenAnswer((_) async => testBlocks);
       when(mockGetUserProfileUseCase.call())
           .thenThrow(Exception('profile error'));
@@ -163,9 +158,9 @@ void main() {
     });
 
     test('取得に失敗したら errorMessage を立てて isLoading=false にする', () async {
-      when(mockGetWorkoutSummaryUseCase.call(testWorkoutId))
+      when(mockWorkoutRepository.getWorkoutSummary(testWorkoutId))
           .thenThrow(Exception('load error'));
-      when(mockGetWorkoutBlocksUseCase.call(testWorkoutId))
+      when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
           .thenAnswer((_) async => testBlocks);
       when(mockGetUserProfileUseCase.call()).thenAnswer(
           (_) async => UserProfile(weight: 70, ftp: 250, updatedAt: DateTime(2023)));
@@ -182,9 +177,9 @@ void main() {
     });
 
     test('refreshWorkoutBlocks で再取得できる', () async {
-      when(mockGetWorkoutSummaryUseCase.call(testWorkoutId))
+      when(mockWorkoutRepository.getWorkoutSummary(testWorkoutId))
           .thenAnswer((_) async => testSummary);
-      when(mockGetWorkoutBlocksUseCase.call(testWorkoutId))
+      when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
           .thenAnswer((_) async => testBlocks);
       when(mockGetUserProfileUseCase.call()).thenAnswer(
           (_) async => UserProfile(weight: 70, ftp: 250, updatedAt: DateTime(2023)));
@@ -200,7 +195,7 @@ void main() {
           .read(workoutDetailScreenStateNotifierProvider(testWorkoutId));
       expect(state.workoutBlocks, testBlocks);
       // build時 + refresh時 の 2 回呼ばれる
-      verify(mockGetWorkoutBlocksUseCase.call(testWorkoutId)).called(2);
+      verify(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId)).called(2);
     });
   });
 }

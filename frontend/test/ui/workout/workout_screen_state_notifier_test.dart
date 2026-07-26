@@ -8,7 +8,7 @@ import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/domain/model/workout/workout_progress_state.dart';
 import 'package:workoutride/domain/model/workout/workout_timer_state.dart';
 import 'package:workoutride/domain/model/power_meter_data.dart';
-import 'package:workoutride/domain/usecase/workout/get_workout_blocks_use_case.dart';
+import 'package:workoutride/domain/repository/workout_repository.dart';
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart';
 import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart' as workout_usecase;
 import 'package:workoutride/domain/usecase/user_profile/get_user_ftp_use_case.dart';
@@ -21,7 +21,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'workout_screen_state_notifier_test.mocks.dart';
 
 @GenerateMocks([
-  GetWorkoutBlocksUseCase,
+  WorkoutRepository,
   GetCalculatedPowerMeterDataUseCase,
   workout_usecase.ManageWorkoutUseCase,
   GetUserFtpUseCase,
@@ -30,7 +30,7 @@ import 'workout_screen_state_notifier_test.mocks.dart';
 ])
 void main() {
   late ProviderContainer container;
-  late MockGetWorkoutBlocksUseCase mockGetWorkoutBlocksUseCase;
+  late MockWorkoutRepository mockWorkoutRepository;
   late MockGetCalculatedPowerMeterDataUseCase mockGetCalculatedPowerMeterDataUseCase;
   late MockManageWorkoutUseCase mockManageWorkoutUseCase;
   late MockGetUserFtpUseCase mockGetUserFtpUseCase;
@@ -68,7 +68,7 @@ void main() {
   );
 
   setUp(() async {
-    mockGetWorkoutBlocksUseCase = MockGetWorkoutBlocksUseCase();
+    mockWorkoutRepository = MockWorkoutRepository();
     mockGetCalculatedPowerMeterDataUseCase = MockGetCalculatedPowerMeterDataUseCase();
     mockManageWorkoutUseCase = MockManageWorkoutUseCase();
     mockGetUserFtpUseCase = MockGetUserFtpUseCase();
@@ -81,7 +81,7 @@ void main() {
 
     container = ProviderContainer(
       overrides: [
-        getWorkoutBlocksUseCaseProvider.overrideWithValue(mockGetWorkoutBlocksUseCase),
+        workoutRepositoryProvider.overrideWithValue(mockWorkoutRepository),
         getCalculatedPowerMeterDataUseCaseProvider.overrideWithValue(mockGetCalculatedPowerMeterDataUseCase),
         manageWorkoutUseCaseProvider.overrideWithValue(mockManageWorkoutUseCase),
         getUserFtpUseCaseProvider.overrideWithValue(mockGetUserFtpUseCase),
@@ -110,7 +110,7 @@ void main() {
 
       test('should load workout blocks and initialize successfully', () async {
         // Arrange
-        when(mockGetWorkoutBlocksUseCase.call(testWorkoutId))
+        when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
             .thenAnswer((_) async => testWorkoutBlocks);
         when(mockGetCalculatedPowerMeterDataUseCase.call())
             .thenAnswer((_) => Stream.fromIterable([testPowerMeterData]));
@@ -144,7 +144,7 @@ void main() {
       test('should handle error during initialization', () {
         // Arrange
         const errorMessage = 'Failed to load workout blocks';
-        when(mockGetWorkoutBlocksUseCase.call(testWorkoutId))
+        when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
             .thenThrow(Exception(errorMessage));
 
         // Act
@@ -159,7 +159,7 @@ void main() {
     group('パワーメーターデータの更新', () {
       test('should update power meter data from stream', () async {
         // Arrange
-        when(mockGetWorkoutBlocksUseCase.call(testWorkoutId))
+        when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
             .thenAnswer((_) async => testWorkoutBlocks);
         when(mockGetCalculatedPowerMeterDataUseCase.call())
             .thenAnswer((_) => Stream.fromIterable([testPowerMeterData]));
@@ -192,7 +192,7 @@ void main() {
     group('ワークアウト進行の更新', () {
       test('should initialize with correct target power', () {
         // Arrange
-        when(mockGetWorkoutBlocksUseCase.call(testWorkoutId))
+        when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
             .thenAnswer((_) async => testWorkoutBlocks);
         when(mockGetCalculatedPowerMeterDataUseCase.call())
             .thenAnswer((_) => Stream.fromIterable([testPowerMeterData]));
@@ -224,7 +224,7 @@ void main() {
     group('一時停止・再開機能', () {
       test('should toggle pause state correctly', () {
         // Arrange
-        when(mockGetWorkoutBlocksUseCase.call(testWorkoutId))
+        when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
             .thenAnswer((_) async => testWorkoutBlocks);
         when(mockGetCalculatedPowerMeterDataUseCase.call())
             .thenAnswer((_) => Stream.fromIterable([testPowerMeterData]));
@@ -264,7 +264,7 @@ void main() {
     group('リソースクリーンアップ', () {
       test('should dispose resources when provider is disposed', () async {
         // Arrange
-        when(mockGetWorkoutBlocksUseCase.call(testWorkoutId))
+        when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
             .thenAnswer((_) async => testWorkoutBlocks);
         when(mockGetCalculatedPowerMeterDataUseCase.call())
             .thenAnswer((_) => Stream.fromIterable([testPowerMeterData]));
