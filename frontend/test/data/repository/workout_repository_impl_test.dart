@@ -6,6 +6,7 @@ import 'package:workoutride/data/remote/workout_remote_data_source.dart';
 import 'package:workoutride/data/repository/workout_repository_impl.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/domain/model/workout/workout_result.dart';
+import 'package:workoutride/domain/model/workout/workout_result_draft.dart';
 import 'package:workoutride/domain/model/workout/workout_summary.dart';
 
 import 'workout_repository_impl_test.mocks.dart';
@@ -108,20 +109,55 @@ void main() {
       verify(mockDataSource.getWorkoutResult(1)).called(1);
     });
 
-    test('saveWorkoutResult は request をそのまま DataSource に渡す', () async {
-      const request = SaveWorkoutResultRequest(
+    test('saveWorkoutResult は Draft を DTO へ変換して DataSource に渡す', () async {
+      final draft = WorkoutResultDraft(
         workoutSummaryId: 1,
-        startedAt: '2023-01-01T00:00:00Z',
+        startedAt: DateTime.utc(2023, 1, 1, 0, 0, 0),
+        finishedAt: DateTime.utc(2023, 1, 1, 0, 15, 0),
         totalDurationSeconds: 900,
+        averagePower: 180,
+        maxPower: 250,
+        averageCadence: 85,
         status: 'completed',
+        blockResults: const [
+          WorkoutBlockResultDraft(
+            workoutBlockId: 10,
+            averagePower: 150,
+            maxPower: 200,
+            averageCadence: 80,
+            durationSeconds: 300,
+          ),
+        ],
       );
-      when(mockDataSource.saveWorkoutResult(request))
+      when(mockDataSource.saveWorkoutResult(any))
           .thenAnswer((_) async => testResult);
 
-      final result = await repository.saveWorkoutResult(request);
+      final result = await repository.saveWorkoutResult(draft);
 
       expect(result, testResult);
-      verify(mockDataSource.saveWorkoutResult(request)).called(1);
+      final captured = verify(mockDataSource.saveWorkoutResult(captureAny))
+          .captured
+          .single as SaveWorkoutResultRequest;
+      // DateTime は data 層で ISO8601(UTC) 文字列へ変換される
+      expect(captured.toJson(), {
+        'workout_summary_id': 1,
+        'started_at': '2023-01-01T00:00:00.000Z',
+        'finished_at': '2023-01-01T00:15:00.000Z',
+        'total_duration_seconds': 900,
+        'average_power': 180,
+        'max_power': 250,
+        'average_cadence': 85,
+        'status': 'completed',
+        'workout_block_results': [
+          {
+            'workout_block_id': 10,
+            'average_power': 150,
+            'max_power': 200,
+            'average_cadence': 80,
+            'duration_seconds': 300,
+          },
+        ],
+      });
     });
   });
 }

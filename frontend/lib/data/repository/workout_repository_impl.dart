@@ -2,6 +2,7 @@ import 'package:workoutride/data/remote/model/save_workout_result_request.dart';
 import 'package:workoutride/data/remote/workout_remote_data_source.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/domain/model/workout/workout_result.dart';
+import 'package:workoutride/domain/model/workout/workout_result_draft.dart';
 import 'package:workoutride/domain/model/workout/workout_summary.dart';
 import 'package:workoutride/domain/repository/workout_repository.dart';
 
@@ -36,7 +37,32 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
   }
 
   @override
-  Future<WorkoutResult> saveWorkoutResult(SaveWorkoutResultRequest request) {
-    return _remoteDataSource.saveWorkoutResult(request);
+  Future<WorkoutResult> saveWorkoutResult(WorkoutResultDraft draft) {
+    return _remoteDataSource.saveWorkoutResult(_toRequest(draft));
+  }
+
+  /// ドメインの Draft を API DTO へ変換する（ISO8601 文字列化を含む）。
+  SaveWorkoutResultRequest _toRequest(WorkoutResultDraft draft) {
+    return SaveWorkoutResultRequest(
+      workoutSummaryId: draft.workoutSummaryId,
+      startedAt: draft.startedAt.toUtc().toIso8601String(),
+      finishedAt: draft.finishedAt?.toUtc().toIso8601String(),
+      totalDurationSeconds: draft.totalDurationSeconds,
+      averagePower: draft.averagePower,
+      maxPower: draft.maxPower,
+      averageCadence: draft.averageCadence,
+      status: draft.status,
+      workoutBlockResults: draft.blockResults
+          .map(
+            (b) => SaveWorkoutBlockResultRequest(
+              workoutBlockId: b.workoutBlockId,
+              averagePower: b.averagePower,
+              maxPower: b.maxPower,
+              averageCadence: b.averageCadence,
+              durationSeconds: b.durationSeconds,
+            ),
+          )
+          .toList(),
+    );
   }
 }

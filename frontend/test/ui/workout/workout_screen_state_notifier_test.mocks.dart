@@ -6,12 +6,12 @@
 import 'dart:async' as _i6;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:workoutride/data/remote/model/save_workout_result_request.dart'
-    as _i8;
 import 'package:workoutride/domain/model/power_meter_data.dart' as _i10;
 import 'package:workoutride/domain/model/user_profile.dart' as _i14;
 import 'package:workoutride/domain/model/workout/workout_block.dart' as _i7;
 import 'package:workoutride/domain/model/workout/workout_result.dart' as _i3;
+import 'package:workoutride/domain/model/workout/workout_result_draft.dart'
+    as _i8;
 import 'package:workoutride/domain/model/workout/workout_summary.dart' as _i2;
 import 'package:workoutride/domain/repository/user_profile_repository.dart'
     as _i4;
@@ -24,8 +24,6 @@ import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_cas
     as _i13;
 import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart'
     as _i11;
-import 'package:workoutride/domain/usecase/workout/save_workout_result_use_case.dart'
-    as _i15;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -148,17 +146,17 @@ class MockWorkoutRepository extends _i1.Mock implements _i5.WorkoutRepository {
 
   @override
   _i6.Future<_i3.WorkoutResult> saveWorkoutResult(
-          _i8.SaveWorkoutResultRequest? request) =>
+          _i8.WorkoutResultDraft? draft) =>
       (super.noSuchMethod(
         Invocation.method(
           #saveWorkoutResult,
-          [request],
+          [draft],
         ),
         returnValue: _i6.Future<_i3.WorkoutResult>.value(_FakeWorkoutResult_1(
           this,
           Invocation.method(
             #saveWorkoutResult,
-            [request],
+            [draft],
           ),
         )),
       ) as _i6.Future<_i3.WorkoutResult>);
@@ -280,30 +278,4 @@ class MockGetUserProfileUseCase extends _i1.Mock
         ),
         returnValue: _i6.Future<_i14.UserProfile?>.value(),
       ) as _i6.Future<_i14.UserProfile?>);
-}
-
-/// A class which mocks [SaveWorkoutResultUseCase].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockSaveWorkoutResultUseCase extends _i1.Mock
-    implements _i15.SaveWorkoutResultUseCase {
-  MockSaveWorkoutResultUseCase() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  _i6.Future<_i3.WorkoutResult> call(_i8.SaveWorkoutResultRequest? request) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #call,
-          [request],
-        ),
-        returnValue: _i6.Future<_i3.WorkoutResult>.value(_FakeWorkoutResult_1(
-          this,
-          Invocation.method(
-            #call,
-            [request],
-          ),
-        )),
-      ) as _i6.Future<_i3.WorkoutResult>);
 }

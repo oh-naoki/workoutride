@@ -465,26 +465,6 @@ final manageWorkoutUseCaseProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ManageWorkoutUseCaseRef = AutoDisposeProviderRef<ManageWorkoutUseCase>;
-String _$saveWorkoutResultUseCaseHash() =>
-    r'77653cb50c4563e1d0b811b425bcd68bc8b5ce20';
-
-/// See also [saveWorkoutResultUseCase].
-@ProviderFor(saveWorkoutResultUseCase)
-final saveWorkoutResultUseCaseProvider =
-    AutoDisposeProvider<SaveWorkoutResultUseCase>.internal(
-  saveWorkoutResultUseCase,
-  name: r'saveWorkoutResultUseCaseProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$saveWorkoutResultUseCaseHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef SaveWorkoutResultUseCaseRef
-    = AutoDisposeProviderRef<SaveWorkoutResultUseCase>;
 String _$mockModeHash() => r'4318c20e2959d772a2fa645299853f362d97412f';
 
 /// モックモードの ON/OFF。SharedPreferences に永続化する。

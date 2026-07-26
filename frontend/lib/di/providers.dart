@@ -16,7 +16,6 @@ import 'package:workoutride/data/repository/auth_repository_impl.dart';
 import 'package:workoutride/data/repository/workout_repository_impl.dart';
 import 'package:workoutride/domain/repository/auth_repository.dart';
 import 'package:workoutride/domain/repository/workout_repository.dart';
-import 'package:workoutride/domain/usecase/workout/save_workout_result_use_case.dart';
 import 'package:workoutride/data/ble_connector.dart';
 import 'package:workoutride/data/power_meter_data_source.dart';
 import 'package:workoutride/domain/model/mock_pattern.dart';
@@ -248,9 +247,4 @@ ManageWorkoutUseCase manageWorkoutUseCase(Ref ref) {
     ref.read(powerZoneAnalyzerProvider),
     ref.read(getUserFtpUseCaseProvider),
   );
-}
-
-@riverpod
-SaveWorkoutResultUseCase saveWorkoutResultUseCase(Ref ref) {
-  return SaveWorkoutResultUseCase(ref.read(workoutRepositoryProvider));
 }
