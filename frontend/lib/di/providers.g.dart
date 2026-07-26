@@ -236,83 +236,6 @@ final userProfileRepositoryProvider =
 // ignore: unused_element
 typedef UserProfileRepositoryRef
     = AutoDisposeProviderRef<UserProfileRepository>;
-String _$getUserProfileUseCaseHash() =>
-    r'6a55722f1260718b970e8238f05505ee4a7ea1f5';
-
-/// See also [getUserProfileUseCase].
-@ProviderFor(getUserProfileUseCase)
-final getUserProfileUseCaseProvider =
-    AutoDisposeProvider<GetUserProfileUseCase>.internal(
-  getUserProfileUseCase,
-  name: r'getUserProfileUseCaseProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$getUserProfileUseCaseHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef GetUserProfileUseCaseRef
-    = AutoDisposeProviderRef<GetUserProfileUseCase>;
-String _$saveUserWeightUseCaseHash() =>
-    r'e6a249c2e1867b6386c09bb0170cd3911d94170a';
-
-/// See also [saveUserWeightUseCase].
-@ProviderFor(saveUserWeightUseCase)
-final saveUserWeightUseCaseProvider =
-    AutoDisposeProvider<SaveUserWeightUseCase>.internal(
-  saveUserWeightUseCase,
-  name: r'saveUserWeightUseCaseProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$saveUserWeightUseCaseHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef SaveUserWeightUseCaseRef
-    = AutoDisposeProviderRef<SaveUserWeightUseCase>;
-String _$getUserFtpUseCaseHash() => r'6d9b6e526ab8bee9e45d69d7e0bd52c0051fd78b';
-
-/// See also [getUserFtpUseCase].
-@ProviderFor(getUserFtpUseCase)
-final getUserFtpUseCaseProvider =
-    AutoDisposeProvider<GetUserFtpUseCase>.internal(
-  getUserFtpUseCase,
-  name: r'getUserFtpUseCaseProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$getUserFtpUseCaseHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef GetUserFtpUseCaseRef = AutoDisposeProviderRef<GetUserFtpUseCase>;
-String _$saveUserFtpUseCaseHash() =>
-    r'2969747d52d72571f0af87081d60145dc34ba7e2';
-
-/// See also [saveUserFtpUseCase].
-@ProviderFor(saveUserFtpUseCase)
-final saveUserFtpUseCaseProvider =
-    AutoDisposeProvider<SaveUserFtpUseCase>.internal(
-  saveUserFtpUseCase,
-  name: r'saveUserFtpUseCaseProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$saveUserFtpUseCaseHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef SaveUserFtpUseCaseRef = AutoDisposeProviderRef<SaveUserFtpUseCase>;
 String _$autoConnectBlePowerMeterUseCaseHash() =>
     r'44655517e018cc5679979f4e1a4e173077388fce';
 
@@ -447,7 +370,7 @@ final powerZoneAnalyzerProvider =
 // ignore: unused_element
 typedef PowerZoneAnalyzerRef = AutoDisposeProviderRef<PowerZoneAnalyzer>;
 String _$manageWorkoutUseCaseHash() =>
-    r'81a64cd8d4d41dbd1b07def68600c9806ce58478';
+    r'c5adba8b20cb202cb2bcacb0c5f15e995c348cd5';
 
 /// See also [manageWorkoutUseCase].
 @ProviderFor(manageWorkoutUseCase)

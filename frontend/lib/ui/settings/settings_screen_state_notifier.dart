@@ -24,9 +24,9 @@ class SettingsScreenStateNotifier extends _$SettingsScreenStateNotifier {
 
   Future<void> _loadCurrentWeight() async {
     try {
-      final useCase = ref.read(getUserProfileUseCaseProvider);
-      final profile = await useCase();
-      
+      final profile =
+          await ref.read(userProfileRepositoryProvider).getUserProfile();
+
       state = state.copyWith(
         isLoading: false,
         currentWeight: profile?.weight,
@@ -42,11 +42,10 @@ class SettingsScreenStateNotifier extends _$SettingsScreenStateNotifier {
 
   Future<void> updateWeight(double weight) async {
     state = state.copyWith(isLoading: true);
-    
+
     try {
-      final useCase = ref.read(saveUserWeightUseCaseProvider);
-      await useCase(weight);
-      
+      await ref.read(userProfileRepositoryProvider).saveWeight(weight);
+
       state = state.copyWith(
         isLoading: false,
         currentWeight: weight,

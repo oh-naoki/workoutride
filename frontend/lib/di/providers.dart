@@ -24,10 +24,6 @@ import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_useca
 import 'package:workoutride/domain/service/power_zone_analyzer.dart';
 import 'package:workoutride/domain/repository/user_profile_repository.dart';
 import 'package:workoutride/data/repository/user_profile_repository_impl.dart';
-import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart';
-import 'package:workoutride/domain/usecase/user_profile/save_user_weight_use_case.dart';
-import 'package:workoutride/domain/usecase/user_profile/get_user_ftp_use_case.dart';
-import 'package:workoutride/domain/usecase/user_profile/save_user_ftp_use_case.dart';
 import 'package:workoutride/domain/usecase/auto_connect_ble_power_meter_use_case.dart';
 import 'package:workoutride/domain/usecase/connect_ble_power_meter_use_case.dart';
 import 'package:workoutride/domain/usecase/scan_ble_device_usecase.dart';
@@ -183,28 +179,6 @@ UserProfileRepository userProfileRepository(Ref ref) {
 }
 
 @riverpod
-GetUserProfileUseCase getUserProfileUseCase(Ref ref) {
-  return GetUserProfileUseCase(
-      repository: ref.read(userProfileRepositoryProvider));
-}
-
-@riverpod
-SaveUserWeightUseCase saveUserWeightUseCase(Ref ref) {
-  return SaveUserWeightUseCase(
-      repository: ref.read(userProfileRepositoryProvider));
-}
-
-@riverpod
-GetUserFtpUseCase getUserFtpUseCase(Ref ref) {
-  return GetUserFtpUseCase(ref.read(userProfileRepositoryProvider));
-}
-
-@riverpod
-SaveUserFtpUseCase saveUserFtpUseCase(Ref ref) {
-  return SaveUserFtpUseCase(ref.read(userProfileRepositoryProvider));
-}
-
-@riverpod
 AutoConnectBlePowerMeterUseCase autoConnectBlePowerMeterUseCase(Ref ref) {
   return AutoConnectBlePowerMeterUseCase(ref.read(bleConnectorProvider));
 }
@@ -245,6 +219,6 @@ ManageWorkoutUseCase manageWorkoutUseCase(Ref ref) {
   return ManageWorkoutUseCase(
     ref.read(getCalculatedPowerMeterDataUseCaseProvider),
     ref.read(powerZoneAnalyzerProvider),
-    ref.read(getUserFtpUseCaseProvider),
+    ref.read(userProfileRepositoryProvider),
   );
 }

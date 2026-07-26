@@ -7,8 +7,7 @@ import 'package:workoutride/domain/model/user_profile.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/domain/model/workout/workout_summary.dart';
 import 'package:workoutride/domain/repository/workout_repository.dart';
-import 'package:workoutride/domain/usecase/user_profile/get_user_ftp_use_case.dart';
-import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart';
+import 'package:workoutride/domain/repository/user_profile_repository.dart';
 import 'package:workoutride/ui/workout_detail/workout_detail_screen_state_notifier.dart';
 
 import 'workout_detail_screen_state_notifier_test.mocks.dart';
@@ -19,14 +18,12 @@ import 'workout_detail_screen_state_notifier_test.mocks.dart';
 // mock の配線を Repository に付け替えたが、検証する UiState 挙動は不変。
 @GenerateMocks([
   WorkoutRepository,
-  GetUserProfileUseCase,
-  GetUserFtpUseCase,
+  UserProfileRepository,
 ])
 void main() {
   late ProviderContainer container;
   late MockWorkoutRepository mockWorkoutRepository;
-  late MockGetUserProfileUseCase mockGetUserProfileUseCase;
-  late MockGetUserFtpUseCase mockGetUserFtpUseCase;
+  late MockUserProfileRepository mockUserProfileRepository;
 
   const testWorkoutId = 1;
 
@@ -65,9 +62,8 @@ void main() {
   ProviderContainer buildContainer() => ProviderContainer(
         overrides: [
           workoutRepositoryProvider.overrideWithValue(mockWorkoutRepository),
-          getUserProfileUseCaseProvider
-              .overrideWithValue(mockGetUserProfileUseCase),
-          getUserFtpUseCaseProvider.overrideWithValue(mockGetUserFtpUseCase),
+          userProfileRepositoryProvider
+              .overrideWithValue(mockUserProfileRepository),
         ],
       );
 
@@ -79,10 +75,9 @@ void main() {
 
   setUp(() {
     mockWorkoutRepository = MockWorkoutRepository();
-    mockGetUserProfileUseCase = MockGetUserProfileUseCase();
-    mockGetUserFtpUseCase = MockGetUserFtpUseCase();
+    mockUserProfileRepository = MockUserProfileRepository();
     // 既定では FTP=250 を返す（未設定ケースのテストで個別に上書き）。
-    when(mockGetUserFtpUseCase.call()).thenAnswer((_) async => 250);
+    when(mockUserProfileRepository.getFtp()).thenAnswer((_) async => 250);
     container = buildContainer();
   });
 
@@ -96,7 +91,7 @@ void main() {
           .thenAnswer((_) async => testSummary);
       when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
           .thenAnswer((_) async => testBlocks);
-      when(mockGetUserProfileUseCase.call()).thenAnswer((_) async =>
+      when(mockUserProfileRepository.getUserProfile()).thenAnswer((_) async =>
           UserProfile(weight: 70, ftp: 250, updatedAt: DateTime(2023)));
 
       final state = container
@@ -112,7 +107,7 @@ void main() {
           .thenAnswer((_) async => testSummary);
       when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
           .thenAnswer((_) async => testBlocks);
-      when(mockGetUserProfileUseCase.call()).thenAnswer((_) async =>
+      when(mockUserProfileRepository.getUserProfile()).thenAnswer((_) async =>
           UserProfile(weight: 70, ftp: 250, updatedAt: DateTime(2023)));
 
       keepAlive();
@@ -135,9 +130,9 @@ void main() {
           .thenAnswer((_) async => testSummary);
       when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
           .thenAnswer((_) async => testBlocks);
-      when(mockGetUserProfileUseCase.call()).thenAnswer((_) async =>
+      when(mockUserProfileRepository.getUserProfile()).thenAnswer((_) async =>
           UserProfile(weight: 70, ftp: 250, updatedAt: DateTime(2023)));
-      when(mockGetUserFtpUseCase.call()).thenAnswer((_) async => null);
+      when(mockUserProfileRepository.getFtp()).thenAnswer((_) async => null);
 
       keepAlive();
       container.read(
@@ -154,7 +149,8 @@ void main() {
           .thenAnswer((_) async => testSummary);
       when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
           .thenAnswer((_) async => testBlocks);
-      when(mockGetUserProfileUseCase.call()).thenAnswer((_) async => null);
+      when(mockUserProfileRepository.getUserProfile())
+          .thenAnswer((_) async => null);
 
       keepAlive();
       container.read(
@@ -171,7 +167,7 @@ void main() {
           .thenAnswer((_) async => testSummary);
       when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
           .thenAnswer((_) async => testBlocks);
-      when(mockGetUserProfileUseCase.call())
+      when(mockUserProfileRepository.getUserProfile())
           .thenThrow(Exception('profile error'));
 
       keepAlive();
@@ -189,7 +185,7 @@ void main() {
           .thenThrow(Exception('load error'));
       when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
           .thenAnswer((_) async => testBlocks);
-      when(mockGetUserProfileUseCase.call()).thenAnswer((_) async =>
+      when(mockUserProfileRepository.getUserProfile()).thenAnswer((_) async =>
           UserProfile(weight: 70, ftp: 250, updatedAt: DateTime(2023)));
 
       keepAlive();
@@ -208,7 +204,7 @@ void main() {
           .thenAnswer((_) async => testSummary);
       when(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId))
           .thenAnswer((_) async => testBlocks);
-      when(mockGetUserProfileUseCase.call()).thenAnswer((_) async =>
+      when(mockUserProfileRepository.getUserProfile()).thenAnswer((_) async =>
           UserProfile(weight: 70, ftp: 250, updatedAt: DateTime(2023)));
 
       keepAlive();

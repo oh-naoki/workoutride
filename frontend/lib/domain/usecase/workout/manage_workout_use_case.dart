@@ -6,8 +6,8 @@ import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/domain/model/workout/workout_progress_state.dart';
 import 'package:workoutride/domain/model/workout/workout_timer_state.dart';
 import 'package:workoutride/domain/service/power_zone_analyzer.dart';
+import 'package:workoutride/domain/repository/user_profile_repository.dart';
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart';
-import 'package:workoutride/domain/usecase/user_profile/get_user_ftp_use_case.dart';
 
 class WorkoutFrame {
   final WorkoutTimerState timer;
@@ -24,45 +24,48 @@ class WorkoutFrame {
     WorkoutTimerState? timer,
     WorkoutProgressState? progress,
     PowerAlertMessage? alert,
-  }) => WorkoutFrame(
-    timer: timer ?? this.timer,
-    progress: progress ?? this.progress,
-    alert: alert ?? this.alert,
-  );
+  }) =>
+      WorkoutFrame(
+        timer: timer ?? this.timer,
+        progress: progress ?? this.progress,
+        alert: alert ?? this.alert,
+      );
 }
 
 class ManageWorkoutUseCase {
   final GetCalculatedPowerMeterDataUseCase _getCalculatedPowerMeterDataUseCase;
   final PowerZoneAnalyzer _powerZoneAnalyzer;
-  final GetUserFtpUseCase _getUserFtpUseCase;
+  final UserProfileRepository _userProfileRepository;
 
   final BehaviorSubject<bool> _paused$ = BehaviorSubject.seeded(false);
 
   ManageWorkoutUseCase(
     this._getCalculatedPowerMeterDataUseCase,
     this._powerZoneAnalyzer,
-    this._getUserFtpUseCase,
+    this._userProfileRepository,
   );
 
   Stream<WorkoutFrame> call(
     List<WorkoutBlock> blocks,
   ) async* {
-    final ftp = await _getUserFtpUseCase.call();
+    final ftp = await _userProfileRepository.getFtp();
     final userFtp = ftp ?? 200;
 
-    final totalSeconds = blocks.fold<int>(0, (sum, block) => sum + block.durationSeconds);
+    final totalSeconds =
+        blocks.fold<int>(0, (sum, block) => sum + block.durationSeconds);
 
     final power$ = _getCalculatedPowerMeterDataUseCase()
-      .map((d) => d.power)
-      .shareReplay(maxSize: 1);
+        .map((d) => d.power)
+        .shareReplay(maxSize: 1);
 
     final tick$ = Stream<int>.periodic(const Duration(seconds: 1), (_) => 1);
 
     final activeTick$ = tick$
-      .withLatestFrom<bool, (int tick, bool paused)>(_paused$, (t, p) => (t, p))
-      .where((tp) => !tp.$2)
-      .withLatestFrom<int, int>(power$, (tp, p) => p > 0 ? tp.$1 : 0)
-      .where((t) => t > 0);
+        .withLatestFrom<bool, (int tick, bool paused)>(
+            _paused$, (t, p) => (t, p))
+        .where((tp) => !tp.$2)
+        .withLatestFrom<int, int>(power$, (tp, p) => p > 0 ? tp.$1 : 0)
+        .where((t) => t > 0);
 
     const initialTimer = WorkoutTimerState(elapsedSeconds: 0, isRunning: true);
     const initialProgress = WorkoutProgressState(
@@ -71,7 +74,8 @@ class ManageWorkoutUseCase {
       isCompleted: false,
     );
 
-    final state$ = activeTick$.scan<(WorkoutTimerState, WorkoutProgressState)>((acc, _, __) {
+    final state$ = activeTick$.scan<(WorkoutTimerState, WorkoutProgressState)>(
+        (acc, _, __) {
       var (timer, progress) = acc;
 
       final newElapsed = timer.elapsedSeconds + 1;
@@ -83,9 +87,11 @@ class ManageWorkoutUseCase {
       }
 
       if (newElapsed >= totalSeconds) {
-        progress = progress.copyWith(isCompleted: true, elapsedSeconds: newElapsed);
+        progress =
+            progress.copyWith(isCompleted: true, elapsedSeconds: newElapsed);
         timer = timer.copyWith(isRunning: false);
-      } else if (newElapsed >= currentEnd && progress.currentBlockIndex < blocks.length - 1) {
+      } else if (newElapsed >= currentEnd &&
+          progress.currentBlockIndex < blocks.length - 1) {
         progress = progress.copyWith(
           currentBlockIndex: progress.currentBlockIndex + 1,
           elapsedSeconds: newElapsed,
@@ -97,7 +103,8 @@ class ManageWorkoutUseCase {
       return (timer, progress);
     }, (initialTimer, initialProgress));
 
-    yield* Rx.combineLatest2<(WorkoutTimerState, WorkoutProgressState), int, WorkoutFrame>(
+    yield* Rx.combineLatest2<(WorkoutTimerState, WorkoutProgressState), int,
+        WorkoutFrame>(
       state$,
       power$.startWith(0),
       (s, p) {
@@ -124,4 +131,4 @@ class ManageWorkoutUseCase {
   void dispose() {
     _paused$.close();
   }
-} 
+}

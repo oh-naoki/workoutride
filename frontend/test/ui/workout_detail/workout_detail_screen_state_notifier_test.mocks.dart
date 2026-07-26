@@ -3,22 +3,18 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i6;
+import 'dart:async' as _i5;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:workoutride/domain/model/user_profile.dart' as _i10;
-import 'package:workoutride/domain/model/workout/workout_block.dart' as _i7;
+import 'package:workoutride/domain/model/user_profile.dart' as _i9;
+import 'package:workoutride/domain/model/workout/workout_block.dart' as _i6;
 import 'package:workoutride/domain/model/workout/workout_result.dart' as _i3;
 import 'package:workoutride/domain/model/workout/workout_result_draft.dart'
-    as _i8;
+    as _i7;
 import 'package:workoutride/domain/model/workout/workout_summary.dart' as _i2;
 import 'package:workoutride/domain/repository/user_profile_repository.dart'
-    as _i4;
-import 'package:workoutride/domain/repository/workout_repository.dart' as _i5;
-import 'package:workoutride/domain/usecase/user_profile/get_user_ftp_use_case.dart'
-    as _i11;
-import 'package:workoutride/domain/usecase/user_profile/get_user_profile_use_case.dart'
-    as _i9;
+    as _i8;
+import 'package:workoutride/domain/repository/workout_repository.dart' as _i4;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -55,150 +51,161 @@ class _FakeWorkoutResult_1 extends _i1.SmartFake implements _i3.WorkoutResult {
         );
 }
 
-class _FakeUserProfileRepository_2 extends _i1.SmartFake
-    implements _i4.UserProfileRepository {
-  _FakeUserProfileRepository_2(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
 /// A class which mocks [WorkoutRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockWorkoutRepository extends _i1.Mock implements _i5.WorkoutRepository {
+class MockWorkoutRepository extends _i1.Mock implements _i4.WorkoutRepository {
   MockWorkoutRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i6.Future<List<_i2.WorkoutSummary>> getWorkoutSummaries() =>
+  _i5.Future<List<_i2.WorkoutSummary>> getWorkoutSummaries() =>
       (super.noSuchMethod(
         Invocation.method(
           #getWorkoutSummaries,
           [],
         ),
         returnValue:
-            _i6.Future<List<_i2.WorkoutSummary>>.value(<_i2.WorkoutSummary>[]),
-      ) as _i6.Future<List<_i2.WorkoutSummary>>);
+            _i5.Future<List<_i2.WorkoutSummary>>.value(<_i2.WorkoutSummary>[]),
+      ) as _i5.Future<List<_i2.WorkoutSummary>>);
 
   @override
-  _i6.Future<_i2.WorkoutSummary> getWorkoutSummary(int? id) =>
+  _i5.Future<_i2.WorkoutSummary> getWorkoutSummary(int? id) =>
       (super.noSuchMethod(
         Invocation.method(
           #getWorkoutSummary,
           [id],
         ),
-        returnValue: _i6.Future<_i2.WorkoutSummary>.value(_FakeWorkoutSummary_0(
+        returnValue: _i5.Future<_i2.WorkoutSummary>.value(_FakeWorkoutSummary_0(
           this,
           Invocation.method(
             #getWorkoutSummary,
             [id],
           ),
         )),
-      ) as _i6.Future<_i2.WorkoutSummary>);
+      ) as _i5.Future<_i2.WorkoutSummary>);
 
   @override
-  _i6.Future<List<_i7.WorkoutBlock>> getWorkoutBlocks(int? workoutSummaryId) =>
+  _i5.Future<List<_i6.WorkoutBlock>> getWorkoutBlocks(int? workoutSummaryId) =>
       (super.noSuchMethod(
         Invocation.method(
           #getWorkoutBlocks,
           [workoutSummaryId],
         ),
         returnValue:
-            _i6.Future<List<_i7.WorkoutBlock>>.value(<_i7.WorkoutBlock>[]),
-      ) as _i6.Future<List<_i7.WorkoutBlock>>);
+            _i5.Future<List<_i6.WorkoutBlock>>.value(<_i6.WorkoutBlock>[]),
+      ) as _i5.Future<List<_i6.WorkoutBlock>>);
 
   @override
-  _i6.Future<List<_i3.WorkoutResult>> getWorkoutResults() =>
+  _i5.Future<List<_i3.WorkoutResult>> getWorkoutResults() =>
       (super.noSuchMethod(
         Invocation.method(
           #getWorkoutResults,
           [],
         ),
         returnValue:
-            _i6.Future<List<_i3.WorkoutResult>>.value(<_i3.WorkoutResult>[]),
-      ) as _i6.Future<List<_i3.WorkoutResult>>);
+            _i5.Future<List<_i3.WorkoutResult>>.value(<_i3.WorkoutResult>[]),
+      ) as _i5.Future<List<_i3.WorkoutResult>>);
 
   @override
-  _i6.Future<_i3.WorkoutResult> getWorkoutResult(int? id) =>
+  _i5.Future<_i3.WorkoutResult> getWorkoutResult(int? id) =>
       (super.noSuchMethod(
         Invocation.method(
           #getWorkoutResult,
           [id],
         ),
-        returnValue: _i6.Future<_i3.WorkoutResult>.value(_FakeWorkoutResult_1(
+        returnValue: _i5.Future<_i3.WorkoutResult>.value(_FakeWorkoutResult_1(
           this,
           Invocation.method(
             #getWorkoutResult,
             [id],
           ),
         )),
-      ) as _i6.Future<_i3.WorkoutResult>);
+      ) as _i5.Future<_i3.WorkoutResult>);
 
   @override
-  _i6.Future<_i3.WorkoutResult> saveWorkoutResult(
-          _i8.WorkoutResultDraft? draft) =>
+  _i5.Future<_i3.WorkoutResult> saveWorkoutResult(
+          _i7.WorkoutResultDraft? draft) =>
       (super.noSuchMethod(
         Invocation.method(
           #saveWorkoutResult,
           [draft],
         ),
-        returnValue: _i6.Future<_i3.WorkoutResult>.value(_FakeWorkoutResult_1(
+        returnValue: _i5.Future<_i3.WorkoutResult>.value(_FakeWorkoutResult_1(
           this,
           Invocation.method(
             #saveWorkoutResult,
             [draft],
           ),
         )),
-      ) as _i6.Future<_i3.WorkoutResult>);
+      ) as _i5.Future<_i3.WorkoutResult>);
 }
 
-/// A class which mocks [GetUserProfileUseCase].
+/// A class which mocks [UserProfileRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockGetUserProfileUseCase extends _i1.Mock
-    implements _i9.GetUserProfileUseCase {
-  MockGetUserProfileUseCase() {
+class MockUserProfileRepository extends _i1.Mock
+    implements _i8.UserProfileRepository {
+  MockUserProfileRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.UserProfileRepository get repository => (super.noSuchMethod(
-        Invocation.getter(#repository),
-        returnValue: _FakeUserProfileRepository_2(
-          this,
-          Invocation.getter(#repository),
-        ),
-      ) as _i4.UserProfileRepository);
-
-  @override
-  _i6.Future<_i10.UserProfile?> call() => (super.noSuchMethod(
+  _i5.Future<_i9.UserProfile?> getUserProfile() => (super.noSuchMethod(
         Invocation.method(
-          #call,
+          #getUserProfile,
           [],
         ),
-        returnValue: _i6.Future<_i10.UserProfile?>.value(),
-      ) as _i6.Future<_i10.UserProfile?>);
-}
-
-/// A class which mocks [GetUserFtpUseCase].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockGetUserFtpUseCase extends _i1.Mock implements _i11.GetUserFtpUseCase {
-  MockGetUserFtpUseCase() {
-    _i1.throwOnMissingStub(this);
-  }
+        returnValue: _i5.Future<_i9.UserProfile?>.value(),
+      ) as _i5.Future<_i9.UserProfile?>);
 
   @override
-  _i6.Future<int?> call() => (super.noSuchMethod(
+  _i5.Future<void> saveUserProfile(_i9.UserProfile? profile) =>
+      (super.noSuchMethod(
         Invocation.method(
-          #call,
+          #saveUserProfile,
+          [profile],
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
+
+  @override
+  _i5.Future<int?> getFtp() => (super.noSuchMethod(
+        Invocation.method(
+          #getFtp,
           [],
         ),
-        returnValue: _i6.Future<int?>.value(),
-      ) as _i6.Future<int?>);
+        returnValue: _i5.Future<int?>.value(),
+      ) as _i5.Future<int?>);
+
+  @override
+  _i5.Future<void> saveFtp(int? ftp) => (super.noSuchMethod(
+        Invocation.method(
+          #saveFtp,
+          [ftp],
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
+
+  @override
+  _i5.Future<double?> getWeight() => (super.noSuchMethod(
+        Invocation.method(
+          #getWeight,
+          [],
+        ),
+        returnValue: _i5.Future<double?>.value(),
+      ) as _i5.Future<double?>);
+
+  @override
+  _i5.Future<void> saveWeight(double? weight) => (super.noSuchMethod(
+        Invocation.method(
+          #saveWeight,
+          [weight],
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 }

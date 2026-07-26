@@ -39,7 +39,7 @@ class WorkoutDetailScreenStateNotifier
 
   Future<void> _loadUserFtp() async {
     try {
-      final ftp = await ref.read(getUserFtpUseCaseProvider).call();
+      final ftp = await ref.read(userProfileRepositoryProvider).getFtp();
       // ftp が null（未設定）のときは state.userFtp を null のまま残す。
       if (ftp != null) {
         state = state.copyWith(userFtp: ftp);
@@ -71,8 +71,8 @@ class WorkoutDetailScreenStateNotifier
 
   Future<void> _loadUserWeight() async {
     try {
-      final useCase = ref.read(getUserProfileUseCaseProvider);
-      final profile = await useCase();
+      final profile =
+          await ref.read(userProfileRepositoryProvider).getUserProfile();
 
       state = state.copyWith(
         userWeight: profile?.weight ?? 60.0,
