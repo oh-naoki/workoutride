@@ -36,14 +36,20 @@ class WorkoutResultDto {
       started_at: json['started_at'] as String,
       finished_at: json['finished_at'] as String?,
       total_duration_seconds: (json['total_duration_seconds'] as num).toInt(),
-      average_power: json['average_power'] != null ? (json['average_power'] as num).toInt() : null,
-      max_power: json['max_power'] != null ? (json['max_power'] as num).toInt() : null,
-      average_cadence: json['average_cadence'] != null ? (json['average_cadence'] as num).toInt() : null,
+      average_power: json['average_power'] != null
+          ? (json['average_power'] as num).toInt()
+          : null,
+      max_power:
+          json['max_power'] != null ? (json['max_power'] as num).toInt() : null,
+      average_cadence: json['average_cadence'] != null
+          ? (json['average_cadence'] as num).toInt()
+          : null,
       status: json['status'] as String,
       created_at: json['created_at'] as String,
       updated_at: json['updated_at'] as String,
       workout_block_results: (json['workout_block_results'] as List<dynamic>?)
-              ?.map((e) => WorkoutBlockResultDto.fromJson(e as Map<String, dynamic>))
+              ?.map((e) =>
+                  WorkoutBlockResultDto.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
     );
@@ -62,7 +68,8 @@ class WorkoutResultDto {
       'status': status,
       'created_at': created_at,
       'updated_at': updated_at,
-      'workout_block_results': workout_block_results.map((e) => e.toJson()).toList(),
+      'workout_block_results':
+          workout_block_results.map((e) => e.toJson()).toList(),
     };
   }
 }

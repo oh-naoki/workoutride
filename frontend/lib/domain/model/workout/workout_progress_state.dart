@@ -15,10 +15,10 @@ class WorkoutProgressState with _$WorkoutProgressState {
 
   const WorkoutProgressState._();
 
-  WorkoutBlock? get currentBlock => 
-    blocks.isNotEmpty && currentBlockIndex < blocks.length 
-      ? blocks[currentBlockIndex] 
-      : null;
+  WorkoutBlock? get currentBlock =>
+      blocks.isNotEmpty && currentBlockIndex < blocks.length
+          ? blocks[currentBlockIndex]
+          : null;
 
   int get remainingSeconds => totalSeconds - elapsedSeconds;
-} 
+}

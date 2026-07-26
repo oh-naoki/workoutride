@@ -9,7 +9,7 @@ import 'package:workoutride/ui/theme/app_colors.dart';
 
 class WorkoutScreen extends ConsumerStatefulWidget {
   final int workoutId;
-  
+
   const WorkoutScreen({super.key, required this.workoutId});
 
   @override
@@ -56,10 +56,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final uiState = ref.watch(workoutScreenStateNotifierProvider(widget.workoutId));
+    final uiState =
+        ref.watch(workoutScreenStateNotifierProvider(widget.workoutId));
 
     // 現在のブロックが変更されたら自動スクロール
-    ref.listen(workoutScreenStateNotifierProvider(widget.workoutId), (previous, next) {
+    ref.listen(workoutScreenStateNotifierProvider(widget.workoutId),
+        (previous, next) {
       if (previous?.currentBlockIndex != next.currentBlockIndex) {
         _scrollToCurrentBlock(next.currentBlockIndex);
       }
@@ -119,9 +121,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                               if (uiState.powerAlertMessage != null)
                                 Container(
                                   margin: const EdgeInsets.only(top: 8.0),
-                                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0, vertical: 8.0),
                                   decoration: BoxDecoration(
-                                    color: uiState.powerAlertMessage!.color.withValues(alpha: 0.8),
+                                    color: uiState.powerAlertMessage!.color
+                                        .withValues(alpha: 0.8),
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
                                   child: Text(
@@ -215,16 +219,19 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                               itemCount: uiState.workoutBlocks.length,
                               itemBuilder: (context, index) {
                                 final block = uiState.workoutBlocks[index];
-                                final isCurrentBlock = index == uiState.currentBlockIndex;
+                                final isCurrentBlock =
+                                    index == uiState.currentBlockIndex;
 
                                 // 現在のブロックの経過時間を計算
                                 int blockElapsedSeconds = 0;
                                 if (isCurrentBlock) {
                                   int previousBlocksTime = 0;
                                   for (var i = 0; i < index; i++) {
-                                    previousBlocksTime += uiState.workoutBlocks[i].durationSeconds;
+                                    previousBlocksTime += uiState
+                                        .workoutBlocks[i].durationSeconds;
                                   }
-                                  blockElapsedSeconds = uiState.elapsedSeconds - previousBlocksTime;
+                                  blockElapsedSeconds = uiState.elapsedSeconds -
+                                      previousBlocksTime;
                                 }
 
                                 return GestureDetector(
@@ -233,15 +240,20 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                                   },
                                   child: _buildWorkoutCard(
                                     name: block.blockType,
-                                    power: block.calculateTargetPower(uiState.userFtp),
-                                    time: _formatDuration(block.durationSeconds),
+                                    power: block
+                                        .calculateTargetPower(uiState.userFtp),
+                                    time:
+                                        _formatDuration(block.durationSeconds),
                                     isActive: isCurrentBlock,
                                     progress: isCurrentBlock
-                                      ? blockElapsedSeconds / block.durationSeconds
-                                      : index < uiState.currentBlockIndex ? 1.0 : 0.0,
+                                        ? blockElapsedSeconds /
+                                            block.durationSeconds
+                                        : index < uiState.currentBlockIndex
+                                            ? 1.0
+                                            : 0.0,
                                     elapsedTime: isCurrentBlock
-                                      ? _formatDuration(blockElapsedSeconds)
-                                      : null,
+                                        ? _formatDuration(blockElapsedSeconds)
+                                        : null,
                                   ),
                                 );
                               },
@@ -262,7 +274,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.check_circle, color: Colors.green, size: 80),
+                      const Icon(Icons.check_circle,
+                          color: Colors.green, size: 80),
                       const SizedBox(height: 24),
                       const Text(
                         'ワークアウト完了！',
@@ -280,7 +293,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                       const SizedBox(height: 32),
                       Text(
                         '${uiState.completionCountdown}秒後にホームへ戻ります...',
-                        style: const TextStyle(color: Colors.white54, fontSize: 14),
+                        style: const TextStyle(
+                            color: Colors.white54, fontSize: 14),
                       ),
                     ],
                   ),
@@ -296,7 +310,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
   Widget _buildPauseResumeButton(bool isPaused) {
     return GestureDetector(
       onTap: () {
-        ref.read(workoutScreenStateNotifierProvider(widget.workoutId).notifier).togglePauseResume();
+        ref
+            .read(workoutScreenStateNotifierProvider(widget.workoutId).notifier)
+            .togglePauseResume();
       },
       child: Container(
         width: 60,
@@ -339,10 +355,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
   // ワークアウト終了確認ダイアログを表示するメソッド
   void _showStopWorkoutDialog() {
     // まず一時停止する
-    final notifier = ref.read(workoutScreenStateNotifierProvider(widget.workoutId).notifier);
-    final uiState = ref.read(workoutScreenStateNotifierProvider(widget.workoutId));
+    final notifier =
+        ref.read(workoutScreenStateNotifierProvider(widget.workoutId).notifier);
+    final uiState =
+        ref.read(workoutScreenStateNotifierProvider(widget.workoutId));
     final wasPaused = uiState.isPaused;
-    
+
     if (!wasPaused) {
       notifier.togglePauseResume();
     }
@@ -459,8 +477,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                     backgroundColor: AppColors.surfaceHigh,
                     valueColor: AlwaysStoppedAnimation<Color>(
                       isActive
-                        ? AppColors.brand
-                        : AppColors.brand.withValues(alpha: 0.25),
+                          ? AppColors.brand
+                          : AppColors.brand.withValues(alpha: 0.25),
                     ),
                   ),
                   Container(

@@ -23,4 +23,4 @@ class PowerZoneAnalyzer {
     final double lowerBound = targetPower * (1 - _tolerancePercentage);
     return currentPower < lowerBound;
   }
-} 
+}

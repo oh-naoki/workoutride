@@ -17,9 +17,33 @@ void main() {
   // Test data constants
   const Map<String, List<int>> testData = {
     'basicPowerData': [0x00, 0x00, 0xC8, 0x00], // Flags: 0x0000, Power: 200 W
-    'powerBalanceData': [0x01, 0x00, 0xC8, 0x00, 0x50], // Flags: 0x0001, Power: 200 W, Balance: 80%
-    'initialCrankData': [0x20, 0x00, 0xC8, 0x00, 0x00, 0x00, 0x00, 0x00], // Initial data
-    'crankDataWithRevs': [0x20, 0x00, 0xC8, 0x00, 0x0A, 0x00, 0x00, 0x20], // 10 revs, 8192 ms (8 sec)
+    'powerBalanceData': [
+      0x01,
+      0x00,
+      0xC8,
+      0x00,
+      0x50
+    ], // Flags: 0x0001, Power: 200 W, Balance: 80%
+    'initialCrankData': [
+      0x20,
+      0x00,
+      0xC8,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x00
+    ], // Initial data
+    'crankDataWithRevs': [
+      0x20,
+      0x00,
+      0xC8,
+      0x00,
+      0x0A,
+      0x00,
+      0x00,
+      0x20
+    ], // 10 revs, 8192 ms (8 sec)
     'minPowerData': [0x00, 0x00, 0x00, 0x00], // Power: 0 W
     'maxPowerData': [0x00, 0x00, 0xFF, 0xFF], // Power: 65535 W
     'invalidData': [0x00, 0x00], // Incomplete data
@@ -32,7 +56,8 @@ void main() {
       test('should subscribe to power meter data source for raw data', () {
         // Arrange
         final useCase = GetPowerMeterDataUseCase(mockPowerMeterDataSource);
-        when(mockPowerMeterDataSource.getRawData()).thenAnswer((_) => const Stream.empty());
+        when(mockPowerMeterDataSource.getRawData())
+            .thenAnswer((_) => const Stream.empty());
 
         // Act
         useCase.call();
@@ -44,7 +69,8 @@ void main() {
 
     // Test group for data processing
     group('Data Processing', () {
-      test('should correctly parse basic power data with flags and power value', () {
+      test('should correctly parse basic power data with flags and power value',
+          () {
         // Arrange
         final useCase = GetPowerMeterDataUseCase(mockPowerMeterDataSource);
         final data = testData['basicPowerData']!;
@@ -70,7 +96,9 @@ void main() {
         expect(result.cadence, equals(0));
       });
 
-      test('should correctly calculate cadence from crank revolution data and time', () {
+      test(
+          'should correctly calculate cadence from crank revolution data and time',
+          () {
         // Arrange
         final useCase = GetPowerMeterDataUseCase(mockPowerMeterDataSource);
         final data1 = testData['initialCrankData']!;
@@ -79,7 +107,7 @@ void main() {
         // Act
         // Process first data (should initialize state)
         useCase.processData(data1);
-        
+
         // Process second data (should calculate cadence)
         final result = useCase.processData(data2);
 
@@ -147,7 +175,8 @@ void main() {
       test('should handle power meter data source error', () async {
         // Arrange
         final useCase = GetPowerMeterDataUseCase(mockPowerMeterDataSource);
-        when(mockPowerMeterDataSource.getRawData()).thenThrow(Exception("Data source error"));
+        when(mockPowerMeterDataSource.getRawData())
+            .thenThrow(Exception("Data source error"));
 
         // Act & Assert
         expect(() => useCase.call(), throwsException);
@@ -181,10 +210,12 @@ void main() {
         // 基準パケット（初回は差分を計算できないので0）
         useCase.processData(crankPacket(power: 200, revs: 0, time: 0));
         // 3回転 / 2秒 → 90rpm
-        final r1 = useCase.processData(crankPacket(power: 200, revs: 3, time: 2048));
+        final r1 =
+            useCase.processData(crankPacket(power: 200, revs: 3, time: 2048));
         // 同じクランクデータ（新イベントなし）が1秒後に届く
         clock = clock.add(const Duration(seconds: 1));
-        final r2 = useCase.processData(crankPacket(power: 200, revs: 3, time: 2048));
+        final r2 =
+            useCase.processData(crankPacket(power: 200, revs: 3, time: 2048));
 
         // Assert
         expect(r1.cadence, equals(90));
@@ -202,10 +233,12 @@ void main() {
 
         // Act
         useCase.processData(crankPacket(power: 200, revs: 0, time: 0));
-        final r1 = useCase.processData(crankPacket(power: 200, revs: 3, time: 2048));
+        final r1 =
+            useCase.processData(crankPacket(power: 200, revs: 3, time: 2048));
         // しきい値(3秒)を超えて新イベントが来ない → 停止とみなす
         clock = clock.add(const Duration(seconds: 4));
-        final r2 = useCase.processData(crankPacket(power: 200, revs: 3, time: 2048));
+        final r2 =
+            useCase.processData(crankPacket(power: 200, revs: 3, time: 2048));
 
         // Assert
         expect(r1.cadence, equals(90));
@@ -220,7 +253,8 @@ void main() {
         // 基準: time=65000 (残り 536 でラップ)
         useCase.processData(crankPacket(power: 200, revs: 100, time: 65000));
         // 65000 + 2048 = 67048 → 65536 で一周し 1512
-        final result = useCase.processData(crankPacket(power: 200, revs: 103, time: 1512));
+        final result =
+            useCase.processData(crankPacket(power: 200, revs: 103, time: 1512));
 
         // Assert
         // 3回転 / 2秒 = 90rpm（マスクしないと timeDiff が巨大な負数になり破綻する）
@@ -235,7 +269,8 @@ void main() {
         // 基準: revs=65535
         useCase.processData(crankPacket(power: 200, revs: 65535, time: 0));
         // 65535 + 3 = 65538 → 一周して 2
-        final result = useCase.processData(crankPacket(power: 200, revs: 2, time: 2048));
+        final result =
+            useCase.processData(crankPacket(power: 200, revs: 2, time: 2048));
 
         // Assert
         expect(result.cadence, equals(90));

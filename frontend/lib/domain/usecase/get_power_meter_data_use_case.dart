@@ -34,7 +34,8 @@ class GetPowerMeterDataUseCase {
   }
 
   PowerMeterData processData(List<int> value) {
-    if (value.isEmpty || value.length < 4) {  // 最低でもフラグとパワーが必要
+    if (value.isEmpty || value.length < 4) {
+      // 最低でもフラグとパワーが必要
       return PowerMeterData(power: 0, cadence: _lastCadence);
     }
 
@@ -62,7 +63,8 @@ class GetPowerMeterDataUseCase {
       // ラップアラウンドするため、差分は 16bit マスクを取る
       // （currentCrankEventTime は 1/1024 秒単位で約 64 秒ごとに一周する）
       int timeDiff = (currentCrankEventTime - lastCrankEventTime) & 0xFFFF;
-      int revDiff = (cumulativeCrankRevolutions - lastCrankRevolutions) & 0xFFFF;
+      int revDiff =
+          (cumulativeCrankRevolutions - lastCrankRevolutions) & 0xFFFF;
 
       final now = _now();
       if (!_hasPreviousCrankData) {
