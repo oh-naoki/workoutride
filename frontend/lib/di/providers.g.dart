@@ -388,6 +388,25 @@ final manageWorkoutUseCaseProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ManageWorkoutUseCaseRef = AutoDisposeProviderRef<ManageWorkoutUseCase>;
+String _$workoutSoundPlayerHash() =>
+    r'4e4ef84c1ad342e814bc25255993641b22732999';
+
+/// See also [workoutSoundPlayer].
+@ProviderFor(workoutSoundPlayer)
+final workoutSoundPlayerProvider =
+    AutoDisposeProvider<WorkoutSoundPlayer>.internal(
+  workoutSoundPlayer,
+  name: r'workoutSoundPlayerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$workoutSoundPlayerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef WorkoutSoundPlayerRef = AutoDisposeProviderRef<WorkoutSoundPlayer>;
 String _$mockModeHash() => r'4318c20e2959d772a2fa645299853f362d97412f';
 
 /// モックモードの ON/OFF。SharedPreferences に永続化する。

@@ -18,6 +18,7 @@ import 'package:workoutride/domain/repository/auth_repository.dart';
 import 'package:workoutride/domain/repository/workout_repository.dart';
 import 'package:workoutride/data/ble_connector.dart';
 import 'package:workoutride/data/power_meter_data_source.dart';
+import 'package:workoutride/data/audio/workout_sound_player.dart';
 import 'package:workoutride/domain/model/mock_pattern.dart';
 import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart';
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart';
@@ -221,4 +222,11 @@ ManageWorkoutUseCase manageWorkoutUseCase(Ref ref) {
     ref.read(powerZoneAnalyzerProvider),
     ref.read(userProfileRepositoryProvider),
   );
+}
+
+@riverpod
+WorkoutSoundPlayer workoutSoundPlayer(Ref ref) {
+  final player = WorkoutSoundPlayer();
+  ref.onDispose(player.dispose);
+  return player;
 }
