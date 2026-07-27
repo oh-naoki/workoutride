@@ -124,13 +124,11 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
 
 flutter_native_splash:
-  color: "#FFFFFF"
-  image: assets/images/ic_splash.png
-  background_image: assets/images/ic_splash.png
+  color: "#FF6A0E"
+  image: assets/icon/app_icon_foreground.png
   fullscreen: true
   android: true
   ios: true
   android_12:
-    color: "#FFFFFF"
-    image: assets/images/ic_splash.png
-    background_image: assets/images/ic_splash.png
+    color: "#FF6A0E"
+    image: assets/icon/app_icon_foreground.png
