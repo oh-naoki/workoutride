@@ -21,4 +21,12 @@ class AppException with _$AppException implements Exception {
         server: (_) => 'サーバーでエラーが発生しました。しばらくしてから再度お試しください。',
         unknown: (message) => 'エラーが発生しました。しばらくしてから再度お試しください。',
       );
+
+  /// UI層はdata層のマッパーに依存できないため、この静的メソッド経由で
+  /// 任意の例外からユーザー向けメッセージを取得する。
+  /// [error]が[AppException]でなければ（data層でのマッピング漏れ）汎用メッセージを返す。
+  static String messageFor(Object error) {
+    if (error is AppException) return error.userMessage;
+    return 'エラーが発生しました。しばらくしてから再度お試しください。';
+  }
 }

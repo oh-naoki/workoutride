@@ -7,7 +7,7 @@ part of 'settings_screen_state_notifier.dart';
 // **************************************************************************
 
 String _$settingsScreenStateNotifierHash() =>
-    r'4a924c4f79260558992b81902830db792d413993';
+    r'e9d350abe6df04cde812aef83785f3f50f089460';
 
 /// See also [SettingsScreenStateNotifier].
 @ProviderFor(SettingsScreenStateNotifier)

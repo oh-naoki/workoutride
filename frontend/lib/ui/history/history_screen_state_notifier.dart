@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:workoutride/data/remote/error/exception_mapper.dart';
 import 'package:workoutride/di/providers.dart';
+import 'package:workoutride/domain/model/error/app_exception.dart';
 import 'package:workoutride/domain/model/workout/workout_result.dart';
 import 'package:workoutride/domain/repository/workout_repository.dart';
 
@@ -41,7 +41,7 @@ class HistoryScreenStateNotifier extends _$HistoryScreenStateNotifier {
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        errorMessage: mapToAppException(e).userMessage,
+        errorMessage: AppException.messageFor(e),
       );
     }
   }

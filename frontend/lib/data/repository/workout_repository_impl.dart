@@ -12,42 +12,36 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
 
   WorkoutRepositoryImpl(this._remoteDataSource);
 
-  Future<T> _guard<T>(Future<T> Function() call) async {
-    try {
-      return await call();
-    } catch (e) {
-      throw mapToAppException(e);
-    }
-  }
-
   @override
   Future<List<WorkoutSummary>> getWorkoutSummaries() {
-    return _guard(() => _remoteDataSource.getWorkoutSummaries());
+    return guardApiCall(() => _remoteDataSource.getWorkoutSummaries());
   }
 
   @override
   Future<WorkoutSummary> getWorkoutSummary(int id) {
-    return _guard(() => _remoteDataSource.getWorkoutSummary(id));
+    return guardApiCall(() => _remoteDataSource.getWorkoutSummary(id));
   }
 
   @override
   Future<List<WorkoutBlock>> getWorkoutBlocks(int workoutSummaryId) {
-    return _guard(() => _remoteDataSource.getWorkoutBlocks(workoutSummaryId));
+    return guardApiCall(
+      () => _remoteDataSource.getWorkoutBlocks(workoutSummaryId),
+    );
   }
 
   @override
   Future<List<WorkoutResult>> getWorkoutResults() {
-    return _guard(() => _remoteDataSource.getWorkoutResults());
+    return guardApiCall(() => _remoteDataSource.getWorkoutResults());
   }
 
   @override
   Future<WorkoutResult> getWorkoutResult(int id) {
-    return _guard(() => _remoteDataSource.getWorkoutResult(id));
+    return guardApiCall(() => _remoteDataSource.getWorkoutResult(id));
   }
 
   @override
   Future<WorkoutResult> saveWorkoutResult(WorkoutResultDraft draft) {
-    return _guard(
+    return guardApiCall(
       () => _remoteDataSource.saveWorkoutResult(_toRequest(draft)),
     );
   }

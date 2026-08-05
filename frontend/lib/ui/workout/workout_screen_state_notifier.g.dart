@@ -7,7 +7,7 @@ part of 'workout_screen_state_notifier.dart';
 // **************************************************************************
 
 String _$workoutScreenStateNotifierHash() =>
-    r'3d022aed3945c81fb8bfeed4cad7d6275f7c559b';
+    r'7828a9998baeb35447801ca62c63680c4b1a1e24';
 
 /// Copied from Dart SDK
 class _SystemHash {

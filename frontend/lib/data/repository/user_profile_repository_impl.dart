@@ -55,12 +55,8 @@ class UserProfileRepositoryImpl implements UserProfileRepository {
   }
 
   @override
-  Future<void> saveFtp(int ftp) async {
-    try {
-      await userFtpApiClient.saveFtp({'ftp_value': ftp});
-    } catch (e) {
-      throw mapToAppException(e);
-    }
+  Future<void> saveFtp(int ftp) {
+    return guardApiCall(() => userFtpApiClient.saveFtp({'ftp_value': ftp}));
   }
 
   @override
@@ -75,12 +71,10 @@ class UserProfileRepositoryImpl implements UserProfileRepository {
   }
 
   @override
-  Future<void> saveWeight(double weight) async {
-    try {
-      await userProfileApiClient.updateUserProfile({'weight': weight});
-    } catch (e) {
-      throw mapToAppException(e);
-    }
+  Future<void> saveWeight(double weight) {
+    return guardApiCall(
+      () => userProfileApiClient.updateUserProfile({'weight': weight}),
+    );
   }
 
   Future<int?> _migrateLocalFtpToBackend() async {

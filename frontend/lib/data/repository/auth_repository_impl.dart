@@ -18,37 +18,31 @@ class AuthRepositoryImpl implements AuthRepository {
     this._secureStorage,
   );
 
-  Future<T> _guard<T>(Future<T> Function() call) async {
-    try {
-      return await call();
-    } catch (e) {
-      throw mapToAppException(e);
-    }
-  }
-
   @override
   Future<User> signInWithGoogle() async {
-    // 1. Google Sign-In
-    final googleUser = await _googleSignIn.signIn();
-    if (googleUser == null) {
-      throw Exception('Google sign in cancelled');
-    }
+    return guardApiCall(() async {
+      // 1. Google Sign-In
+      final googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        throw Exception('Google sign in cancelled');
+      }
 
-    final googleAuth = await googleUser.authentication;
-    if (googleAuth.idToken == null) {
-      throw Exception('Failed to get ID token');
-    }
+      final googleAuth = await googleUser.authentication;
+      if (googleAuth.idToken == null) {
+        throw Exception('Failed to get ID token');
+      }
 
-    // 2. Backend認証
-    final response = await _guard(
-      () => _apiClient.googleSignIn({'id_token': googleAuth.idToken!}),
-    );
+      // 2. Backend認証
+      final response = await _apiClient.googleSignIn({
+        'id_token': googleAuth.idToken!,
+      });
 
-    // 3. トークン保存
-    await _secureStorage.write(key: _tokenKey, value: response.token);
+      // 3. トークン保存
+      await _secureStorage.write(key: _tokenKey, value: response.token);
 
-    // 4. Userを返す（provider, uid含む）
-    return response.user.toDomain();
+      // 4. Userを返す（provider, uid含む）
+      return response.user.toDomain();
+    });
   }
 
   @override

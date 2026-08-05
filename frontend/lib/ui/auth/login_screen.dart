@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:workoutride/data/remote/error/exception_mapper.dart';
 import 'package:workoutride/di/providers.dart';
+import 'package:workoutride/domain/model/error/app_exception.dart';
 import 'package:workoutride/ui/auth/auth_state_notifier.dart';
 
 class LoginScreen extends ConsumerWidget {
@@ -57,7 +57,7 @@ class LoginScreen extends ConsumerWidget {
     if (error.toString().toLowerCase().contains('cancel')) {
       return 'ログインがキャンセルされました。';
     }
-    return mapToAppException(error).userMessage;
+    return AppException.messageFor(error);
   }
 
   Widget _buildErrorContent(BuildContext context, WidgetRef ref, Object error) {
