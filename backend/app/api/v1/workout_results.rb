@@ -12,10 +12,14 @@ module V1
       desc 'ワークアウト結果の一覧を取得'
       params do
         optional :workout_summary_id, type: Integer, desc: 'ワークアウトサマリーIDでフィルタ'
+        optional :page, type: Integer, default: 1, values: ->(v) { v >= 1 }, desc: 'ページ番号'
+        optional :per_page, type: Integer, default: 50, values: ->(v) { v.between?(1, 200) }, desc: '1ページあたりの件数(最大200)'
       end
       get do
         results = current_user.workout_results.includes(:workout_block_results).order(created_at: :desc)
         results = results.where(workout_summary_id: params[:workout_summary_id]) if params[:workout_summary_id]
+        header 'X-Total-Count', results.count.to_s
+        results = results.limit(params[:per_page]).offset((params[:page] - 1) * params[:per_page])
         present results, with: Entities::WorkoutResult
       end
 
