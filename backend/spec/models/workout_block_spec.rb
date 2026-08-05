@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe WorkoutBlock, type: :model do
   describe 'associations' do
     it { should belong_to(:workout_summary) }
+    it { should belong_to(:block_category) }
   end
 
   describe 'factory' do
@@ -30,7 +31,7 @@ RSpec.describe WorkoutBlock, type: :model do
       expect(workout_block).to respond_to(:order_index)
       expect(workout_block).to respond_to(:target_ftp_percentage)
       expect(workout_block).to respond_to(:duration)
-      expect(workout_block).to respond_to(:block_type)
+      expect(workout_block).to respond_to(:block_category)
     end
   end
 end

@@ -4,6 +4,6 @@ FactoryBot.define do
     order_index { 0 }
     target_ftp_percentage { rand(50..150) }
     duration { rand(60..600) }
-    block_type { %w[warmup work rest cooldown].sample }
+    association :block_category
   end
 end
