@@ -56,6 +56,12 @@ RSpec.describe 'API::V1::WorkoutBlocks', type: :request do
           expect(block['workout_summary_id']).to eq(workout_summary.id)
         end
       end
+
+      it 'exposes block_type as the block_category name' do
+        json_response = JSON.parse(response.body)
+
+        expect(json_response[0]['block_type']).to eq(workout_blocks[0].block_category.name)
+      end
     end
 
     context 'when no workout blocks exist for the summary' do

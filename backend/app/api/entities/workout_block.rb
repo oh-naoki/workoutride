@@ -5,7 +5,9 @@ module Entities
     expose :order_index
     expose :target_ftp_percentage
     expose :duration
-    expose :block_type
+    expose :block_type, documentation: { desc: 'ブロックカテゴリ名' } do |block|
+      block.block_category.name
+    end
     expose :created_at
     expose :updated_at
   end

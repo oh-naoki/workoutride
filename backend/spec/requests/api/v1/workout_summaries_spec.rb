@@ -31,6 +31,11 @@ RSpec.describe 'API::V1::WorkoutSummaries', type: :request do
         expect(first_summary).to have_key('updated_at')
       end
 
+      it 'exposes category as the category name' do
+        json_response = JSON.parse(response.body)
+        expect(json_response.first['category']).to eq(workout_summaries.first.category.name)
+      end
+
       it 'does not expose internal attributes' do
         json_response = JSON.parse(response.body)
         first_summary = json_response.first

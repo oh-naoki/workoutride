@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_05_124031) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_05_125211) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -24,6 +24,20 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_05_124031) do
     t.index ["token_digest"], name: "index_auth_tokens_on_token_digest", unique: true
     t.index ["user_id", "expires_at"], name: "index_auth_tokens_on_user_id_and_expires_at"
     t.index ["user_id"], name: "index_auth_tokens_on_user_id"
+  end
+
+  create_table "block_categories", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_block_categories_on_name", unique: true
+  end
+
+  create_table "categories", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_categories_on_name", unique: true
   end
 
   create_table "user_ftps", force: :cascade do |t|
@@ -60,11 +74,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_05_124031) do
   create_table "workout_blocks", force: :cascade do |t|
     t.integer "order_index"
     t.integer "duration"
-    t.string "block_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "target_ftp_percentage", precision: 10, scale: 2
     t.bigint "workout_summary_id", null: false
+    t.bigint "block_category_id", null: false
+    t.index ["block_category_id"], name: "index_workout_blocks_on_block_category_id"
     t.index ["workout_summary_id"], name: "index_workout_blocks_on_workout_summary_id"
   end
 
@@ -87,16 +102,19 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_05_124031) do
   create_table "workout_summaries", force: :cascade do |t|
     t.string "name"
     t.integer "total_duration"
-    t.string "category"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "category_id", null: false
+    t.index ["category_id"], name: "index_workout_summaries_on_category_id"
   end
 
   add_foreign_key "auth_tokens", "users"
   add_foreign_key "user_ftps", "users"
   add_foreign_key "workout_block_results", "workout_blocks"
   add_foreign_key "workout_block_results", "workout_results"
+  add_foreign_key "workout_blocks", "block_categories"
   add_foreign_key "workout_blocks", "workout_summaries"
   add_foreign_key "workout_results", "users"
   add_foreign_key "workout_results", "workout_summaries"
+  add_foreign_key "workout_summaries", "categories"
 end

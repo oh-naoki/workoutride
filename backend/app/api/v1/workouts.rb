@@ -15,7 +15,7 @@ module V1
         optional :per_page, type: Integer, default: 100, values: ->(v) { v.between?(1, 200) }, desc: '1ページあたりの件数(最大200)'
       end
       get do
-        workout_summaries = WorkoutSummary.order(:id)
+        workout_summaries = WorkoutSummary.includes(:category).order(:id)
         header 'X-Total-Count', workout_summaries.count.to_s
         workout_summaries = workout_summaries.limit(params[:per_page]).offset((params[:page] - 1) * params[:per_page])
         present workout_summaries, with: Entities::WorkoutSummary
@@ -37,7 +37,7 @@ module V1
         requires :id, type: Integer, desc: 'ワークアウトサマリーID'
       end
       get ':id' do
-        workout_blocks = WorkoutBlock.where(workout_summary_id: params[:id])
+        workout_blocks = WorkoutBlock.includes(:block_category).where(workout_summary_id: params[:id])
         present workout_blocks, with: Entities::WorkoutBlock
       end
     end
