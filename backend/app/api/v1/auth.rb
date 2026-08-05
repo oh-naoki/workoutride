@@ -24,29 +24,31 @@ module V1
         }
       end
 
-      desc 'Sign out'
-      delete :logout do
-        authenticate!
-        token = extract_token_from_header
-        current_user.auth_tokens.find_by(token_digest: AuthToken.digest(token))&.destroy
-        { message: 'Logged out successfully' }
-      end
+      namespace '' do
+        before do
+          authenticate!
+        end
 
-      desc 'Delete account and all associated data'
-      delete :account do
-        authenticate!
-        current_user.destroy!
-        { message: 'Account deleted successfully' }
-      end
+        desc 'Sign out'
+        delete :logout do
+          current_auth_token&.destroy
+          { message: 'Logged out successfully' }
+        end
 
-      desc 'Get current user'
-      get :me do
-        authenticate!
-        {
-          id: current_user.id,
-          provider: current_user.provider,
-          uid: current_user.uid
-        }
+        desc 'Delete account and all associated data'
+        delete :account do
+          current_user.destroy!
+          { message: 'Account deleted successfully' }
+        end
+
+        desc 'Get current user'
+        get :me do
+          {
+            id: current_user.id,
+            provider: current_user.provider,
+            uid: current_user.uid
+          }
+        end
       end
     end
   end
