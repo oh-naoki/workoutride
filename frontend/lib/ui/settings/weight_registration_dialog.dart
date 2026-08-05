@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workoutride/di/providers.dart';
+import 'package:workoutride/domain/model/error/app_exception.dart';
 
 class WeightRegistrationDialog extends ConsumerStatefulWidget {
   final double? currentWeight;
@@ -55,7 +56,7 @@ class _WeightRegistrationDialogState
         Navigator.of(context).pop(weight);
       }
     } catch (e) {
-      _showErrorDialog('体重の保存に失敗しました');
+      _showErrorDialog(AppException.messageFor(e));
     } finally {
       if (mounted) {
         setState(() {

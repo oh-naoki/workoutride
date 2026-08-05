@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workoutride/di/providers.dart';
+import 'package:workoutride/domain/model/error/app_exception.dart';
 
 class FtpRegistrationDialog extends ConsumerStatefulWidget {
   const FtpRegistrationDialog({super.key});
@@ -51,7 +52,7 @@ class _FtpRegistrationDialogState extends ConsumerState<FtpRegistrationDialog> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('FTPの保存に失敗しました: $e')),
+          SnackBar(content: Text(AppException.messageFor(e))),
         );
       }
     } finally {

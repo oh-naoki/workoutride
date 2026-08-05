@@ -4,6 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:workoutride/data/audio/workout_sound_player.dart';
 import 'package:workoutride/di/providers.dart';
+import 'package:workoutride/domain/model/error/app_exception.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/domain/model/power_alert_message.dart';
 import 'package:workoutride/domain/repository/user_profile_repository.dart';
@@ -222,7 +223,7 @@ class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
     } catch (e) {
       state = WorkoutScreenUiState(
         isLoading: false,
-        errorMessage: e.toString(),
+        errorMessage: AppException.messageFor(e),
         userWeight: _userWeight ?? 60.0,
         userFtp: _userFtp ?? 200,
       );
