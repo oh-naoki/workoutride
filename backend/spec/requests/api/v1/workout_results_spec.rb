@@ -52,6 +52,15 @@ RSpec.describe 'V1::WorkoutResults', type: :request do
       get "/api/v1/workout_results/#{workout_result.id}"
       expect(response).to have_http_status(:unauthorized)
     end
+
+    it 'does not allow fetching another user\'s workout result' do
+      other_user = User.create!(provider: 'google', uid: 'other-user')
+      other_result = create(:workout_result, workout_summary: workout_summary, user: other_user)
+
+      get "/api/v1/workout_results/#{other_result.id}", headers: headers
+
+      expect(response).to have_http_status(:not_found)
+    end
   end
 
   describe 'POST /api/v1/workout_results' do
