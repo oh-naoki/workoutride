@@ -58,5 +58,30 @@ RSpec.describe 'API::V1::WorkoutSummaries', type: :request do
         expect(response).to have_http_status(:unauthorized)
       end
     end
+
+    context 'pagination' do
+      let!(:workout_summaries) { create_list(:workout_summary, 5) }
+
+      it 'limits results to per_page and reports the total via header' do
+        get '/api/v1/workout_summaries', params: { per_page: 2 }, headers: headers
+
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body).size).to eq(2)
+        expect(response.headers['X-Total-Count']).to eq('5')
+      end
+
+      it 'returns the second page' do
+        get '/api/v1/workout_summaries', params: { page: 2, per_page: 2 }, headers: headers
+
+        ids = JSON.parse(response.body).map { |s| s['id'] }
+        expect(ids).to eq(workout_summaries[2..3].map(&:id))
+      end
+
+      it 'rejects a per_page above the max' do
+        get '/api/v1/workout_summaries', params: { per_page: 201 }, headers: headers
+
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
   end
 end

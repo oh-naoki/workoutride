@@ -33,6 +33,15 @@ RSpec.describe 'V1::WorkoutResults', type: :request do
       get '/api/v1/workout_results'
       expect(response).to have_http_status(:unauthorized)
     end
+
+    it 'paginates results and reports the total via header' do
+      create_list(:workout_result, 3, workout_summary: workout_summary, user: user)
+
+      get '/api/v1/workout_results', params: { per_page: 2 }, headers: headers
+
+      expect(JSON.parse(response.body).size).to eq(2)
+      expect(response.headers['X-Total-Count']).to eq('4')
+    end
   end
 
   describe 'GET /api/v1/workout_results/:id' do

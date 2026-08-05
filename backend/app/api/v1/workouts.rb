@@ -10,8 +10,14 @@ module V1
 
     resource :workout_summaries do
       desc 'ワークアウトサマリーの一覧を取得'
+      params do
+        optional :page, type: Integer, default: 1, values: ->(v) { v >= 1 }, desc: 'ページ番号'
+        optional :per_page, type: Integer, default: 100, values: ->(v) { v.between?(1, 200) }, desc: '1ページあたりの件数(最大200)'
+      end
       get do
-        workout_summaries = WorkoutSummary.all
+        workout_summaries = WorkoutSummary.order(:id)
+        header 'X-Total-Count', workout_summaries.count.to_s
+        workout_summaries = workout_summaries.limit(params[:per_page]).offset((params[:page] - 1) * params[:per_page])
         present workout_summaries, with: Entities::WorkoutSummary
       end
 
