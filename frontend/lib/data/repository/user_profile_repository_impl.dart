@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workoutride/data/remote/api/user_ftp_api_client.dart';
 import 'package:workoutride/data/remote/api/user_profile_api_client.dart';
+import 'package:workoutride/data/remote/error/exception_mapper.dart';
 import 'package:workoutride/domain/model/user_profile.dart';
 import 'package:workoutride/domain/repository/user_profile_repository.dart';
 
@@ -49,13 +50,17 @@ class UserProfileRepositoryImpl implements UserProfileRepository {
       if (e.response?.statusCode == 404) {
         return await _migrateLocalFtpToBackend();
       }
-      rethrow;
+      throw mapToAppException(e);
     }
   }
 
   @override
   Future<void> saveFtp(int ftp) async {
-    await userFtpApiClient.saveFtp({'ftp_value': ftp});
+    try {
+      await userFtpApiClient.saveFtp({'ftp_value': ftp});
+    } catch (e) {
+      throw mapToAppException(e);
+    }
   }
 
   @override
@@ -71,7 +76,11 @@ class UserProfileRepositoryImpl implements UserProfileRepository {
 
   @override
   Future<void> saveWeight(double weight) async {
-    await userProfileApiClient.updateUserProfile({'weight': weight});
+    try {
+      await userProfileApiClient.updateUserProfile({'weight': weight});
+    } catch (e) {
+      throw mapToAppException(e);
+    }
   }
 
   Future<int?> _migrateLocalFtpToBackend() async {

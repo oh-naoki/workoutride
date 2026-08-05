@@ -1,3 +1,4 @@
+import 'package:workoutride/data/remote/error/exception_mapper.dart';
 import 'package:workoutride/data/remote/model/save_workout_result_request.dart';
 import 'package:workoutride/data/remote/workout_remote_data_source.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
@@ -11,34 +12,44 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
 
   WorkoutRepositoryImpl(this._remoteDataSource);
 
+  Future<T> _guard<T>(Future<T> Function() call) async {
+    try {
+      return await call();
+    } catch (e) {
+      throw mapToAppException(e);
+    }
+  }
+
   @override
   Future<List<WorkoutSummary>> getWorkoutSummaries() {
-    return _remoteDataSource.getWorkoutSummaries();
+    return _guard(() => _remoteDataSource.getWorkoutSummaries());
   }
 
   @override
   Future<WorkoutSummary> getWorkoutSummary(int id) {
-    return _remoteDataSource.getWorkoutSummary(id);
+    return _guard(() => _remoteDataSource.getWorkoutSummary(id));
   }
 
   @override
   Future<List<WorkoutBlock>> getWorkoutBlocks(int workoutSummaryId) {
-    return _remoteDataSource.getWorkoutBlocks(workoutSummaryId);
+    return _guard(() => _remoteDataSource.getWorkoutBlocks(workoutSummaryId));
   }
 
   @override
   Future<List<WorkoutResult>> getWorkoutResults() {
-    return _remoteDataSource.getWorkoutResults();
+    return _guard(() => _remoteDataSource.getWorkoutResults());
   }
 
   @override
   Future<WorkoutResult> getWorkoutResult(int id) {
-    return _remoteDataSource.getWorkoutResult(id);
+    return _guard(() => _remoteDataSource.getWorkoutResult(id));
   }
 
   @override
   Future<WorkoutResult> saveWorkoutResult(WorkoutResultDraft draft) {
-    return _remoteDataSource.saveWorkoutResult(_toRequest(draft));
+    return _guard(
+      () => _remoteDataSource.saveWorkoutResult(_toRequest(draft)),
+    );
   }
 
   /// ドメインの Draft を API DTO へ変換する（ISO8601 文字列化を含む）。

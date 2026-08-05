@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:workoutride/data/remote/error/exception_mapper.dart';
 import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/ui/auth/auth_state_notifier.dart';
 
@@ -53,16 +54,10 @@ class LoginScreen extends ConsumerWidget {
   }
 
   String _friendlyErrorMessage(dynamic error) {
-    final msg = error.toString().toLowerCase();
-    if (msg.contains('network') ||
-        msg.contains('socket') ||
-        msg.contains('connection')) {
-      return 'ネットワークエラーが発生しました。通信状況を確認してください。';
-    }
-    if (msg.contains('cancel') || msg.contains('cancelled')) {
+    if (error.toString().toLowerCase().contains('cancel')) {
       return 'ログインがキャンセルされました。';
     }
-    return 'ログインに失敗しました。しばらくしてから再試行してください。';
+    return mapToAppException(error).userMessage;
   }
 
   Widget _buildErrorContent(BuildContext context, WidgetRef ref, Object error) {

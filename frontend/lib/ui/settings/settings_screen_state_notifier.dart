@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:workoutride/data/remote/error/exception_mapper.dart';
 import 'package:workoutride/di/providers.dart';
 
 part 'settings_screen_state_notifier.freezed.dart';
@@ -35,7 +36,7 @@ class SettingsScreenStateNotifier extends _$SettingsScreenStateNotifier {
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        errorMessage: 'Failed to load user profile',
+        errorMessage: mapToAppException(e).userMessage,
       );
     }
   }
@@ -54,7 +55,7 @@ class SettingsScreenStateNotifier extends _$SettingsScreenStateNotifier {
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        errorMessage: 'Failed to save weight',
+        errorMessage: mapToAppException(e).userMessage,
       );
     }
   }
