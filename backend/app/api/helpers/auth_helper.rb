@@ -8,6 +8,11 @@ module Helpers
       @current_user ||= authenticate_from_token
     end
 
+    def current_auth_token
+      current_user
+      @current_auth_token
+    end
+
     private
 
     def authenticate_from_token
@@ -18,6 +23,7 @@ module Helpers
       return nil unless auth_token
 
       auth_token.touch_last_used!
+      @current_auth_token = auth_token
       auth_token.user
     end
 

@@ -5,6 +5,19 @@ RSpec.describe 'V1::Auth', type: :request do
   let!(:auth_token) { user.auth_tokens.create! }
   let(:headers) { { 'Authorization' => "Bearer #{auth_token.token}" } }
 
+  describe 'POST /v1/auth/google' do
+    it 'signs in without requiring an Authorization header' do
+      allow(Google::Auth::IDTokens).to receive(:verify_oidc).and_return('sub' => 'new-google-sub')
+
+      post '/api/v1/auth/google', params: { id_token: 'dummy-token' }
+
+      expect(response).to have_http_status(:created)
+      json = JSON.parse(response.body)
+      expect(json['token']).to be_present
+      expect(json['user']['uid']).to eq('new-google-sub')
+    end
+  end
+
   describe 'DELETE /v1/auth/account' do
     let(:workout_summary) { create(:workout_summary) }
 
