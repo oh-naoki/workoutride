@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_07_12_090000) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_05_124031) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -30,7 +30,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_12_090000) do
     t.integer "ftp_value", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id"
+    t.bigint "user_id", null: false
     t.index ["user_id", "created_at"], name: "index_user_ftps_on_user_id_and_created_at"
     t.index ["user_id"], name: "index_user_ftps_on_user_id"
   end
@@ -79,7 +79,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_07_12_090000) do
     t.string "status", default: "completed", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id"
+    t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_workout_results_on_user_id"
     t.index ["workout_summary_id"], name: "index_workout_results_on_workout_summary_id"
   end
