@@ -37,9 +37,11 @@ class BleConnector {
       controller.addError(e); // エラーが発生した場合、Streamにエラーを追加
     });
 
-    // システムデバイスを取得してスキャンを開始します。
-    FlutterBluePlus.systemDevices([Guid("180f")]);
-    FlutterBluePlus.startScan(timeout: const Duration(seconds: 300));
+    // Cycling Power Service (0x1818) を持つデバイスのみをスキャン対象にする
+    FlutterBluePlus.startScan(
+      timeout: const Duration(seconds: 300),
+      withServices: [Guid("1818")],
+    );
 
     return controller.stream;
   }
