@@ -6,7 +6,6 @@
 import 'dart:async' as _i5;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:workoutride/data/audio/workout_sound_player.dart' as _i13;
 import 'package:workoutride/domain/model/power_meter_data.dart' as _i9;
 import 'package:workoutride/domain/model/user_profile.dart' as _i12;
 import 'package:workoutride/domain/model/workout/workout_block.dart' as _i6;
@@ -17,6 +16,8 @@ import 'package:workoutride/domain/model/workout/workout_summary.dart' as _i2;
 import 'package:workoutride/domain/repository/user_profile_repository.dart'
     as _i11;
 import 'package:workoutride/domain/repository/workout_repository.dart' as _i4;
+import 'package:workoutride/domain/repository/workout_sound_player.dart'
+    as _i13;
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart'
     as _i8;
 import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart'
