@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/domain/model/error/app_exception.dart';
-import 'package:workoutride/ui/auth/auth_state_notifier.dart';
+import 'package:workoutride/app/auth_controller.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authStateNotifierProvider);
+    final authState = ref.watch(authControllerProvider);
 
     return Scaffold(
       body: Center(
@@ -37,7 +37,7 @@ class LoginScreen extends ConsumerWidget {
         const SizedBox(height: 48),
         ElevatedButton.icon(
           onPressed: () {
-            ref.read(authStateNotifierProvider.notifier).signInWithGoogle();
+            ref.read(authControllerProvider.notifier).signInWithGoogle();
           },
           icon: const Icon(Icons.login),
           label: const Text('Sign in with Google'),
@@ -75,7 +75,7 @@ class LoginScreen extends ConsumerWidget {
         const SizedBox(height: 24),
         ElevatedButton(
           onPressed: () {
-            ref.read(authStateNotifierProvider.notifier).signInWithGoogle();
+            ref.read(authControllerProvider.notifier).signInWithGoogle();
           },
           child: const Text('再試行'),
         ),
@@ -159,7 +159,7 @@ class _DebugPanelState extends ConsumerState<_DebugPanel> {
                 child: ElevatedButton(
                   onPressed: () {
                     ref
-                        .read(authStateNotifierProvider.notifier)
+                        .read(authControllerProvider.notifier)
                         .signInAsDebugUser();
                   },
                   child: const Text('Skip Login'),

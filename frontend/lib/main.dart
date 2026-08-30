@@ -5,7 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workoutride/di/providers.dart';
-import 'package:workoutride/ui/auth/auth_state_notifier.dart';
+import 'package:workoutride/app/auth_controller.dart';
 import 'package:workoutride/ui/auth/login_screen.dart';
 import 'package:workoutride/ui/home/home_screen.dart';
 import 'package:workoutride/ui/theme/app_colors.dart';
@@ -34,7 +34,7 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authStateNotifierProvider);
+    final authState = ref.watch(authControllerProvider);
 
     return MaterialApp(
       title: 'WorkoutRide',

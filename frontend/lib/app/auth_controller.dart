@@ -5,13 +5,21 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:workoutride/domain/model/auth/auth_state.dart';
 import 'package:workoutride/di/providers.dart';
 
-part 'auth_state_notifier.g.dart';
+part 'auth_controller.g.dart';
 
 @riverpod
-class AuthStateNotifier extends _$AuthStateNotifier {
+class AuthController extends _$AuthController {
   @override
   Future<AuthState> build() async {
     final repo = ref.read(authRepositoryProvider);
+
+    // 通信中に 401 が返ったら未認証へ落とす。トークンの破棄は data 層が済ませて
+    // いるので、ここでは状態を合わせるだけでよい。
+    final subscription = repo.sessionExpired.listen((_) {
+      state = const AsyncValue.data(AuthState.unauthenticated());
+    });
+    ref.onDispose(subscription.cancel);
+
     final user = await repo.getCurrentUser();
 
     if (user == null) {

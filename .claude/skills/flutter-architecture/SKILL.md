@@ -35,21 +35,38 @@ description: WorkoutRide の Flutter アプリ（frontend/）でコードを追�
 ## 絶対に守る3点
 
 1. **黄金律**: `domain/` から `data/` を import しない。外部 I/O は Repository IF 越しに触る。
-2. **DTO を閉じ込める**: `data/remote/model/` の型は `ui/` にも `domain/` にも出さない。Repository の公開型は常にドメインモデル。
-3. **View にロジックを書かない**: データ取得（`FutureBuilder` + Repository 直呼び）も集計も禁止。すべて ViewModel の `UiState`（Freezed）へ。
+2. **逆流も禁止**: `data/` から `ui/`（や他の上位層）を import しない。
+   下位層が上位層を知るのは黄金律より悪い。data 層が上位に何かを伝えたいときは、
+   **Repository IF に通知手段（`Stream` 等）を生やして上位に購読させる**。
+   data から呼んでよいのは `domain/model` と `domain/repository` だけ。
+3. **DTO を閉じ込める**: `data/remote/model/` の型は `ui/` にも `domain/` にも出さない。Repository の公開型は常にドメインモデル。
+4. **View にロジックを書かない**: データ取得（`FutureBuilder` + Repository 直呼び）も集計も禁止。すべて ViewModel の `UiState`（Freezed）へ。
 
 状態管理は `@riverpod` codegen の `Notifier` のみ。旧 `StateNotifier`/`StateProvider` は新規で使わない。
 
 ## 機械的チェック（変更後・PR 前に実行）
 
+> **必ずリポジトリのルートから実行すること。** ディレクトリを間違えると
+> grep が対象を見つけられず、違反があっても「なし ✓」と表示されてしまう。
+> 下のスクリプトは先頭で対象ディレクトリの存在を確認して落とすようにしてある。
+
 ```bash
-cd frontend/lib
+cd "$(git rev-parse --show-toplevel)/frontend/lib" || exit 1
+for d in domain ui data component; do
+  [ -d "$d" ] || { echo "ERROR: $d が無い。実行位置が違う"; exit 1; }
+done
 
 echo "=== 黄金律: domain/ が data/ を import ==="
 grep -rn "import.*['\"].*data/" domain/ || echo "  なし ✓"
 
 echo "=== ui/ が data/ を import ==="
 grep -rn "import.*['\"].*data/" ui/ || echo "  なし ✓"
+
+echo "=== 逆流: data/ が上位層を import ==="
+grep -rnE "import.*['\"].*(ui|app)/" data/ || echo "  なし ✓"
+
+echo "=== 逆流: domain/ が ui/ を import ==="
+grep -rn "import.*['\"].*ui/" domain/ || echo "  なし ✓"
 
 echo "=== View 内のデータ取得 ==="
 grep -rn "FutureBuilder\|StreamBuilder" ui/ component/ || echo "  なし ✓"

@@ -73,7 +73,28 @@ final authApiClientProvider = Provider<AuthApiClient>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AuthApiClientRef = ProviderRef<AuthApiClient>;
-String _$authRepositoryHash() => r'bf49dd93f034ea0ca440c9d093d75667bc89a643';
+String _$authSessionSignalHash() => r'76be16a6812bab6cac2fa3b625ae93ff1a552cad';
+
+/// 401 を通信層から Repository へ橋渡しする器。両者とも data 層なので
+/// この受け渡しは層をまたがない。
+///
+/// Copied from [authSessionSignal].
+@ProviderFor(authSessionSignal)
+final authSessionSignalProvider =
+    AutoDisposeProvider<AuthSessionSignal>.internal(
+  authSessionSignal,
+  name: r'authSessionSignalProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$authSessionSignalHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef AuthSessionSignalRef = AutoDisposeProviderRef<AuthSessionSignal>;
+String _$authRepositoryHash() => r'ea5b0bcd3e0e8de51788bfc40db581e54da97ea7';
 
 /// See also [authRepository].
 @ProviderFor(authRepository)
@@ -90,7 +111,7 @@ final authRepositoryProvider = AutoDisposeProvider<AuthRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AuthRepositoryRef = AutoDisposeProviderRef<AuthRepository>;
-String _$dioHash() => r'e8380f95946b318ec1d3ee7a6efc8eaa6837a2e3';
+String _$dioHash() => r'8f28a38fe3f07603306e3dae9843e7b8b0008535';
 
 /// See also [dio].
 @ProviderFor(dio)

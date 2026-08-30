@@ -10,6 +10,7 @@ import 'package:workoutride/data/remote/api/auth_api_client.dart';
 import 'package:workoutride/data/remote/api/workout_api_client.dart';
 import 'package:workoutride/data/remote/api/user_ftp_api_client.dart';
 import 'package:workoutride/data/remote/api/user_profile_api_client.dart';
+import 'package:workoutride/data/remote/auth_session_signal.dart';
 import 'package:workoutride/data/remote/interceptor/auth_interceptor.dart';
 import 'package:workoutride/data/repository/auth_repository_impl.dart';
 import 'package:workoutride/data/repository/workout_repository_impl.dart';
@@ -60,12 +61,22 @@ AuthApiClient authApiClient(Ref ref) {
   return AuthApiClient(ref.watch(dioProvider));
 }
 
+/// 401 を通信層から Repository へ橋渡しする器。両者とも data 層なので
+/// この受け渡しは層をまたがない。
+@riverpod
+AuthSessionSignal authSessionSignal(Ref ref) {
+  final signal = AuthSessionSignal();
+  ref.onDispose(signal.dispose);
+  return signal;
+}
+
 @riverpod
 AuthRepository authRepository(Ref ref) {
   return AuthRepositoryImpl(
     ref.watch(authApiClientProvider),
     ref.watch(googleSignInProvider),
     ref.watch(secureStorageProvider),
+    ref.watch(authSessionSignalProvider),
   );
 }
 
@@ -122,7 +133,10 @@ Dio dio(Ref ref) {
 
   // AuthInterceptorを追加
   dio.interceptors.add(
-    AuthInterceptor(ref.read(secureStorageProvider), ref),
+    AuthInterceptor(
+      ref.read(secureStorageProvider),
+      ref.read(authSessionSignalProvider),
+    ),
   );
 
   // iOSシミュレータでHTTPSを許可する設定

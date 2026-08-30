@@ -4,7 +4,7 @@ import 'package:workoutride/ui/ble_setting/scan_screen.dart';
 import 'package:workoutride/ui/settings/weight_registration_dialog.dart';
 import 'package:workoutride/ui/settings/ftp_registration_dialog.dart';
 import 'package:workoutride/ui/settings/settings_screen_state_notifier.dart';
-import 'package:workoutride/ui/auth/auth_state_notifier.dart';
+import 'package:workoutride/app/auth_controller.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -87,7 +87,7 @@ class SettingsScreen extends ConsumerWidget {
     );
 
     if (result == true && context.mounted) {
-      await ref.read(authStateNotifierProvider.notifier).signOut();
+      await ref.read(authControllerProvider.notifier).signOut();
     }
   }
 
@@ -101,7 +101,7 @@ class SettingsScreen extends ConsumerWidget {
     if (confirmed != true || !context.mounted) return;
 
     try {
-      await ref.read(authStateNotifierProvider.notifier).deleteAccount();
+      await ref.read(authControllerProvider.notifier).deleteAccount();
     } catch (_) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
