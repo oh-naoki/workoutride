@@ -1,17 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:workoutride/data/power_meter_data_source.dart';
+import 'package:workoutride/domain/repository/power_meter_raw_data_source.dart';
 import 'package:workoutride/domain/usecase/get_power_meter_data_use_case.dart';
 
 import 'get_power_meter_data_use_case_test.mocks.dart' as mocks;
 
-@GenerateMocks([PowerMeterDataSource])
+@GenerateMocks([PowerMeterRawDataSource])
 void main() {
-  late mocks.MockPowerMeterDataSource mockPowerMeterDataSource;
+  late mocks.MockPowerMeterRawDataSource mockPowerMeterDataSource;
 
   setUp(() {
-    mockPowerMeterDataSource = mocks.MockPowerMeterDataSource();
+    mockPowerMeterDataSource = mocks.MockPowerMeterRawDataSource();
   });
 
   // Test data constants

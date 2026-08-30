@@ -198,12 +198,12 @@ final workoutRepositoryProvider =
 // ignore: unused_element
 typedef WorkoutRepositoryRef = AutoDisposeProviderRef<WorkoutRepository>;
 String _$powerMeterDataSourceHash() =>
-    r'8882d07ab98e3b2cff2d918f0399c3493fe6b93c';
+    r'c54fc52ad72a8d545139b93b7c554f6363f836dd';
 
 /// See also [powerMeterDataSource].
 @ProviderFor(powerMeterDataSource)
 final powerMeterDataSourceProvider =
-    AutoDisposeProvider<PowerMeterDataSource>.internal(
+    AutoDisposeProvider<PowerMeterRawDataSource>.internal(
   powerMeterDataSource,
   name: r'powerMeterDataSourceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -215,7 +215,8 @@ final powerMeterDataSourceProvider =
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef PowerMeterDataSourceRef = AutoDisposeProviderRef<PowerMeterDataSource>;
+typedef PowerMeterDataSourceRef
+    = AutoDisposeProviderRef<PowerMeterRawDataSource>;
 String _$userProfileRepositoryHash() =>
     r'b98d37e395612d33a443cb8ef74fec7d4256dffa';
 
@@ -236,26 +237,6 @@ final userProfileRepositoryProvider =
 // ignore: unused_element
 typedef UserProfileRepositoryRef
     = AutoDisposeProviderRef<UserProfileRepository>;
-String _$autoConnectBlePowerMeterUseCaseHash() =>
-    r'44655517e018cc5679979f4e1a4e173077388fce';
-
-/// See also [autoConnectBlePowerMeterUseCase].
-@ProviderFor(autoConnectBlePowerMeterUseCase)
-final autoConnectBlePowerMeterUseCaseProvider =
-    AutoDisposeProvider<AutoConnectBlePowerMeterUseCase>.internal(
-  autoConnectBlePowerMeterUseCase,
-  name: r'autoConnectBlePowerMeterUseCaseProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$autoConnectBlePowerMeterUseCaseHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef AutoConnectBlePowerMeterUseCaseRef
-    = AutoDisposeProviderRef<AutoConnectBlePowerMeterUseCase>;
 String _$bleConnectorHash() => r'f29ddceb8cb911e65a208c82019df9d2d59d45ec';
 
 /// See also [bleConnector].
@@ -272,45 +253,26 @@ final bleConnectorProvider = AutoDisposeProvider<BleConnector>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef BleConnectorRef = AutoDisposeProviderRef<BleConnector>;
-String _$connectBlePowerMeterUseCaseHash() =>
-    r'26385837d49fb09ae9918789ab73a1007b6276f5';
+String _$blePowerMeterRepositoryHash() =>
+    r'26e7aa76f8481e13811209d13b78ce59228c7f82';
 
-/// See also [connectBlePowerMeterUseCase].
-@ProviderFor(connectBlePowerMeterUseCase)
-final connectBlePowerMeterUseCaseProvider =
-    AutoDisposeProvider<ConnectBlePowerMeterUseCase>.internal(
-  connectBlePowerMeterUseCase,
-  name: r'connectBlePowerMeterUseCaseProvider',
+/// See also [blePowerMeterRepository].
+@ProviderFor(blePowerMeterRepository)
+final blePowerMeterRepositoryProvider =
+    AutoDisposeProvider<BlePowerMeterRepository>.internal(
+  blePowerMeterRepository,
+  name: r'blePowerMeterRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$connectBlePowerMeterUseCaseHash,
+      : _$blePowerMeterRepositoryHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef ConnectBlePowerMeterUseCaseRef
-    = AutoDisposeProviderRef<ConnectBlePowerMeterUseCase>;
-String _$scanBleDeviceUseCaseHash() =>
-    r'7b755055dd1329ec9a0452a6ea986a13df9993b6';
-
-/// See also [scanBleDeviceUseCase].
-@ProviderFor(scanBleDeviceUseCase)
-final scanBleDeviceUseCaseProvider =
-    AutoDisposeProvider<ScanBleDeviceUseCase>.internal(
-  scanBleDeviceUseCase,
-  name: r'scanBleDeviceUseCaseProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$scanBleDeviceUseCaseHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ScanBleDeviceUseCaseRef = AutoDisposeProviderRef<ScanBleDeviceUseCase>;
+typedef BlePowerMeterRepositoryRef
+    = AutoDisposeProviderRef<BlePowerMeterRepository>;
 String _$getPowerMeterDataUseCaseHash() =>
     r'450656c932d98078f1e2ff2979da5ab1bc3f5003';
 

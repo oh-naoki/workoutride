@@ -5,7 +5,7 @@ import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/domain/model/error/app_exception.dart';
 import 'package:workoutride/domain/model/workout/workout_summary.dart';
 import 'package:workoutride/domain/repository/workout_repository.dart';
-import 'package:workoutride/domain/usecase/auto_connect_ble_power_meter_use_case.dart';
+import 'package:workoutride/domain/repository/ble_power_meter_repository.dart';
 
 part 'home_screen_state_notifier.freezed.dart';
 part 'home_screen_state_notifier.g.dart';
@@ -25,14 +25,13 @@ class HomeScreenUiState with _$HomeScreenUiState {
 @riverpod
 class HomeScreenStateNotifier extends _$HomeScreenStateNotifier {
   late final WorkoutRepository _workoutRepository;
-  late final AutoConnectBlePowerMeterUseCase _autoConnectBlePowerMeterUseCase;
+  late final BlePowerMeterRepository _blePowerMeterRepository;
 
   @override
   HomeScreenUiState build() {
     state = const HomeScreenUiState(isLoading: true);
     _workoutRepository = ref.read(workoutRepositoryProvider);
-    _autoConnectBlePowerMeterUseCase =
-        ref.read(autoConnectBlePowerMeterUseCaseProvider);
+    _blePowerMeterRepository = ref.read(blePowerMeterRepositoryProvider);
 
     _fetchWorkoutSummaries();
     _autoConnectBleDevice();
@@ -60,7 +59,7 @@ class HomeScreenStateNotifier extends _$HomeScreenStateNotifier {
     try {
       state = state.copyWith(isConnectingBle: true, bleErrorMessage: null);
 
-      final isConnected = await _autoConnectBlePowerMeterUseCase.call();
+      final isConnected = await _blePowerMeterRepository.autoConnect();
 
       state = state.copyWith(
         isConnectingBle: false,
@@ -85,7 +84,7 @@ class HomeScreenStateNotifier extends _$HomeScreenStateNotifier {
   }
 
   Future<void> cancelBleConnection() async {
-    await _autoConnectBlePowerMeterUseCase.cancelConnection();
+    await _blePowerMeterRepository.disconnect();
     state = state.copyWith(
       isConnectingBle: false,
       isBleConnected: false,
