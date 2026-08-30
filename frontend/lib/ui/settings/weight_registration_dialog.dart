@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:workoutride/di/providers.dart';
-import 'package:workoutride/domain/model/error/app_exception.dart';
 
-class WeightRegistrationDialog extends ConsumerStatefulWidget {
+/// 体重を入力するだけのダイアログ。
+///
+/// 保存はしない。検証を通った値を `pop` で返し、永続化と状態更新は
+/// 呼び出し元の ViewModel（`SettingsScreenStateNotifier.updateWeight`）が行う。
+/// 以前はこのダイアログと ViewModel の両方が saveWeight を呼んでおり、
+/// 体重更新のたびに PUT が2回飛んでいた。
+class WeightRegistrationDialog extends StatefulWidget {
   final double? currentWeight;
 
   const WeightRegistrationDialog({
@@ -12,14 +15,12 @@ class WeightRegistrationDialog extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<WeightRegistrationDialog> createState() =>
+  State<WeightRegistrationDialog> createState() =>
       _WeightRegistrationDialogState();
 }
 
-class _WeightRegistrationDialogState
-    extends ConsumerState<WeightRegistrationDialog> {
+class _WeightRegistrationDialogState extends State<WeightRegistrationDialog> {
   final _textController = TextEditingController();
-  bool _isLoading = false;
 
   @override
   void initState() {
@@ -35,7 +36,7 @@ class _WeightRegistrationDialogState
     super.dispose();
   }
 
-  Future<void> _saveWeight() async {
+  void _submit() {
     final text = _textController.text.trim();
     if (text.isEmpty) return;
 
@@ -45,25 +46,7 @@ class _WeightRegistrationDialogState
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      await ref.read(userProfileRepositoryProvider).saveWeight(weight);
-
-      if (mounted) {
-        Navigator.of(context).pop(weight);
-      }
-    } catch (e) {
-      _showErrorDialog(AppException.messageFor(e));
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
+    Navigator.of(context).pop(weight);
   }
 
   void _showErrorDialog(String message) {
@@ -99,24 +82,17 @@ class _WeightRegistrationDialogState
               hintText: '60.0',
               border: OutlineInputBorder(),
             ),
-            enabled: !_isLoading,
           ),
         ],
       ),
       actions: [
         TextButton(
-          onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.of(context).pop(),
           child: const Text('キャンセル'),
         ),
         ElevatedButton(
-          onPressed: _isLoading ? null : _saveWeight,
-          child: _isLoading
-              ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Text('保存'),
+          onPressed: _submit,
+          child: const Text('保存'),
         ),
       ],
     );

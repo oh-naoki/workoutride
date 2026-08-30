@@ -1,25 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:workoutride/di/providers.dart';
-import 'package:workoutride/domain/model/error/app_exception.dart';
 
-class FtpRegistrationDialog extends ConsumerStatefulWidget {
-  const FtpRegistrationDialog({super.key});
+/// FTP を入力するだけのダイアログ。
+///
+/// 保存はしない。検証を通った値を `pop` で返し、永続化と状態更新は
+/// 呼び出し元の ViewModel（`SettingsScreenStateNotifier.updateFtp`）が行う。
+/// View にデータアクセスを持たせない規約（docs/architecture.md §2.1）に従う。
+class FtpRegistrationDialog extends StatefulWidget {
+  final int? currentFtp;
+
+  const FtpRegistrationDialog({
+    super.key,
+    this.currentFtp,
+  });
 
   @override
-  ConsumerState<FtpRegistrationDialog> createState() =>
-      _FtpRegistrationDialogState();
+  State<FtpRegistrationDialog> createState() => _FtpRegistrationDialogState();
 }
 
-class _FtpRegistrationDialogState extends ConsumerState<FtpRegistrationDialog> {
+class _FtpRegistrationDialogState extends State<FtpRegistrationDialog> {
   final _formKey = GlobalKey<FormState>();
   final _ftpController = TextEditingController();
-  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    _loadCurrentFtp();
+    if (widget.currentFtp != null) {
+      _ftpController.text = widget.currentFtp.toString();
+    }
   }
 
   @override
@@ -28,40 +35,9 @@ class _FtpRegistrationDialogState extends ConsumerState<FtpRegistrationDialog> {
     super.dispose();
   }
 
-  Future<void> _loadCurrentFtp() async {
-    final currentFtp = await ref.read(userProfileRepositoryProvider).getFtp();
-    if (currentFtp != null) {
-      _ftpController.text = currentFtp.toString();
-    }
-  }
-
-  Future<void> _saveFtp() async {
+  void _submit() {
     if (!_formKey.currentState!.validate()) return;
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      final ftp = int.parse(_ftpController.text);
-      await ref.read(userProfileRepositoryProvider).saveFtp(ftp);
-
-      if (mounted) {
-        Navigator.of(context).pop(true);
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppException.messageFor(e))),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
+    Navigator.of(context).pop(int.parse(_ftpController.text));
   }
 
   @override
@@ -106,18 +82,12 @@ class _FtpRegistrationDialogState extends ConsumerState<FtpRegistrationDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.of(context).pop(),
           child: const Text('キャンセル'),
         ),
         ElevatedButton(
-          onPressed: _isLoading ? null : _saveFtp,
-          child: _isLoading
-              ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Text('保存'),
+          onPressed: _submit,
+          child: const Text('保存'),
         ),
       ],
     );
