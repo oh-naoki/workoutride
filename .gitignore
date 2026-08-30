@@ -124,6 +124,11 @@ docs/workoutride-gcp-infra-1.html
 # Coverage
 coverage/
 
+# Claude Code: 共有するのは skills/ と settings.json のみ。
+# worktrees/ は作業用の git worktree、settings.local.json は個人の権限設定。
+.claude/worktrees/
+.claude/settings.local.json
+
 # Exceptions to above rules.
 !frontend/ios/**/default.mode1v3
 !frontend/ios/**/default.mode2v3
