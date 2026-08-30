@@ -5,9 +5,9 @@ import 'package:mockito/mockito.dart';
 import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/domain/model/user_profile.dart';
 import 'package:workoutride/domain/repository/user_profile_repository.dart';
-import 'package:workoutride/ui/settings/settings_screen_state_notifier.dart';
+import 'package:workoutride/ui/settings/settings_screen_view_model.dart';
 
-import 'settings_screen_state_notifier_test.mocks.dart';
+import 'settings_screen_view_model_test.mocks.dart';
 
 // 体重・FTP の取得と保存が ViewModel に一本化されたことを守るテスト。
 // 以前は FTP を View の FutureBuilder が取得し、体重はダイアログと
@@ -31,7 +31,7 @@ void main() {
 
   // autoDispose なため、リスナーを張って async 完了までプロバイダを生存させる。
   void keepAlive() =>
-      container.listen(settingsScreenStateNotifierProvider, (_, __) {});
+      container.listen(settingsScreenViewModelProvider, (_, __) {});
 
   setUp(() {
     mockRepository = MockUserProfileRepository();
@@ -42,7 +42,7 @@ void main() {
     container.dispose();
   });
 
-  group('SettingsScreenStateNotifier', () {
+  group('SettingsScreenViewModel', () {
     test('体重と FTP をまとめて読み込んで UiState に反映する', () async {
       when(mockRepository.getUserProfile())
           .thenAnswer((_) async => testProfile);
@@ -51,7 +51,7 @@ void main() {
       keepAlive();
       await Future<void>.delayed(Duration.zero);
 
-      final state = container.read(settingsScreenStateNotifierProvider);
+      final state = container.read(settingsScreenViewModelProvider);
       expect(state.isLoading, false);
       expect(state.currentWeight, 65.5);
       expect(state.currentFtp, 240);
@@ -65,7 +65,7 @@ void main() {
       keepAlive();
       await Future<void>.delayed(Duration.zero);
 
-      final state = container.read(settingsScreenStateNotifierProvider);
+      final state = container.read(settingsScreenViewModelProvider);
       expect(state.currentFtp, isNull);
       expect(state.currentWeight, isNull);
     });
@@ -80,13 +80,13 @@ void main() {
       await Future<void>.delayed(Duration.zero);
 
       await container
-          .read(settingsScreenStateNotifierProvider.notifier)
+          .read(settingsScreenViewModelProvider.notifier)
           .updateWeight(70.0);
 
       // ダイアログ側でも保存していた頃は 2 回呼ばれていた。
       verify(mockRepository.saveWeight(70.0)).called(1);
-      expect(container.read(settingsScreenStateNotifierProvider).currentWeight,
-          70.0);
+      expect(
+          container.read(settingsScreenViewModelProvider).currentWeight, 70.0);
     });
 
     test('updateFtp は saveFtp を呼び UiState を更新する', () async {
@@ -99,12 +99,11 @@ void main() {
       await Future<void>.delayed(Duration.zero);
 
       await container
-          .read(settingsScreenStateNotifierProvider.notifier)
+          .read(settingsScreenViewModelProvider.notifier)
           .updateFtp(260);
 
       verify(mockRepository.saveFtp(260)).called(1);
-      expect(
-          container.read(settingsScreenStateNotifierProvider).currentFtp, 260);
+      expect(container.read(settingsScreenViewModelProvider).currentFtp, 260);
     });
 
     test('読み込み失敗時は errorMessage を立てて isLoading を落とす', () async {
@@ -117,7 +116,7 @@ void main() {
       keepAlive();
       await Future<void>.delayed(Duration.zero);
 
-      final state = container.read(settingsScreenStateNotifierProvider);
+      final state = container.read(settingsScreenViewModelProvider);
       expect(state.isLoading, false);
       expect(state.errorMessage, isNotNull);
     });

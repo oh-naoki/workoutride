@@ -8,9 +8,9 @@ import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/domain/model/workout/workout_summary.dart';
 import 'package:workoutride/domain/repository/workout_repository.dart';
 import 'package:workoutride/domain/repository/user_profile_repository.dart';
-import 'package:workoutride/ui/workout_detail/workout_detail_screen_state_notifier.dart';
+import 'package:workoutride/ui/workout_detail/workout_detail_screen_view_model.dart';
 
-import 'workout_detail_screen_state_notifier_test.mocks.dart';
+import 'workout_detail_screen_view_model_test.mocks.dart';
 
 // このテストはリファクタ前の「現状の振る舞い」を固定する characterization test。
 // PR⑤（View薄化）で挙動が変わったら赤くなる安全網。
@@ -69,7 +69,7 @@ void main() {
 
   // autoDispose なため、リスナーを張って async 完了までプロバイダを生存させる。
   void keepAlive() => container.listen(
-        workoutDetailScreenStateNotifierProvider(testWorkoutId),
+        workoutDetailScreenViewModelProvider(testWorkoutId),
         (_, __) {},
       );
 
@@ -85,7 +85,7 @@ void main() {
     container.dispose();
   });
 
-  group('WorkoutDetailScreenStateNotifier', () {
+  group('WorkoutDetailScreenViewModel', () {
     test('初期状態は isLoading=true', () {
       when(mockWorkoutRepository.getWorkoutSummary(testWorkoutId))
           .thenAnswer((_) async => testSummary);
@@ -94,8 +94,8 @@ void main() {
       when(mockUserProfileRepository.getUserProfile()).thenAnswer((_) async =>
           UserProfile(weight: 70, ftp: 250, updatedAt: DateTime(2023)));
 
-      final state = container
-          .read(workoutDetailScreenStateNotifierProvider(testWorkoutId));
+      final state =
+          container.read(workoutDetailScreenViewModelProvider(testWorkoutId));
 
       expect(state.isLoading, true);
       expect(state.workoutBlocks, isEmpty);
@@ -111,12 +111,12 @@ void main() {
           UserProfile(weight: 70, ftp: 250, updatedAt: DateTime(2023)));
 
       keepAlive();
-      container.read(
-          workoutDetailScreenStateNotifierProvider(testWorkoutId).notifier);
+      container
+          .read(workoutDetailScreenViewModelProvider(testWorkoutId).notifier);
       await Future.delayed(const Duration(milliseconds: 50));
 
-      final state = container
-          .read(workoutDetailScreenStateNotifierProvider(testWorkoutId));
+      final state =
+          container.read(workoutDetailScreenViewModelProvider(testWorkoutId));
       expect(state.isLoading, false);
       expect(state.errorMessage, isNull);
       expect(state.workoutSummary, testSummary);
@@ -135,12 +135,12 @@ void main() {
       when(mockUserProfileRepository.getFtp()).thenAnswer((_) async => null);
 
       keepAlive();
-      container.read(
-          workoutDetailScreenStateNotifierProvider(testWorkoutId).notifier);
+      container
+          .read(workoutDetailScreenViewModelProvider(testWorkoutId).notifier);
       await Future.delayed(const Duration(milliseconds: 50));
 
-      final state = container
-          .read(workoutDetailScreenStateNotifierProvider(testWorkoutId));
+      final state =
+          container.read(workoutDetailScreenViewModelProvider(testWorkoutId));
       expect(state.userFtp, isNull);
     });
 
@@ -153,12 +153,12 @@ void main() {
           .thenAnswer((_) async => null);
 
       keepAlive();
-      container.read(
-          workoutDetailScreenStateNotifierProvider(testWorkoutId).notifier);
+      container
+          .read(workoutDetailScreenViewModelProvider(testWorkoutId).notifier);
       await Future.delayed(const Duration(milliseconds: 50));
 
-      final state = container
-          .read(workoutDetailScreenStateNotifierProvider(testWorkoutId));
+      final state =
+          container.read(workoutDetailScreenViewModelProvider(testWorkoutId));
       expect(state.userWeight, 60.0);
     });
 
@@ -171,12 +171,12 @@ void main() {
           .thenThrow(Exception('profile error'));
 
       keepAlive();
-      container.read(
-          workoutDetailScreenStateNotifierProvider(testWorkoutId).notifier);
+      container
+          .read(workoutDetailScreenViewModelProvider(testWorkoutId).notifier);
       await Future.delayed(const Duration(milliseconds: 50));
 
-      final state = container
-          .read(workoutDetailScreenStateNotifierProvider(testWorkoutId));
+      final state =
+          container.read(workoutDetailScreenViewModelProvider(testWorkoutId));
       expect(state.userWeight, 60.0);
     });
 
@@ -189,12 +189,12 @@ void main() {
           UserProfile(weight: 70, ftp: 250, updatedAt: DateTime(2023)));
 
       keepAlive();
-      container.read(
-          workoutDetailScreenStateNotifierProvider(testWorkoutId).notifier);
+      container
+          .read(workoutDetailScreenViewModelProvider(testWorkoutId).notifier);
       await Future.delayed(const Duration(milliseconds: 50));
 
-      final state = container
-          .read(workoutDetailScreenStateNotifierProvider(testWorkoutId));
+      final state =
+          container.read(workoutDetailScreenViewModelProvider(testWorkoutId));
       expect(state.isLoading, false);
       expect(state.errorMessage, isNotNull);
     });
@@ -208,14 +208,14 @@ void main() {
           UserProfile(weight: 70, ftp: 250, updatedAt: DateTime(2023)));
 
       keepAlive();
-      final notifier = container.read(
-          workoutDetailScreenStateNotifierProvider(testWorkoutId).notifier);
+      final notifier = container
+          .read(workoutDetailScreenViewModelProvider(testWorkoutId).notifier);
       await Future.delayed(const Duration(milliseconds: 50));
 
       await notifier.refreshWorkoutBlocks(testWorkoutId);
 
-      final state = container
-          .read(workoutDetailScreenStateNotifierProvider(testWorkoutId));
+      final state =
+          container.read(workoutDetailScreenViewModelProvider(testWorkoutId));
       expect(state.workoutBlocks, testBlocks);
       // build時 + refresh時 の 2 回呼ばれる
       verify(mockWorkoutRepository.getWorkoutBlocks(testWorkoutId)).called(2);

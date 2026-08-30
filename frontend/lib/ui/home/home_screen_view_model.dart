@@ -7,8 +7,8 @@ import 'package:workoutride/domain/model/workout/workout_summary.dart';
 import 'package:workoutride/domain/repository/workout_repository.dart';
 import 'package:workoutride/domain/repository/ble_power_meter_repository.dart';
 
-part 'home_screen_state_notifier.freezed.dart';
-part 'home_screen_state_notifier.g.dart';
+part 'home_screen_view_model.freezed.dart';
+part 'home_screen_view_model.g.dart';
 
 @freezed
 class HomeScreenUiState with _$HomeScreenUiState {
@@ -23,7 +23,7 @@ class HomeScreenUiState with _$HomeScreenUiState {
 }
 
 @riverpod
-class HomeScreenStateNotifier extends _$HomeScreenStateNotifier {
+class HomeScreenViewModel extends _$HomeScreenViewModel {
   late final WorkoutRepository _workoutRepository;
   late final BlePowerMeterRepository _blePowerMeterRepository;
 

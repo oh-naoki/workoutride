@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workoutride/domain/model/workout/workout_result.dart';
-import 'package:workoutride/ui/history/history_screen_state_notifier.dart';
+import 'package:workoutride/ui/history/history_screen_view_model.dart';
 import 'package:workoutride/ui/history/workout_result_detail_screen.dart';
 
 class HistoryScreen extends ConsumerWidget {
@@ -9,7 +9,7 @@ class HistoryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final uiState = ref.watch(historyScreenStateNotifierProvider);
+    final uiState = ref.watch(historyScreenViewModelProvider);
 
     if (uiState.isLoading) {
       return const Center(
@@ -35,7 +35,7 @@ class HistoryScreen extends ConsumerWidget {
               TextButton(
                 onPressed: () {
                   ref
-                      .read(historyScreenStateNotifierProvider.notifier)
+                      .read(historyScreenViewModelProvider.notifier)
                       .refreshWorkoutResults();
                 },
                 child: const Text('再読み込み'),
@@ -69,7 +69,7 @@ class HistoryScreen extends ConsumerWidget {
     return RefreshIndicator(
       onRefresh: () async {
         ref
-            .read(historyScreenStateNotifierProvider.notifier)
+            .read(historyScreenViewModelProvider.notifier)
             .refreshWorkoutResults();
       },
       child: ListView.builder(

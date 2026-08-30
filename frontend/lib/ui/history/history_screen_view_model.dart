@@ -6,8 +6,8 @@ import 'package:workoutride/domain/model/error/app_exception.dart';
 import 'package:workoutride/domain/model/workout/workout_result.dart';
 import 'package:workoutride/domain/repository/workout_repository.dart';
 
-part 'history_screen_state_notifier.freezed.dart';
-part 'history_screen_state_notifier.g.dart';
+part 'history_screen_view_model.freezed.dart';
+part 'history_screen_view_model.g.dart';
 
 @freezed
 class HistoryScreenUiState with _$HistoryScreenUiState {
@@ -19,7 +19,7 @@ class HistoryScreenUiState with _$HistoryScreenUiState {
 }
 
 @riverpod
-class HistoryScreenStateNotifier extends _$HistoryScreenStateNotifier {
+class HistoryScreenViewModel extends _$HistoryScreenViewModel {
   late final WorkoutRepository _workoutRepository;
 
   @override

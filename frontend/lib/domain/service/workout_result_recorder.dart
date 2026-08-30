@@ -5,7 +5,7 @@ import 'package:workoutride/domain/model/workout/workout_result_draft.dart';
 /// 保存用の [WorkoutResultDraft] を組み立てる純粋なドメインサービス。
 ///
 /// Riverpod や Flutter に依存しないため単体テストが容易。ViewModel
-/// （WorkoutScreenStateNotifier）から集計ロジックを切り出したもの。
+/// （WorkoutScreenViewModel）から集計ロジックを切り出したもの。
 class WorkoutResultRecorder {
   final List<WorkoutBlock> _blocks;
   final DateTime _startedAt;

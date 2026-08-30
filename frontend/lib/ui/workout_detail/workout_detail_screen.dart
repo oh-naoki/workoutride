@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workoutride/domain/model/workout/workout_block.dart';
-import 'package:workoutride/ui/workout_detail/workout_detail_screen_state_notifier.dart';
+import 'package:workoutride/ui/workout_detail/workout_detail_screen_view_model.dart';
 import 'package:workoutride/ui/workout/workout_screen.dart';
 import 'package:workoutride/ui/theme/app_colors.dart';
 
@@ -13,7 +13,7 @@ class WorkoutDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final uiState =
-        ref.watch(workoutDetailScreenStateNotifierProvider(workoutId));
+        ref.watch(workoutDetailScreenViewModelProvider(workoutId));
 
     return Scaffold(
       backgroundColor: AppColors.background,

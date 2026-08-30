@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:workoutride/domain/model/device_scan_result.dart';
-import 'package:workoutride/ui/ble_setting/scan_screen_state_notifier.dart';
+import 'package:workoutride/ui/ble_setting/scan_screen_view_model.dart';
 
 class ScanScreen extends HookConsumerWidget {
   const ScanScreen({super.key});
@@ -10,11 +10,11 @@ class ScanScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     useEffect(() {
-      ref.read(scanScreenStateNotifierProvider.notifier).startScan();
+      ref.read(scanScreenViewModelProvider.notifier).startScan();
       return null;
     }, []);
 
-    final uiState = ref.watch(scanScreenStateNotifierProvider);
+    final uiState = ref.watch(scanScreenViewModelProvider);
 
     useEffect(() {
       if (uiState.isConnected) {
@@ -90,7 +90,7 @@ class ScanScreen extends HookConsumerWidget {
                             onTap: () {
                               ref
                                   .read(
-                                      scanScreenStateNotifierProvider.notifier)
+                                      scanScreenViewModelProvider.notifier)
                                   .onDeviceTap(result);
                             },
                           ),

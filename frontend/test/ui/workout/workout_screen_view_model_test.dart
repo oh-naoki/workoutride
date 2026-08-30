@@ -14,11 +14,11 @@ import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart'
     as workout_usecase;
 import 'package:workoutride/domain/repository/user_profile_repository.dart';
 import 'package:workoutride/domain/repository/workout_sound_player.dart';
-import 'package:workoutride/ui/workout/workout_screen_state_notifier.dart';
+import 'package:workoutride/ui/workout/workout_screen_view_model.dart';
 import 'package:workoutride/di/providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'workout_screen_state_notifier_test.mocks.dart';
+import 'workout_screen_view_model_test.mocks.dart';
 
 // WorkoutSoundPlayer は実体だと AudioPlayer の生成がプラットフォームチャンネルに
 // 依存し、flutter test 環境（Flutterバインディング無し）では非同期に例外を投げる。
@@ -103,12 +103,12 @@ void main() {
     container.dispose();
   });
 
-  group('WorkoutScreenStateNotifier', () {
+  group('WorkoutScreenViewModel', () {
     group('初期化', () {
       test('should initialize with loading state', () {
         // Arrange & Act
         final notifier =
-            container.read(workoutScreenStateNotifierProvider(testWorkoutId));
+            container.read(workoutScreenViewModelProvider(testWorkoutId));
 
         // Assert
         expect(notifier.isLoading, true);
@@ -138,13 +138,12 @@ void main() {
                 ]));
 
         // Act
-        container
-            .read(workoutScreenStateNotifierProvider(testWorkoutId).notifier);
+        container.read(workoutScreenViewModelProvider(testWorkoutId).notifier);
         await Future.delayed(const Duration(milliseconds: 500));
 
         // Assert - 非同期処理のため、値が設定されるかを確認
         final state =
-            container.read(workoutScreenStateNotifierProvider(testWorkoutId));
+            container.read(workoutScreenViewModelProvider(testWorkoutId));
         // 非同期処理の完了を待つのが難しいため、初期値のテストに変更
         expect(state.workoutBlocks, isA<List<WorkoutBlock>>());
         expect(state.maxPower, isA<int>()); // 初期値は0でも良い
@@ -160,7 +159,7 @@ void main() {
 
         // Act
         final state =
-            container.read(workoutScreenStateNotifierProvider(testWorkoutId));
+            container.read(workoutScreenViewModelProvider(testWorkoutId));
 
         // Assert - 初期状態はローディングであるべき
         expect(state.isLoading, true);
@@ -191,15 +190,14 @@ void main() {
                 ]));
 
         // Act
-        container
-            .read(workoutScreenStateNotifierProvider(testWorkoutId).notifier);
+        container.read(workoutScreenViewModelProvider(testWorkoutId).notifier);
         await Future.delayed(
             const Duration(milliseconds: 200)); // パワーメーターデータの購読のための時間
 
         // Assert - パワーメーターデータのストリームから値が反映されるかをテスト
         // テストを簡潔にするため、初期値（0）のテストのみを行う
         final state =
-            container.read(workoutScreenStateNotifierProvider(testWorkoutId));
+            container.read(workoutScreenViewModelProvider(testWorkoutId));
         expect(state.power, isA<int>());
         expect(state.cadence, isA<int>());
       });
@@ -229,7 +227,7 @@ void main() {
 
         // Act
         final state =
-            container.read(workoutScreenStateNotifierProvider(testWorkoutId));
+            container.read(workoutScreenViewModelProvider(testWorkoutId));
 
         // Assert - 初期状態の確認
         expect(state.isLoading, true); // 初期状態はローディング
@@ -263,23 +261,21 @@ void main() {
 
         // Act & Assert
         final notifier = container
-            .read(workoutScreenStateNotifierProvider(testWorkoutId).notifier);
+            .read(workoutScreenViewModelProvider(testWorkoutId).notifier);
 
         // 初期状態の確認
         var state =
-            container.read(workoutScreenStateNotifierProvider(testWorkoutId));
+            container.read(workoutScreenViewModelProvider(testWorkoutId));
         expect(state.isPaused, false);
 
         // 一時停止を実行
         notifier.togglePauseResume();
-        state =
-            container.read(workoutScreenStateNotifierProvider(testWorkoutId));
+        state = container.read(workoutScreenViewModelProvider(testWorkoutId));
         expect(state.isPaused, true);
 
         // 再開を実行
         notifier.togglePauseResume();
-        state =
-            container.read(workoutScreenStateNotifierProvider(testWorkoutId));
+        state = container.read(workoutScreenViewModelProvider(testWorkoutId));
         expect(state.isPaused, false);
       });
     });
@@ -307,8 +303,7 @@ void main() {
                 ]));
 
         // Act
-        container
-            .read(workoutScreenStateNotifierProvider(testWorkoutId).notifier);
+        container.read(workoutScreenViewModelProvider(testWorkoutId).notifier);
         await Future.delayed(const Duration(milliseconds: 300)); // 非同期処理の完了を待つ
 
         // Dispose container

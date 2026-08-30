@@ -5,8 +5,8 @@ import 'package:workoutride/di/providers.dart';
 
 import '../../domain/model/device_scan_result.dart';
 
-part 'scan_screen_state_notifier.freezed.dart';
-part 'scan_screen_state_notifier.g.dart';
+part 'scan_screen_view_model.freezed.dart';
+part 'scan_screen_view_model.g.dart';
 
 @freezed
 class ScanScreenUiState with _$ScanScreenUiState {
@@ -20,7 +20,7 @@ class ScanScreenUiState with _$ScanScreenUiState {
 }
 
 @riverpod
-class ScanScreenStateNotifier extends _$ScanScreenStateNotifier {
+class ScanScreenViewModel extends _$ScanScreenViewModel {
   @override
   ScanScreenUiState build() {
     return const ScanScreenUiState();

@@ -4,8 +4,8 @@ import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/domain/model/error/app_exception.dart';
 import 'package:workoutride/domain/model/user_profile.dart';
 
-part 'settings_screen_state_notifier.freezed.dart';
-part 'settings_screen_state_notifier.g.dart';
+part 'settings_screen_view_model.freezed.dart';
+part 'settings_screen_view_model.g.dart';
 
 @freezed
 class SettingsScreenUiState with _$SettingsScreenUiState {
@@ -19,7 +19,7 @@ class SettingsScreenUiState with _$SettingsScreenUiState {
 }
 
 @riverpod
-class SettingsScreenStateNotifier extends _$SettingsScreenStateNotifier {
+class SettingsScreenViewModel extends _$SettingsScreenViewModel {
   @override
   SettingsScreenUiState build() {
     _loadProfile();

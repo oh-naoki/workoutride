@@ -13,8 +13,8 @@ import 'package:workoutride/domain/service/workout_result_recorder.dart';
 import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_usecase.dart';
 import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart';
 
-part 'workout_screen_state_notifier.freezed.dart';
-part 'workout_screen_state_notifier.g.dart';
+part 'workout_screen_view_model.freezed.dart';
+part 'workout_screen_view_model.g.dart';
 
 @freezed
 class WorkoutScreenUiState with _$WorkoutScreenUiState {
@@ -44,7 +44,7 @@ class WorkoutScreenUiState with _$WorkoutScreenUiState {
 }
 
 @riverpod
-class WorkoutScreenStateNotifier extends _$WorkoutScreenStateNotifier {
+class WorkoutScreenViewModel extends _$WorkoutScreenViewModel {
   late final WorkoutRepository _workoutRepository;
   late final UserProfileRepository _userProfileRepository;
   late final GetCalculatedPowerMeterDataUseCase _getPowerMeterDataUseCase;

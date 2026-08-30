@@ -59,10 +59,15 @@
   - ❌ `data/` の型（DTO・ApiClient・DataSource）を import する。
   - ❌ ビジネスロジック（集計・変換・判定）を書く。
 
-### 2.2 ViewModel（`ui/**/xxx_screen_state_notifier.dart`）
+### 2.2 ViewModel（`ui/**/xxx_screen_view_model.dart`）
 
-> 命名は歴史的に `XxxScreenStateNotifier` だが、**実体は ViewModel**。当面リネームはしない
-> （公式も命名は自由）。役割が ViewModel であることを意識する。
+> かつては `XxxScreenStateNotifier` という名前だったが、実体は ViewModel であり、
+> しかも `StateNotifier` は Riverpod の非推奨 API の名前でもある。この重なりのせいで
+> 「旧 StateNotifier が残っていないか」の検索が全 ViewModel を誤検出していたため、
+> `XxxScreenViewModel` へ改名した（PR #131）。
+>
+> ただし画面に紐つかないアプリ全体の状態は ViewModel ではない。認証状態は
+> `app/auth_controller.dart` の `AuthController` として `ui/` の外に置いている。
 
 - **やること**:
   - Repository / UseCase から受け取ったデータを **UI 状態（Freezed の `XxxUiState`）に整形**（フィルタ・ソート・集約）。
@@ -156,7 +161,8 @@
 lib/
 ├── main.dart
 ├── di/providers.dart          … DI（@riverpod）
-├── ui/<feature>/              … View + ViewModel(=StateNotifier) + UiState
+├── app/                       … 画面に紐つかないアプリ全体の状態(AuthController)
+├── ui/<feature>/              … View + ViewModel + UiState
 ├── domain/
 │   ├── model/                 … ドメインモデル(Freezed)
 │   ├── repository/            … Repository インターフェース

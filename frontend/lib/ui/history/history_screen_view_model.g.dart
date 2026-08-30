@@ -1,27 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'scan_screen_state_notifier.dart';
+part of 'history_screen_view_model.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$scanScreenStateNotifierHash() =>
-    r'45acaebbfc9dfcfca37277e78c13b04257b59c13';
+String _$historyScreenViewModelHash() =>
+    r'206f7cb623e237cad320959ecf4a82b01d593d70';
 
-/// See also [ScanScreenStateNotifier].
-@ProviderFor(ScanScreenStateNotifier)
-final scanScreenStateNotifierProvider = AutoDisposeNotifierProvider<
-    ScanScreenStateNotifier, ScanScreenUiState>.internal(
-  ScanScreenStateNotifier.new,
-  name: r'scanScreenStateNotifierProvider',
+/// See also [HistoryScreenViewModel].
+@ProviderFor(HistoryScreenViewModel)
+final historyScreenViewModelProvider = AutoDisposeNotifierProvider<
+    HistoryScreenViewModel, HistoryScreenUiState>.internal(
+  HistoryScreenViewModel.new,
+  name: r'historyScreenViewModelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$scanScreenStateNotifierHash,
+      : _$historyScreenViewModelHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ScanScreenStateNotifier = AutoDisposeNotifier<ScanScreenUiState>;
+typedef _$HistoryScreenViewModel = AutoDisposeNotifier<HistoryScreenUiState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
