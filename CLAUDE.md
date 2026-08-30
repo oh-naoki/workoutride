@@ -48,7 +48,7 @@ bundle exec rake grape:routes                       # Grape-specific route listi
 
 ### Frontend — layered Clean Architecture (Riverpod)
 
-The authoritative spec is **`docs/architecture.md`** — read it before making structural changes; it defines the target architecture, dependency rules, and an explicit list of current deviations with a migration plan. Key points:
+The authoritative spec is **`docs/architecture.md`** — read it before making structural changes; it defines the target architecture, dependency rules, and an explicit list of current deviations with a migration plan. For hands-on work (where to put new code, and the grep commands that detect violations mechanically) use the **`flutter-architecture` skill**. Key points:
 
 - Layers: `ui/` (View + ViewModel, one pair per screen) → optional `domain/usecase/` → `domain/repository/` (interface) + `data/repository/` (impl) → `data/remote|ble_connector|audio` (Service, wraps exactly one external data source, Future/Stream only, no state).
 - **Golden rule**: `domain/` must never import from `data/`. DTOs (`data/remote/model/`) never cross into `domain/` or `ui/`; only domain models do. Convert DTO↔domain in the data layer (Repository impl or an `extensions.dart` `toDomain()`).
