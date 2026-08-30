@@ -11,7 +11,6 @@ import 'package:workoutride/data/remote/api/workout_api_client.dart';
 import 'package:workoutride/data/remote/api/user_ftp_api_client.dart';
 import 'package:workoutride/data/remote/api/user_profile_api_client.dart';
 import 'package:workoutride/data/remote/interceptor/auth_interceptor.dart';
-import 'package:workoutride/data/remote/workout_remote_data_source.dart';
 import 'package:workoutride/data/repository/auth_repository_impl.dart';
 import 'package:workoutride/data/repository/workout_repository_impl.dart';
 import 'package:workoutride/domain/repository/auth_repository.dart';
@@ -149,13 +148,8 @@ UserProfileApiClient userProfileApiClient(Ref ref) {
 }
 
 @riverpod
-WorkoutRemoteDataSource workoutRemoteDataSource(Ref ref) {
-  return WorkoutRemoteDataSource(ref.read(workoutApiClientProvider));
-}
-
-@riverpod
 WorkoutRepository workoutRepository(Ref ref) {
-  return WorkoutRepositoryImpl(ref.read(workoutRemoteDataSourceProvider));
+  return WorkoutRepositoryImpl(ref.read(workoutApiClientProvider));
 }
 
 @riverpod
