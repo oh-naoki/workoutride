@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:workoutride/di/providers.dart';
 import 'package:workoutride/domain/model/device_scan_result.dart';
 import 'package:workoutride/ui/ble_setting/scan_screen_state_notifier.dart';
 
@@ -11,13 +10,7 @@ class ScanScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     useEffect(() {
-      ref.read(bleConnectorProvider).initialize().then((_) {
-        ref.read(scanScreenStateNotifierProvider.notifier).scanDevice();
-      }).catchError((e) {
-        ref.read(scanScreenStateNotifierProvider.notifier).setError(
-              'Bluetoothの初期化に失敗しました: $e',
-            );
-      });
+      ref.read(scanScreenStateNotifierProvider.notifier).startScan();
       return null;
     }, []);
 

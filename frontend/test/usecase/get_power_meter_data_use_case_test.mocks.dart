@@ -6,7 +6,8 @@
 import 'dart:async' as _i3;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:workoutride/data/power_meter_data_source.dart' as _i2;
+import 'package:workoutride/domain/repository/power_meter_raw_data_source.dart'
+    as _i2;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -22,12 +23,12 @@ import 'package:workoutride/data/power_meter_data_source.dart' as _i2;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-/// A class which mocks [PowerMeterDataSource].
+/// A class which mocks [PowerMeterRawDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockPowerMeterDataSource extends _i1.Mock
-    implements _i2.PowerMeterDataSource {
-  MockPowerMeterDataSource() {
+class MockPowerMeterRawDataSource extends _i1.Mock
+    implements _i2.PowerMeterRawDataSource {
+  MockPowerMeterRawDataSource() {
     _i1.throwOnMissingStub(this);
   }
 

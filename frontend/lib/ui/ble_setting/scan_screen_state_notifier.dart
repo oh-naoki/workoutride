@@ -26,9 +26,23 @@ class ScanScreenStateNotifier extends _$ScanScreenStateNotifier {
     return const ScanScreenUiState();
   }
 
-  void scanDevice() {
-    state = state.copyWith(isScanning: true);
-    ref.read(scanBleDeviceUseCaseProvider)().listen(
+  /// BLE を初期化してから探索を始める。
+  ///
+  /// 以前は View 側の useEffect が bleConnector を直接触って初期化し、
+  /// 成否に応じて scanDevice / setError を呼び分けていた。View に手順を
+  /// 持たせない（docs/architecture.md §2.1）ため、一連の流れをここへ移した。
+  Future<void> startScan() async {
+    final repository = ref.read(blePowerMeterRepositoryProvider);
+
+    try {
+      await repository.initialize();
+    } catch (e) {
+      state = state.copyWith(errorMessage: 'Bluetoothの初期化に失敗しました: $e');
+      return;
+    }
+
+    state = state.copyWith(isScanning: true, errorMessage: null);
+    repository.scanDevices().listen(
       (results) {
         state = state.copyWith(
           scanResults: results,
@@ -47,10 +61,6 @@ class ScanScreenStateNotifier extends _$ScanScreenStateNotifier {
     );
   }
 
-  void setError(String message) {
-    state = state.copyWith(errorMessage: message);
-  }
-
   Future<void> onDeviceTap(DeviceScanResult result) async {
     if (state.isConnecting) return;
 
@@ -60,7 +70,9 @@ class ScanScreenStateNotifier extends _$ScanScreenStateNotifier {
         errorMessage: null,
       );
 
-      await ref.read(connectBlePowerMeterUseCaseProvider)(result.deviceAddress);
+      await ref
+          .read(blePowerMeterRepositoryProvider)
+          .connect(result.deviceAddress);
 
       state = state.copyWith(
         isConnected: true,

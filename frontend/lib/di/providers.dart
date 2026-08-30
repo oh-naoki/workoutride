@@ -17,7 +17,10 @@ import 'package:workoutride/data/repository/workout_repository_impl.dart';
 import 'package:workoutride/domain/repository/auth_repository.dart';
 import 'package:workoutride/domain/repository/workout_repository.dart';
 import 'package:workoutride/data/ble_connector.dart';
+import 'package:workoutride/data/repository/ble_power_meter_repository_impl.dart';
 import 'package:workoutride/data/power_meter_data_source.dart';
+import 'package:workoutride/domain/repository/ble_power_meter_repository.dart';
+import 'package:workoutride/domain/repository/power_meter_raw_data_source.dart';
 import 'package:workoutride/data/audio/workout_sound_player_impl.dart';
 import 'package:workoutride/domain/repository/workout_sound_player.dart';
 import 'package:workoutride/domain/model/mock_pattern.dart';
@@ -26,9 +29,6 @@ import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_useca
 import 'package:workoutride/domain/service/power_zone_analyzer.dart';
 import 'package:workoutride/domain/repository/user_profile_repository.dart';
 import 'package:workoutride/data/repository/user_profile_repository_impl.dart';
-import 'package:workoutride/domain/usecase/auto_connect_ble_power_meter_use_case.dart';
-import 'package:workoutride/domain/usecase/connect_ble_power_meter_use_case.dart';
-import 'package:workoutride/domain/usecase/scan_ble_device_usecase.dart';
 import 'package:workoutride/domain/usecase/get_power_meter_data_use_case.dart';
 
 part 'providers.g.dart';
@@ -159,7 +159,7 @@ WorkoutRepository workoutRepository(Ref ref) {
 }
 
 @riverpod
-PowerMeterDataSource powerMeterDataSource(Ref ref) {
+PowerMeterRawDataSource powerMeterDataSource(Ref ref) {
   final isMockMode = ref.watch(mockModeProvider);
   final mockPattern = ref.watch(mockPatternSelectionProvider);
 
@@ -181,23 +181,13 @@ UserProfileRepository userProfileRepository(Ref ref) {
 }
 
 @riverpod
-AutoConnectBlePowerMeterUseCase autoConnectBlePowerMeterUseCase(Ref ref) {
-  return AutoConnectBlePowerMeterUseCase(ref.read(bleConnectorProvider));
-}
-
-@riverpod
 BleConnector bleConnector(Ref ref) {
   return BleConnector(ref.read(sharedPreferencesProvider));
 }
 
 @riverpod
-ConnectBlePowerMeterUseCase connectBlePowerMeterUseCase(Ref ref) {
-  return ConnectBlePowerMeterUseCase(ref.read(bleConnectorProvider));
-}
-
-@riverpod
-ScanBleDeviceUseCase scanBleDeviceUseCase(Ref ref) {
-  return ScanBleDeviceUseCase(ref.read(bleConnectorProvider));
+BlePowerMeterRepository blePowerMeterRepository(Ref ref) {
+  return BlePowerMeterRepositoryImpl(ref.read(bleConnectorProvider));
 }
 
 @riverpod

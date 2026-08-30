@@ -1,11 +1,9 @@
 import 'package:workoutride/data/ble_connector.dart';
 import 'package:workoutride/domain/model/mock_pattern.dart';
+import 'package:workoutride/domain/repository/power_meter_raw_data_source.dart';
 
-abstract class PowerMeterDataSource {
-  Stream<List<int>> getRawData();
-}
-
-class BlePowerMeterDataSource implements PowerMeterDataSource {
+/// 実機の BLE 通知（Cycling Power Measurement, 0x2A63）を購読する実装。
+class BlePowerMeterDataSource implements PowerMeterRawDataSource {
   final BleConnector _bleConnector;
 
   BlePowerMeterDataSource(this._bleConnector);
@@ -108,7 +106,8 @@ List<int> _createPowerMeterData(int power, int cadence) {
   ];
 }
 
-class MockPowerMeterDataSource implements PowerMeterDataSource {
+/// 開発用の擬似データを生成する実装（実機が無くても画面を動かせる）。
+class MockPowerMeterDataSource implements PowerMeterRawDataSource {
   final MockPattern pattern;
 
   MockPowerMeterDataSource(this.pattern);

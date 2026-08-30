@@ -1,8 +1,8 @@
-import 'package:workoutride/data/power_meter_data_source.dart';
+import 'package:workoutride/domain/repository/power_meter_raw_data_source.dart';
 import 'package:workoutride/domain/model/power_meter_data.dart';
 
 class GetPowerMeterDataUseCase {
-  final PowerMeterDataSource _powerMeterDataSource;
+  final PowerMeterRawDataSource _powerMeterDataSource;
 
   /// 時刻取得関数（テストから差し替え可能）
   final DateTime Function() _now;
