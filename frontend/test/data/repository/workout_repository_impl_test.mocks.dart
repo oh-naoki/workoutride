@@ -6,12 +6,10 @@
 import 'dart:async' as _i5;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:workoutride/data/remote/model/save_workout_result_request.dart'
-    as _i7;
-import 'package:workoutride/data/remote/workout_remote_data_source.dart' as _i4;
-import 'package:workoutride/domain/model/workout/workout_block.dart' as _i6;
-import 'package:workoutride/domain/model/workout/workout_result.dart' as _i3;
-import 'package:workoutride/domain/model/workout/workout_summary.dart' as _i2;
+import 'package:workoutride/data/remote/api/workout_api_client.dart' as _i4;
+import 'package:workoutride/data/remote/model/workout_block_dto.dart' as _i6;
+import 'package:workoutride/data/remote/model/workout_result_dto.dart' as _i3;
+import 'package:workoutride/data/remote/model/workout_summary_dto.dart' as _i2;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -27,9 +25,9 @@ import 'package:workoutride/domain/model/workout/workout_summary.dart' as _i2;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeWorkoutSummary_0 extends _i1.SmartFake
-    implements _i2.WorkoutSummary {
-  _FakeWorkoutSummary_0(
+class _FakeWorkoutSummaryDto_0 extends _i1.SmartFake
+    implements _i2.WorkoutSummaryDto {
+  _FakeWorkoutSummaryDto_0(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -38,8 +36,9 @@ class _FakeWorkoutSummary_0 extends _i1.SmartFake
         );
 }
 
-class _FakeWorkoutResult_1 extends _i1.SmartFake implements _i3.WorkoutResult {
-  _FakeWorkoutResult_1(
+class _FakeWorkoutResultDto_1 extends _i1.SmartFake
+    implements _i3.WorkoutResultDto {
+  _FakeWorkoutResultDto_1(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -48,94 +47,96 @@ class _FakeWorkoutResult_1 extends _i1.SmartFake implements _i3.WorkoutResult {
         );
 }
 
-/// A class which mocks [WorkoutRemoteDataSource].
+/// A class which mocks [WorkoutApiClient].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockWorkoutRemoteDataSource extends _i1.Mock
-    implements _i4.WorkoutRemoteDataSource {
-  MockWorkoutRemoteDataSource() {
+class MockWorkoutApiClient extends _i1.Mock implements _i4.WorkoutApiClient {
+  MockWorkoutApiClient() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<List<_i2.WorkoutSummary>> getWorkoutSummaries() =>
+  _i5.Future<List<_i2.WorkoutSummaryDto>> getWorkoutSummaries() =>
       (super.noSuchMethod(
         Invocation.method(
           #getWorkoutSummaries,
           [],
         ),
-        returnValue:
-            _i5.Future<List<_i2.WorkoutSummary>>.value(<_i2.WorkoutSummary>[]),
-      ) as _i5.Future<List<_i2.WorkoutSummary>>);
+        returnValue: _i5.Future<List<_i2.WorkoutSummaryDto>>.value(
+            <_i2.WorkoutSummaryDto>[]),
+      ) as _i5.Future<List<_i2.WorkoutSummaryDto>>);
 
   @override
-  _i5.Future<_i2.WorkoutSummary> getWorkoutSummary(int? id) =>
+  _i5.Future<_i2.WorkoutSummaryDto> getWorkoutSummary(int? id) =>
       (super.noSuchMethod(
         Invocation.method(
           #getWorkoutSummary,
           [id],
         ),
-        returnValue: _i5.Future<_i2.WorkoutSummary>.value(_FakeWorkoutSummary_0(
+        returnValue:
+            _i5.Future<_i2.WorkoutSummaryDto>.value(_FakeWorkoutSummaryDto_0(
           this,
           Invocation.method(
             #getWorkoutSummary,
             [id],
           ),
         )),
-      ) as _i5.Future<_i2.WorkoutSummary>);
+      ) as _i5.Future<_i2.WorkoutSummaryDto>);
 
   @override
-  _i5.Future<List<_i6.WorkoutBlock>> getWorkoutBlocks(int? workoutSummaryId) =>
+  _i5.Future<List<_i6.WorkoutBlockDto>> getWorkoutBlocks(int? workoutId) =>
       (super.noSuchMethod(
         Invocation.method(
           #getWorkoutBlocks,
-          [workoutSummaryId],
+          [workoutId],
         ),
-        returnValue:
-            _i5.Future<List<_i6.WorkoutBlock>>.value(<_i6.WorkoutBlock>[]),
-      ) as _i5.Future<List<_i6.WorkoutBlock>>);
+        returnValue: _i5.Future<List<_i6.WorkoutBlockDto>>.value(
+            <_i6.WorkoutBlockDto>[]),
+      ) as _i5.Future<List<_i6.WorkoutBlockDto>>);
 
   @override
-  _i5.Future<List<_i3.WorkoutResult>> getWorkoutResults() =>
+  _i5.Future<List<_i3.WorkoutResultDto>> getWorkoutResults() =>
       (super.noSuchMethod(
         Invocation.method(
           #getWorkoutResults,
           [],
         ),
-        returnValue:
-            _i5.Future<List<_i3.WorkoutResult>>.value(<_i3.WorkoutResult>[]),
-      ) as _i5.Future<List<_i3.WorkoutResult>>);
+        returnValue: _i5.Future<List<_i3.WorkoutResultDto>>.value(
+            <_i3.WorkoutResultDto>[]),
+      ) as _i5.Future<List<_i3.WorkoutResultDto>>);
 
   @override
-  _i5.Future<_i3.WorkoutResult> getWorkoutResult(int? id) =>
+  _i5.Future<_i3.WorkoutResultDto> getWorkoutResult(int? id) =>
       (super.noSuchMethod(
         Invocation.method(
           #getWorkoutResult,
           [id],
         ),
-        returnValue: _i5.Future<_i3.WorkoutResult>.value(_FakeWorkoutResult_1(
+        returnValue:
+            _i5.Future<_i3.WorkoutResultDto>.value(_FakeWorkoutResultDto_1(
           this,
           Invocation.method(
             #getWorkoutResult,
             [id],
           ),
         )),
-      ) as _i5.Future<_i3.WorkoutResult>);
+      ) as _i5.Future<_i3.WorkoutResultDto>);
 
   @override
-  _i5.Future<_i3.WorkoutResult> saveWorkoutResult(
-          _i7.SaveWorkoutResultRequest? request) =>
+  _i5.Future<_i3.WorkoutResultDto> saveWorkoutResult(
+          Map<String, dynamic>? body) =>
       (super.noSuchMethod(
         Invocation.method(
           #saveWorkoutResult,
-          [request],
+          [body],
         ),
-        returnValue: _i5.Future<_i3.WorkoutResult>.value(_FakeWorkoutResult_1(
+        returnValue:
+            _i5.Future<_i3.WorkoutResultDto>.value(_FakeWorkoutResultDto_1(
           this,
           Invocation.method(
             #saveWorkoutResult,
-            [request],
+            [body],
           ),
         )),
-      ) as _i5.Future<_i3.WorkoutResult>);
+      ) as _i5.Future<_i3.WorkoutResultDto>);
 }

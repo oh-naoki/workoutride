@@ -159,27 +159,7 @@ final userProfileApiClientProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef UserProfileApiClientRef = AutoDisposeProviderRef<UserProfileApiClient>;
-String _$workoutRemoteDataSourceHash() =>
-    r'898d07cacada98d85391680cccf1c9217a8efc72';
-
-/// See also [workoutRemoteDataSource].
-@ProviderFor(workoutRemoteDataSource)
-final workoutRemoteDataSourceProvider =
-    AutoDisposeProvider<WorkoutRemoteDataSource>.internal(
-  workoutRemoteDataSource,
-  name: r'workoutRemoteDataSourceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$workoutRemoteDataSourceHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef WorkoutRemoteDataSourceRef
-    = AutoDisposeProviderRef<WorkoutRemoteDataSource>;
-String _$workoutRepositoryHash() => r'dc8316dfb202e593e5ebcba8fc228bafe2749ae3';
+String _$workoutRepositoryHash() => r'1adb603bcce7c2d729dbc6e986dcfef189282acc';
 
 /// See also [workoutRepository].
 @ProviderFor(workoutRepository)

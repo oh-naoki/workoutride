@@ -234,32 +234,33 @@ A1 / A3 / B1（PR #95 `WorkoutResultDraft` 導入）、B2 / C1（PR #93 codegen 
 B3（PR #96 workout_detail の FTP 取得を ViewModel へ）、D1 大半（PR #94, #97 薄い UseCase 撤廃）、
 D2（PR #98 `WorkoutResultRecorder` 抽出）、E2（`di/providers.dart` 286→232行）。
 
-### 現存する逸脱一覧（`file:line`）
+### 現存する逸脱一覧
 
-| # | 逸脱 | 該当 | 規約 |
-|---|------|------|------|
-| **A2** | BLE にだけ Repository 層が無く、UseCase が `data/` を直 import（黄金律違反） | `domain/usecase/{auto_connect,connect,scan}_ble*.dart`, `get_power_meter_data_use_case.dart` | §3 |
-| **D1'** | 薄いラッパ UseCase 残存（純粋な委譲のみ） | `connect_ble_power_meter_use_case.dart`(13行), `auto_connect_ble_power_meter_use_case.dart`(22行) | §2.6, §6.1 |
-| **B4** | ViewModel が `data/` を直 import（PR #100 の効果音追加で混入） | `ui/workout/workout_screen_state_notifier.dart:5`（`data/audio/workout_sound_player.dart`） | §2.2 |
-| **B5** | View 内でデータ取得（B3 と同型。settings が未対応） | `ui/settings/settings_screen.dart:173`（`FutureBuilder` + Repository 直呼び） | §2.1, §6.2 |
-| **A4** | 外部ライブラリ型→ドメイン型の変換が domain 層にある | `domain/usecase/scan_ble_device_usecase.dart`（`ScanResult`→`DeviceScanResult`） | §2.4 |
-| **E1** | データ層の段数が不統一 | workout のみ3段（`WorkoutRemoteDataSource` 経由）、auth/user_profile は2段 | §2.3, §2.4 |
+**なし。** 2026-08-30 の監査で挙がった6件は同日中に全て解消した（下記）。
 
-> **B5 の補足**: 同じ settings 画面で weight は ViewModel 経由なのに FTP だけ View で取得しており、
-> 画面内で取得経路が二重化している。一貫性の観点でも直す価値が高い。
+| # | 逸脱だったもの | 解消した PR |
+|---|---|---|
+| **B4** | ViewModel が `data/audio` を直 import | #125 ドメイン IF 化 |
+| **B5** | settings の View 内データ取得（`FutureBuilder`） | #126 ViewModel へ集約 |
+| **A2** | BLE にだけ Repository 層が無く UseCase が `data/` を直 import | #127 Repository 層を新設 |
+| **D1'** | 薄いラッパ UseCase 2本（純粋な委譲） | #127 削除し Repository 直呼びへ |
+| **A4** | `ScanResult`→`DeviceScanResult` 変換が domain 層 | #127 実装側へ移動 |
+| **E1** | データ層の段数が不統一（workout のみ3段） | #128 `WorkoutRemoteDataSource` 廃止 |
 
-### 段階的移行フェーズ（推奨順）
+これにより **`domain/` → `data/` の import はゼロ**、**Repository は全ドメインで
+ApiClient / Connector 直呼びの2段**に揃っている。
 
-| Phase | 目的 | 対象 | リスク |
-|-------|------|------|-------|
-| **1** | ViewModel/View から `data/` 依存を剥がす（audio の IF 化・settings の View 薄化） | B4, B5 | 小 |
-| **2** | BLE に Repository 層を導入し、薄い UseCase を廃止・変換を data 層へ | A2, D1', A4 | 中〜大（実機確認が要る） |
-| **3** | データ層を2段に統一（`WorkoutRemoteDataSource` 廃止） | E1 | 中 |
-| **4 任意** | DI 分割 / feature-first / Riverpod 3 移行 | — | 大 |
+> 副産物として #126 で不具合を1件修正した。体重の保存がダイアログと ViewModel の
+> 両方で走り、PUT が2回飛んでいた。取得・保存の経路を ViewModel に一本化した結果として
+> 顕在化したもの。
 
-> 注: Phase 2 は "より Clean Arch" 方向で公式の軽量 MVVM とトレードオフだが、
-> **BLE だけ他3ドメインと非対称**（Repository を経由しない）という一貫性の問題が実害として大きいため、
-> 2026-08-30 時点で「任意」から「実施する」に格上げした。
+### 今後やるとしたら（任意・優先度低）
+
+| 目的 | 内容 | リスク |
+|------|------|-------|
+| DI 分割 | `di/providers.dart`（232行）を機能ドメイン別に分ける | 中 |
+| feature-first | レイヤーファースト → 機能別ディレクトリ | 大 |
+| Riverpod 3 移行 | 既に codegen Notifier ベースなので親和性は高い | 中 |
 
 ---
 
