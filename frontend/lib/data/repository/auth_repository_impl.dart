@@ -1,6 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:workoutride/data/remote/api/auth_api_client.dart';
+import 'package:workoutride/data/remote/auth_session_signal.dart';
 import 'package:workoutride/data/remote/error/exception_mapper.dart';
 import 'package:workoutride/domain/model/auth/user.dart';
 import 'package:workoutride/domain/repository/auth_repository.dart';
@@ -10,13 +11,20 @@ class AuthRepositoryImpl implements AuthRepository {
   final GoogleSignIn _googleSignIn;
   final FlutterSecureStorage _secureStorage;
 
+  /// 401 の発火元は通信層。ここはそれを上位へ中継するだけ。
+  final AuthSessionSignal _sessionSignal;
+
   static const _tokenKey = 'auth_token';
 
   AuthRepositoryImpl(
     this._apiClient,
     this._googleSignIn,
     this._secureStorage,
+    this._sessionSignal,
   );
+
+  @override
+  Stream<void> get sessionExpired => _sessionSignal.expired;
 
   @override
   Future<User> signInWithGoogle() async {

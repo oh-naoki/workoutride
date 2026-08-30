@@ -236,7 +236,13 @@ D2（PR #98 `WorkoutResultRecorder` 抽出）、E2（`di/providers.dart` 286→2
 
 ### 現存する逸脱一覧
 
-**なし。** 2026-08-30 の監査で挙がった6件は同日中に全て解消した（下記）。
+**なし。** 2026-08-30 の監査で挙がった6件と、その後に見つかった1件（F1）を全て解消した。
+
+> **F1（追加検出）**: `data/remote/interceptor/auth_interceptor.dart` が
+> `ui/auth/auth_state_notifier.dart` を import していた。401 を受けたときに UI の
+> 認証状態を直接書き換えるためで、**下位層が上位層を参照する**逆流だった。
+> 当初のチェックが `domain→data` と `ui→data` しか見ていなかったため素通りしていた。
+> → PR #130 で解消。逆流方向のチェックも skill に追加した。
 
 | # | 逸脱だったもの | 解消した PR |
 |---|---|---|
@@ -246,9 +252,15 @@ D2（PR #98 `WorkoutResultRecorder` 抽出）、E2（`di/providers.dart` 286→2
 | **D1'** | 薄いラッパ UseCase 2本（純粋な委譲） | #127 削除し Repository 直呼びへ |
 | **A4** | `ScanResult`→`DeviceScanResult` 変換が domain 層 | #127 実装側へ移動 |
 | **E1** | データ層の段数が不統一（workout のみ3段） | #128 `WorkoutRemoteDataSource` 廃止 |
+| **F1** | `data/` が `ui/` を import（逆流） | #130 Repository の `sessionExpired` 経由へ |
 
-これにより **`domain/` → `data/` の import はゼロ**、**Repository は全ドメインで
-ApiClient / Connector 直呼びの2段**に揃っている。
+これにより **層をまたぐ import は4方向すべてクリーン**
+（`domain→data` / `ui→data` / `data→上位` / `domain→ui`）、
+**Repository は全ドメインで ApiClient / Connector 直呼びの2段**に揃っている。
+
+> **`lib/app/` について**: 画面に紐つかないアプリ全体の状態（現状は `AuthController` のみ）を置く。
+> 認証状態は main.dart のルーティング・ログイン画面・設定画面から使われ、特定の View の
+> Model ではないため、`ui/` の ViewModel とは区別している。
 
 > 副産物として #126 で不具合を1件修正した。体重の保存がダイアログと ViewModel の
 > 両方で走り、PUT が2回飛んでいた。取得・保存の経路を ViewModel に一本化した結果として
