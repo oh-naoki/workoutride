@@ -5,7 +5,6 @@ import 'package:workoutride/ui/settings/weight_registration_dialog.dart';
 import 'package:workoutride/ui/settings/ftp_registration_dialog.dart';
 import 'package:workoutride/ui/settings/settings_screen_state_notifier.dart';
 import 'package:workoutride/ui/auth/auth_state_notifier.dart';
-import 'package:workoutride/di/providers.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -36,19 +35,25 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   Future<void> _showFtpRegistrationDialog(
-      BuildContext context, WidgetRef ref) async {
-    final result = await showDialog<bool>(
+      BuildContext context, WidgetRef ref, int? currentFtp) async {
+    final result = await showDialog<int>(
       context: context,
-      builder: (context) => const FtpRegistrationDialog(),
+      builder: (context) => FtpRegistrationDialog(currentFtp: currentFtp),
     );
 
-    if (result == true && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('FTPを設定しました'),
-          backgroundColor: Colors.green,
-        ),
-      );
+    if (result != null) {
+      await ref
+          .read(settingsScreenStateNotifierProvider.notifier)
+          .updateFtp(result);
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('FTPを${result}Wに設定しました'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
     }
   }
 
@@ -170,21 +175,14 @@ class SettingsScreen extends ConsumerWidget {
                             context, ref, uiState.currentWeight),
                       ),
                       const SizedBox(height: 16),
-                      FutureBuilder<int?>(
-                        future:
-                            ref.read(userProfileRepositoryProvider).getFtp(),
-                        builder: (context, snapshot) {
-                          final currentFtp = snapshot.data;
-                          return _buildSettingTile(
-                            title: 'FTP設定',
-                            subtitle: currentFtp != null
-                                ? '現在のFTP: ${currentFtp}W'
-                                : 'FTPが設定されていません',
-                            icon: Icons.speed,
-                            onTap: () =>
-                                _showFtpRegistrationDialog(context, ref),
-                          );
-                        },
+                      _buildSettingTile(
+                        title: 'FTP設定',
+                        subtitle: uiState.currentFtp != null
+                            ? '現在のFTP: ${uiState.currentFtp}W'
+                            : 'FTPが設定されていません',
+                        icon: Icons.speed,
+                        onTap: () => _showFtpRegistrationDialog(
+                            context, ref, uiState.currentFtp),
                       ),
                       const SizedBox(height: 32),
                       _buildSectionTitle('デバイス設定'),

@@ -17,7 +17,9 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$SettingsScreenUiState {
   bool get isLoading => throw _privateConstructorUsedError;
-  double? get currentWeight => throw _privateConstructorUsedError;
+  double? get currentWeight =>
+      throw _privateConstructorUsedError; // null は「FTP 未設定」を意味する。
+  int? get currentFtp => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
 
   /// Create a copy of SettingsScreenUiState
@@ -33,7 +35,11 @@ abstract class $SettingsScreenUiStateCopyWith<$Res> {
           $Res Function(SettingsScreenUiState) then) =
       _$SettingsScreenUiStateCopyWithImpl<$Res, SettingsScreenUiState>;
   @useResult
-  $Res call({bool isLoading, double? currentWeight, String? errorMessage});
+  $Res call(
+      {bool isLoading,
+      double? currentWeight,
+      int? currentFtp,
+      String? errorMessage});
 }
 
 /// @nodoc
@@ -54,6 +60,7 @@ class _$SettingsScreenUiStateCopyWithImpl<$Res,
   $Res call({
     Object? isLoading = null,
     Object? currentWeight = freezed,
+    Object? currentFtp = freezed,
     Object? errorMessage = freezed,
   }) {
     return _then(_value.copyWith(
@@ -65,6 +72,10 @@ class _$SettingsScreenUiStateCopyWithImpl<$Res,
           ? _value.currentWeight
           : currentWeight // ignore: cast_nullable_to_non_nullable
               as double?,
+      currentFtp: freezed == currentFtp
+          ? _value.currentFtp
+          : currentFtp // ignore: cast_nullable_to_non_nullable
+              as int?,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -82,7 +93,11 @@ abstract class _$$SettingsScreenUiStateImplCopyWith<$Res>
       __$$SettingsScreenUiStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isLoading, double? currentWeight, String? errorMessage});
+  $Res call(
+      {bool isLoading,
+      double? currentWeight,
+      int? currentFtp,
+      String? errorMessage});
 }
 
 /// @nodoc
@@ -101,6 +116,7 @@ class __$$SettingsScreenUiStateImplCopyWithImpl<$Res>
   $Res call({
     Object? isLoading = null,
     Object? currentWeight = freezed,
+    Object? currentFtp = freezed,
     Object? errorMessage = freezed,
   }) {
     return _then(_$SettingsScreenUiStateImpl(
@@ -112,6 +128,10 @@ class __$$SettingsScreenUiStateImplCopyWithImpl<$Res>
           ? _value.currentWeight
           : currentWeight // ignore: cast_nullable_to_non_nullable
               as double?,
+      currentFtp: freezed == currentFtp
+          ? _value.currentFtp
+          : currentFtp // ignore: cast_nullable_to_non_nullable
+              as int?,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -126,6 +146,7 @@ class _$SettingsScreenUiStateImpl implements _SettingsScreenUiState {
   const _$SettingsScreenUiStateImpl(
       {this.isLoading = false,
       this.currentWeight = null,
+      this.currentFtp = null,
       this.errorMessage = null});
 
   @override
@@ -134,13 +155,17 @@ class _$SettingsScreenUiStateImpl implements _SettingsScreenUiState {
   @override
   @JsonKey()
   final double? currentWeight;
+// null は「FTP 未設定」を意味する。
+  @override
+  @JsonKey()
+  final int? currentFtp;
   @override
   @JsonKey()
   final String? errorMessage;
 
   @override
   String toString() {
-    return 'SettingsScreenUiState(isLoading: $isLoading, currentWeight: $currentWeight, errorMessage: $errorMessage)';
+    return 'SettingsScreenUiState(isLoading: $isLoading, currentWeight: $currentWeight, currentFtp: $currentFtp, errorMessage: $errorMessage)';
   }
 
   @override
@@ -152,13 +177,15 @@ class _$SettingsScreenUiStateImpl implements _SettingsScreenUiState {
                 other.isLoading == isLoading) &&
             (identical(other.currentWeight, currentWeight) ||
                 other.currentWeight == currentWeight) &&
+            (identical(other.currentFtp, currentFtp) ||
+                other.currentFtp == currentFtp) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, isLoading, currentWeight, errorMessage);
+  int get hashCode => Object.hash(
+      runtimeType, isLoading, currentWeight, currentFtp, errorMessage);
 
   /// Create a copy of SettingsScreenUiState
   /// with the given fields replaced by the non-null parameter values.
@@ -174,12 +201,15 @@ abstract class _SettingsScreenUiState implements SettingsScreenUiState {
   const factory _SettingsScreenUiState(
       {final bool isLoading,
       final double? currentWeight,
+      final int? currentFtp,
       final String? errorMessage}) = _$SettingsScreenUiStateImpl;
 
   @override
   bool get isLoading;
   @override
-  double? get currentWeight;
+  double? get currentWeight; // null は「FTP 未設定」を意味する。
+  @override
+  int? get currentFtp;
   @override
   String? get errorMessage;
 
