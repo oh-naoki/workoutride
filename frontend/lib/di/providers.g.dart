@@ -389,7 +389,7 @@ final manageWorkoutUseCaseProvider =
 // ignore: unused_element
 typedef ManageWorkoutUseCaseRef = AutoDisposeProviderRef<ManageWorkoutUseCase>;
 String _$workoutSoundPlayerHash() =>
-    r'4e4ef84c1ad342e814bc25255993641b22732999';
+    r'5b931f39255f57f8816605e3a838559fd075b3b1';
 
 /// See also [workoutSoundPlayer].
 @ProviderFor(workoutSoundPlayer)
