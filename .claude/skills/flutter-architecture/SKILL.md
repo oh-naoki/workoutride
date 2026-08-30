@@ -15,7 +15,8 @@ description: WorkoutRide の Flutter アプリ（frontend/）でコードを追�
 | 書きたいもの | 置き場所 |
 |---|---|
 | 画面の描画 | `ui/<feature>/xxx_screen.dart` |
-| 画面の状態・ユーザー操作の受け口 | `ui/<feature>/xxx_screen_state_notifier.dart`（実体は ViewModel） |
+| 画面の状態・ユーザー操作の受け口 | `ui/<feature>/xxx_screen_view_model.dart` |
+| 画面に紐つかないアプリ全体の状態 | `app/`（現状は `AuthController` のみ） |
 | API/BLE/ストレージへのアクセス窓口 | `data/` の Service（`Future`/`Stream` のみ返す。状態を持たない） |
 | データ取得の正規窓口・DTO→ドメイン変換 | IF は `domain/repository/`、実装は `data/repository/` |
 | 複数 Repository の統合／単独で複雑なロジック | `domain/usecase/`（**条件を満たすときだけ**） |
@@ -32,7 +33,7 @@ description: WorkoutRide の Flutter アプリ（frontend/）でコードを追�
 **型変換をどこに書くか** — DTO↔ドメインの変換は必ず `data/` の中（Repository 実装か `data/remote/model/extensions.dart` の `toDomain()`）。
 外部ライブラリの型（`flutter_blue_plus` の `ScanResult` 等）をドメインモデルに変換するのも `data/` の責務。
 
-## 絶対に守る3点
+## 絶対に守る4点
 
 1. **黄金律**: `domain/` から `data/` を import しない。外部 I/O は Repository IF 越しに触る。
 2. **逆流も禁止**: `data/` から `ui/`（や他の上位層）を import しない。
@@ -52,7 +53,7 @@ description: WorkoutRide の Flutter アプリ（frontend/）でコードを追�
 
 ```bash
 cd "$(git rev-parse --show-toplevel)/frontend/lib" || exit 1
-for d in domain ui data component; do
+for d in domain ui data component app; do
   [ -d "$d" ] || { echo "ERROR: $d が無い。実行位置が違う"; exit 1; }
 done
 
@@ -71,9 +72,8 @@ grep -rn "import.*['\"].*ui/" domain/ || echo "  なし ✓"
 echo "=== View 内のデータ取得 ==="
 grep -rn "FutureBuilder\|StreamBuilder" ui/ component/ || echo "  なし ✓"
 
-echo "=== 旧 StateNotifier の実装 ==="
-grep -rnE "extends StateNotifier|(^|[^A-Za-z0-9_])(StateNotifierProvider|StateProvider)\(" \
-  --include="*.dart" . | grep -v "\.g\.dart" || echo "  なし ✓"
+echo "=== 旧 StateNotifier の使用 ==="
+grep -rn "StateNotifier" --include="*.dart" . | grep -v "\.g\.dart" || echo "  なし ✓"
 
 echo "=== DTO の越境（コメント行は除外） ==="
 grep -rnE "(^|[^A-Za-z0-9_])[A-Z][A-Za-z0-9]*Dto\b|SaveWorkoutResultRequest" ui/ domain/ \
@@ -82,10 +82,11 @@ grep -rnE "(^|[^A-Za-z0-9_])[A-Z][A-Za-z0-9]*Dto\b|SaveWorkoutResultRequest" ui/
 
 いずれかがヒットしたら、その変更は規約違反。`docs/architecture.md` の該当節を読んで直す。
 
-> 注: 上2つの grep が `-E` と前方の文字クラスを使っているのは誤検出を避けるため。
-> プロバイダ名 `xxxScreenStateNotifierProvider` は歴史的経緯で `StateNotifier` を含むが実体は
-> codegen の `Notifier` なので、単純な `grep "StateNotifierProvider"` だと全 ViewModel が引っかかる。
-> DTO 側も `workout_result_draft.dart` の説明コメントが引っかかるためコメント行を除外している。
+> 注: `StateNotifier` のチェックが単純な grep で済むのは、ViewModel を
+> `XxxScreenViewModel` に改名して名前の衝突を解消したから。改名前は全 ViewModel の
+> プロバイダ名が `xxxScreenStateNotifierProvider` で、非推奨 API の
+> `StateNotifierProvider` を部分文字列として含むため、27件の誤検出が出ていた。
+> DTO 側は `workout_result_draft.dart` の説明コメントが引っかかるためコメント行を除外している。
 
 ## 薄い UseCase を見つけたら
 

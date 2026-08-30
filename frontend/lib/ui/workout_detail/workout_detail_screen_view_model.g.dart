@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'workout_detail_screen_state_notifier.dart';
+part of 'workout_detail_screen_view_model.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$workoutDetailScreenStateNotifierHash() =>
-    r'4ff2a6fcb1db6c388cf90fc9b9618bd6bc46ce9d';
+String _$workoutDetailScreenViewModelHash() =>
+    r'c09779afb838917b77ea8f88627ef101029a4919';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,7 +30,7 @@ class _SystemHash {
   }
 }
 
-abstract class _$WorkoutDetailScreenStateNotifier
+abstract class _$WorkoutDetailScreenViewModel
     extends BuildlessAutoDisposeNotifier<WorkoutDetailScreenUiState> {
   late final int workoutId;
 
@@ -39,29 +39,29 @@ abstract class _$WorkoutDetailScreenStateNotifier
   );
 }
 
-/// See also [WorkoutDetailScreenStateNotifier].
-@ProviderFor(WorkoutDetailScreenStateNotifier)
-const workoutDetailScreenStateNotifierProvider =
-    WorkoutDetailScreenStateNotifierFamily();
+/// See also [WorkoutDetailScreenViewModel].
+@ProviderFor(WorkoutDetailScreenViewModel)
+const workoutDetailScreenViewModelProvider =
+    WorkoutDetailScreenViewModelFamily();
 
-/// See also [WorkoutDetailScreenStateNotifier].
-class WorkoutDetailScreenStateNotifierFamily
+/// See also [WorkoutDetailScreenViewModel].
+class WorkoutDetailScreenViewModelFamily
     extends Family<WorkoutDetailScreenUiState> {
-  /// See also [WorkoutDetailScreenStateNotifier].
-  const WorkoutDetailScreenStateNotifierFamily();
+  /// See also [WorkoutDetailScreenViewModel].
+  const WorkoutDetailScreenViewModelFamily();
 
-  /// See also [WorkoutDetailScreenStateNotifier].
-  WorkoutDetailScreenStateNotifierProvider call(
+  /// See also [WorkoutDetailScreenViewModel].
+  WorkoutDetailScreenViewModelProvider call(
     int workoutId,
   ) {
-    return WorkoutDetailScreenStateNotifierProvider(
+    return WorkoutDetailScreenViewModelProvider(
       workoutId,
     );
   }
 
   @override
-  WorkoutDetailScreenStateNotifierProvider getProviderOverride(
-    covariant WorkoutDetailScreenStateNotifierProvider provider,
+  WorkoutDetailScreenViewModelProvider getProviderOverride(
+    covariant WorkoutDetailScreenViewModelProvider provider,
   ) {
     return call(
       provider.workoutId,
@@ -80,31 +80,31 @@ class WorkoutDetailScreenStateNotifierFamily
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'workoutDetailScreenStateNotifierProvider';
+  String? get name => r'workoutDetailScreenViewModelProvider';
 }
 
-/// See also [WorkoutDetailScreenStateNotifier].
-class WorkoutDetailScreenStateNotifierProvider
-    extends AutoDisposeNotifierProviderImpl<WorkoutDetailScreenStateNotifier,
+/// See also [WorkoutDetailScreenViewModel].
+class WorkoutDetailScreenViewModelProvider
+    extends AutoDisposeNotifierProviderImpl<WorkoutDetailScreenViewModel,
         WorkoutDetailScreenUiState> {
-  /// See also [WorkoutDetailScreenStateNotifier].
-  WorkoutDetailScreenStateNotifierProvider(
+  /// See also [WorkoutDetailScreenViewModel].
+  WorkoutDetailScreenViewModelProvider(
     int workoutId,
   ) : this._internal(
-          () => WorkoutDetailScreenStateNotifier()..workoutId = workoutId,
-          from: workoutDetailScreenStateNotifierProvider,
-          name: r'workoutDetailScreenStateNotifierProvider',
+          () => WorkoutDetailScreenViewModel()..workoutId = workoutId,
+          from: workoutDetailScreenViewModelProvider,
+          name: r'workoutDetailScreenViewModelProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$workoutDetailScreenStateNotifierHash,
-          dependencies: WorkoutDetailScreenStateNotifierFamily._dependencies,
+                  : _$workoutDetailScreenViewModelHash,
+          dependencies: WorkoutDetailScreenViewModelFamily._dependencies,
           allTransitiveDependencies:
-              WorkoutDetailScreenStateNotifierFamily._allTransitiveDependencies,
+              WorkoutDetailScreenViewModelFamily._allTransitiveDependencies,
           workoutId: workoutId,
         );
 
-  WorkoutDetailScreenStateNotifierProvider._internal(
+  WorkoutDetailScreenViewModelProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -118,7 +118,7 @@ class WorkoutDetailScreenStateNotifierProvider
 
   @override
   WorkoutDetailScreenUiState runNotifierBuild(
-    covariant WorkoutDetailScreenStateNotifier notifier,
+    covariant WorkoutDetailScreenViewModel notifier,
   ) {
     return notifier.build(
       workoutId,
@@ -126,10 +126,10 @@ class WorkoutDetailScreenStateNotifierProvider
   }
 
   @override
-  Override overrideWith(WorkoutDetailScreenStateNotifier Function() create) {
+  Override overrideWith(WorkoutDetailScreenViewModel Function() create) {
     return ProviderOverride(
       origin: this,
-      override: WorkoutDetailScreenStateNotifierProvider._internal(
+      override: WorkoutDetailScreenViewModelProvider._internal(
         () => create()..workoutId = workoutId,
         from: from,
         name: null,
@@ -142,14 +142,14 @@ class WorkoutDetailScreenStateNotifierProvider
   }
 
   @override
-  AutoDisposeNotifierProviderElement<WorkoutDetailScreenStateNotifier,
+  AutoDisposeNotifierProviderElement<WorkoutDetailScreenViewModel,
       WorkoutDetailScreenUiState> createElement() {
-    return _WorkoutDetailScreenStateNotifierProviderElement(this);
+    return _WorkoutDetailScreenViewModelProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is WorkoutDetailScreenStateNotifierProvider &&
+    return other is WorkoutDetailScreenViewModelProvider &&
         other.workoutId == workoutId;
   }
 
@@ -164,20 +164,20 @@ class WorkoutDetailScreenStateNotifierProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin WorkoutDetailScreenStateNotifierRef
+mixin WorkoutDetailScreenViewModelRef
     on AutoDisposeNotifierProviderRef<WorkoutDetailScreenUiState> {
   /// The parameter `workoutId` of this provider.
   int get workoutId;
 }
 
-class _WorkoutDetailScreenStateNotifierProviderElement
-    extends AutoDisposeNotifierProviderElement<WorkoutDetailScreenStateNotifier,
-        WorkoutDetailScreenUiState> with WorkoutDetailScreenStateNotifierRef {
-  _WorkoutDetailScreenStateNotifierProviderElement(super.provider);
+class _WorkoutDetailScreenViewModelProviderElement
+    extends AutoDisposeNotifierProviderElement<WorkoutDetailScreenViewModel,
+        WorkoutDetailScreenUiState> with WorkoutDetailScreenViewModelRef {
+  _WorkoutDetailScreenViewModelProviderElement(super.provider);
 
   @override
   int get workoutId =>
-      (origin as WorkoutDetailScreenStateNotifierProvider).workoutId;
+      (origin as WorkoutDetailScreenViewModelProvider).workoutId;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

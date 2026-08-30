@@ -7,8 +7,8 @@ import 'package:workoutride/domain/model/workout/workout_block.dart';
 import 'package:workoutride/domain/model/workout/workout_summary.dart';
 import 'package:workoutride/domain/repository/workout_repository.dart';
 
-part 'workout_detail_screen_state_notifier.freezed.dart';
-part 'workout_detail_screen_state_notifier.g.dart';
+part 'workout_detail_screen_view_model.freezed.dart';
+part 'workout_detail_screen_view_model.g.dart';
 
 @freezed
 class WorkoutDetailScreenUiState with _$WorkoutDetailScreenUiState {
@@ -24,8 +24,7 @@ class WorkoutDetailScreenUiState with _$WorkoutDetailScreenUiState {
 }
 
 @riverpod
-class WorkoutDetailScreenStateNotifier
-    extends _$WorkoutDetailScreenStateNotifier {
+class WorkoutDetailScreenViewModel extends _$WorkoutDetailScreenViewModel {
   late final WorkoutRepository _workoutRepository;
 
   @override

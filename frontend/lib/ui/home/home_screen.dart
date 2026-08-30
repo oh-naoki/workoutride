@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workoutride/domain/model/workout/workout_summary.dart';
 import 'package:workoutride/ui/history/history_screen.dart';
 import 'package:workoutride/ui/settings/settings_screen.dart';
-import 'package:workoutride/ui/home/home_screen_state_notifier.dart';
+import 'package:workoutride/ui/home/home_screen_view_model.dart';
 import 'package:workoutride/ui/theme/app_colors.dart';
 import 'package:workoutride/ui/workout_detail/workout_detail_screen.dart';
 
@@ -19,7 +19,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final uiState = ref.watch(homeScreenStateNotifierProvider);
+    final uiState = ref.watch(homeScreenViewModelProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -342,7 +342,7 @@ class BleConnectionStatus extends ConsumerWidget {
             TextButton(
               onPressed: () {
                 ref
-                    .read(homeScreenStateNotifierProvider.notifier)
+                    .read(homeScreenViewModelProvider.notifier)
                     .cancelBleConnection();
               },
               child: const Text('キャンセル',
@@ -352,7 +352,7 @@ class BleConnectionStatus extends ConsumerWidget {
             ElevatedButton.icon(
               onPressed: () {
                 ref
-                    .read(homeScreenStateNotifierProvider.notifier)
+                    .read(homeScreenViewModelProvider.notifier)
                     .retryBleConnection();
               },
               icon: const Icon(Icons.refresh, size: 16),

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workoutride/ui/ble_setting/scan_screen.dart';
 import 'package:workoutride/ui/settings/weight_registration_dialog.dart';
 import 'package:workoutride/ui/settings/ftp_registration_dialog.dart';
-import 'package:workoutride/ui/settings/settings_screen_state_notifier.dart';
+import 'package:workoutride/ui/settings/settings_screen_view_model.dart';
 import 'package:workoutride/app/auth_controller.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -20,7 +20,7 @@ class SettingsScreen extends ConsumerWidget {
 
     if (result != null) {
       await ref
-          .read(settingsScreenStateNotifierProvider.notifier)
+          .read(settingsScreenViewModelProvider.notifier)
           .updateWeight(result);
 
       if (context.mounted) {
@@ -43,7 +43,7 @@ class SettingsScreen extends ConsumerWidget {
 
     if (result != null) {
       await ref
-          .read(settingsScreenStateNotifierProvider.notifier)
+          .read(settingsScreenViewModelProvider.notifier)
           .updateFtp(result);
 
       if (context.mounted) {
@@ -116,7 +116,7 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final uiState = ref.watch(settingsScreenStateNotifierProvider);
+    final uiState = ref.watch(settingsScreenViewModelProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -153,7 +153,7 @@ class SettingsScreen extends ConsumerWidget {
                         IconButton(
                           onPressed: () => ref
                               .read(
-                                  settingsScreenStateNotifierProvider.notifier)
+                                  settingsScreenViewModelProvider.notifier)
                               .clearError(),
                           icon: const Icon(Icons.close, color: Colors.red),
                         ),

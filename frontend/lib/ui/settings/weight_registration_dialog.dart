@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /// 体重を入力するだけのダイアログ。
 ///
 /// 保存はしない。検証を通った値を `pop` で返し、永続化と状態更新は
-/// 呼び出し元の ViewModel（`SettingsScreenStateNotifier.updateWeight`）が行う。
+/// 呼び出し元の ViewModel（`SettingsScreenViewModel.updateWeight`）が行う。
 /// 以前はこのダイアログと ViewModel の両方が saveWeight を呼んでおり、
 /// 体重更新のたびに PUT が2回飛んでいた。
 class WeightRegistrationDialog extends StatefulWidget {

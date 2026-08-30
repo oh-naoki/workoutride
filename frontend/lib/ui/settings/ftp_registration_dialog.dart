@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /// FTP を入力するだけのダイアログ。
 ///
 /// 保存はしない。検証を通った値を `pop` で返し、永続化と状態更新は
-/// 呼び出し元の ViewModel（`SettingsScreenStateNotifier.updateFtp`）が行う。
+/// 呼び出し元の ViewModel（`SettingsScreenViewModel.updateFtp`）が行う。
 /// View にデータアクセスを持たせない規約（docs/architecture.md §2.1）に従う。
 class FtpRegistrationDialog extends StatefulWidget {
   final int? currentFtp;

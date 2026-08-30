@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:workoutride/component/meter.dart';
 import 'package:workoutride/ui/workout/developer_menu.dart';
-import 'package:workoutride/ui/workout/workout_screen_state_notifier.dart';
+import 'package:workoutride/ui/workout/workout_screen_view_model.dart';
 import 'package:workoutride/ui/theme/app_colors.dart';
 
 class WorkoutScreen extends ConsumerStatefulWidget {
@@ -57,10 +57,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
   @override
   Widget build(BuildContext context) {
     final uiState =
-        ref.watch(workoutScreenStateNotifierProvider(widget.workoutId));
+        ref.watch(workoutScreenViewModelProvider(widget.workoutId));
 
     // 現在のブロックが変更されたら自動スクロール
-    ref.listen(workoutScreenStateNotifierProvider(widget.workoutId),
+    ref.listen(workoutScreenViewModelProvider(widget.workoutId),
         (previous, next) {
       if (previous?.currentBlockIndex != next.currentBlockIndex) {
         _scrollToCurrentBlock(next.currentBlockIndex);
@@ -311,7 +311,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
     return GestureDetector(
       onTap: () {
         ref
-            .read(workoutScreenStateNotifierProvider(widget.workoutId).notifier)
+            .read(workoutScreenViewModelProvider(widget.workoutId).notifier)
             .togglePauseResume();
       },
       child: Container(
@@ -356,9 +356,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
   void _showStopWorkoutDialog() {
     // まず一時停止する
     final notifier =
-        ref.read(workoutScreenStateNotifierProvider(widget.workoutId).notifier);
+        ref.read(workoutScreenViewModelProvider(widget.workoutId).notifier);
     final uiState =
-        ref.read(workoutScreenStateNotifierProvider(widget.workoutId));
+        ref.read(workoutScreenViewModelProvider(widget.workoutId));
     final wasPaused = uiState.isPaused;
 
     if (!wasPaused) {
