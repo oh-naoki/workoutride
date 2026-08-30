@@ -13,7 +13,7 @@ import 'package:workoutride/domain/usecase/get_calculated_power_meter_data_useca
 import 'package:workoutride/domain/usecase/workout/manage_workout_use_case.dart'
     as workout_usecase;
 import 'package:workoutride/domain/repository/user_profile_repository.dart';
-import 'package:workoutride/data/audio/workout_sound_player.dart';
+import 'package:workoutride/domain/repository/workout_sound_player.dart';
 import 'package:workoutride/ui/workout/workout_screen_state_notifier.dart';
 import 'package:workoutride/di/providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
