@@ -1,6 +1,6 @@
 # Play Console 登録ドラフト
 
-**作成日**: 2026-07-18
+**作成日**: 2026-07-18（2026-08-16 見直し、2026-09-04 審査結果反映）
 **パッケージ名**: `com.github.ohnaoki.workoutride`
 
 ---
@@ -48,15 +48,16 @@ FTPと体重を登録して、パワーゾーンとW/kgを正確に管理。デ�
 - タグ: サイクリング / トレーニング / フィットネス
 
 ### 連絡先
-- メールアドレス: oh.naoki0819@gmail.com（Play Consoleで公開される点に注意。専用アドレスの用意も検討）
+- メールアドレス: oh.naoki0819@gmail.com（Play Consoleで公開される点に注意。専用アドレスの用意も検討 — **未決定**）
 - プライバシーポリシーURL: `https://workoutride.ohnaoki.app/privacy.html`
+- デベロッパーアカウントの公開住所: マンション名を伏せ、番地・部屋番号のみで登録予定（本人確認中、2026-08-16時点）
 
-### 用意が必要な画像アセット（未作成）
-| アセット | サイズ | 備考 |
+### 画像アセット
+| アセット | サイズ | 状態 |
 |---|---|---|
-| アプリアイコン | 512×512 PNG（32bit、アルファ可）| 現行launcher iconの高解像度版 |
-| フィーチャーグラフィック | 1024×500 PNG/JPG | ストア上部のバナー |
-| スクリーンショット | 最低2枚、縦1080×1920推奨 | ワークアウト実行画面・一覧・履歴・結果詳細の4枚推奨 |
+| アプリアイコン | 512×512 PNG | ✔ 作成済み（`store-assets/play-icon-512.png`、2026-07-20） |
+| フィーチャーグラフィック | 1024×500 PNG/JPG | ✔ 作成済み（`store-assets/feature-graphic.png`） |
+| スクリーンショット | 最低2枚、縦1080×1920推奨 | ✔ 作成済み（`store-assets/screenshots/`、2026-08-16、releaseビルド・エミュレータで撮影） |
 
 ---
 
@@ -112,20 +113,35 @@ FTPと体重を登録して、パワーゾーンとW/kgを正確に管理。デ�
 
 ## 5. クローズドテスト計画（12人×14日）
 
-1. AABをビルド（`build-release.yml` を workflow_dispatch で起動）
+1. AABをビルド（`build-playstore-aab.yml` を workflow_dispatch で起動）
 2. クローズドテストトラック作成 → AABアップロード
-3. テスター募集:
-   - 知人・家族（Googleアカウントでオプトイン → 1回インストールすれば以後放置でOK）
+3. テスター管理: Googleグループ `workoutride-closed-testers@googlegroups.com` を登録（✔ グループ作成済み、2026-08-16）
+4. テスター募集:
+   - Xアカウント `oh_naoki_bike` で募集ツイート（`docs/tester-recruitment.md`）
    - 不足分は相互テストコミュニティ（r/AndroidClosedTesting 等）で募集
-4. 14日経過後、本番公開申請（申請時にテストで得た知見を問うアンケートあり）
+5. 14日経過後、本番公開申請（申請時にテストで得た知見を問うアンケートあり）
 
 ---
 
 ## 6. 提出前の最終チェックリスト
 
-- [ ] versionName/versionCode 確認（現在 `1.0.0+1`）
-- [ ] release署名のAABがビルドできる（keystoreはGitHub Secrets）
-- [ ] privacy.html / account-deletion.html が本番で200を返す（2026-07-12確認済み）
-- [ ] スクリーンショット4枚・アイコン512px・フィーチャーグラフィック作成
-- [ ] データセーフティフォームを上記の表どおり入力
-- [ ] アカウント削除URLをストア設定に登録
+- [x] versionName/versionCode 確認（現在 `1.0.0+2`、以後アップロードごとにビルド番号インクリメント）
+- [x] release署名のAABがビルドできる（keystoreはGitHub Secrets、2026-08-16ビルド成功）
+- [x] privacy.html / account-deletion.html が本番で200を返す（2026-07-12確認済み）
+- [x] アイコン512px・フィーチャーグラフィック作成（2026-07-20）
+- [x] スクリーンショット4枚作成（2026-08-16、`store-assets/screenshots/`）
+- [x] データセーフティフォームを上記の表どおり入力（2026-08-30提出）
+- [x] アカウント削除URLをストア設定に登録（2026-08-30提出）
+- [x] Google Play デベロッパーアカウントの本人確認完了（2026-08-17）
+- [ ] 連絡先メールを専用アドレスにするか決定
+
+### 審査結果（2026-08-30 提出 → 2026-08-30 承認）
+- クローズドテスト（Alphaトラック）が公開済み。AAB `2 (1.0.0)`、177か国配布。
+- オプトインURL確定: `https://play.google.com/apps/testing/com.github.ohnaoki.workoutride`
+- `backend/public/testers.html` のプレースホルダをこのURLとGoogleグループURLで差し替え済み。
+- 現在テスター0人。次はXアカウント`oh_naoki_bike`での募集ツイート → 12人×14日達成待ち。
+
+### 新たな課題: target API level 対応期限超過（2026-09-04時点で未対応）
+- Play Consoleに警告: 「2026年8月31日より、最新のAndroidリリースから1年以内のAPIレベルを対象としていないアプリは、更新できなくなります」
+- 現在の対応期限（8/31）はすでに過ぎており、**次回のAABアップデート提出がブロックされる可能性がある**（既存のクローズドテスト配布自体は影響なし）
+- 現在のFlutter安定版（3.29.2、2025-03リリース）はtargetSdk/compileSdkとも35（Android 15）がデフォルト。Google側の要求ラインがさらに上がっている可能性があるため、`flutter upgrade`でtargetSdk 36系に対応したFlutterバージョンへの更新が必要か確認要
